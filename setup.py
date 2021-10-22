@@ -11,7 +11,7 @@ setuptools.setup(
     description="api testing",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/JE-Chen/Py_AutoControlGUI",
+    url="https://github.com/JE-Chen/JEPost",
     packages=setuptools.find_packages(),
     install_requires=[
         "requests",
