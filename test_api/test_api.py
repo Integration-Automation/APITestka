@@ -27,9 +27,9 @@ class Task(Resource):
         abort_if_todo_doesnt_exist(task_id)
         return TASKS[task_id]
 
-    def delete(self, tasks):
-        abort_if_todo_doesnt_exist(tasks)
-        del TASKS[tasks]
+    def delete(self, task_id):
+        abort_if_todo_doesnt_exist(task_id)
+        del TASKS[task_id]
         return '', 204
 
     def put(self, task_id):

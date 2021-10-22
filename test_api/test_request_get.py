@@ -8,4 +8,3 @@ print(response.status_code)
 
 print(result)
 
-print(result['task1'])
