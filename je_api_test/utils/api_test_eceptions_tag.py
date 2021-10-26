@@ -1,3 +1,11 @@
 api_test_error_message = "API tester error"
+api_test_get_data_error_message = "API tester can't get api data error"
 api_test_get_error_message = "API tester get error"
 api_test_get_json_error_message = "API tester get json error"
+api_test_put_error_message = "API tester put error"
+api_test_delete_error_message = "API tester delete error"
+api_test_post_error_message = "API tester post error"
+api_test_head_error_message = "API tester head error"
+api_test_options_error_message = "API tester options error"
+api_test_patch_error_message = "API tester patch error"
+

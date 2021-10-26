@@ -1,6 +1,10 @@
 from je_api_test.utils.api_test_eceptions_tag import api_test_error_message
 from je_api_test.utils.api_test_eceptions_tag import api_test_get_error_message
 from je_api_test.utils.api_test_eceptions_tag import api_test_get_json_error_message
+from je_api_test.utils.api_test_eceptions_tag import api_test_put_error_message
+from je_api_test.utils.api_test_eceptions_tag import api_test_delete_error_message
+from je_api_test.utils.api_test_eceptions_tag import api_test_post_error_message
+from je_api_test.utils.api_test_eceptions_tag import api_test_head_error_message
 
 
 class APITesterException(Exception):
@@ -13,14 +17,55 @@ class APITesterException(Exception):
         return self.message
 
 
-class APITesterGetException(AutoControlException):
+class APITesterGetDataException(APITesterException):
 
     def __init__(self, message=api_test_get_error_message):
         super().__init__(message)
 
 
-class APITesterGetJsonException(AutoControlException):
+class APITesterGetException(APITesterException):
+
+    def __init__(self, message=api_test_get_error_message):
+        super().__init__(message)
+
+
+class APITesterGetJsonException(APITesterException):
 
     def __init__(self, message=api_test_get_json_error_message):
         super().__init__(message)
 
+
+class APITesterPutException(APITesterException):
+
+    def __init__(self, message=api_test_put_error_message):
+        super().__init__(message)
+
+
+class APITesterDeleteException(APITesterException):
+
+    def __init__(self, message=api_test_put_error_message):
+        super().__init__(message)
+
+
+class APITesterPostException(APITesterException):
+
+    def __init__(self, message=api_test_post_error_message):
+        super().__init__(message)
+
+
+class APITesterHeadException(APITesterException):
+
+    def __init__(self, message=api_test_head_error_message):
+        super().__init__(message)
+
+
+class APITesterOptionsException(APITesterException):
+
+    def __init__(self, message=api_test_head_error_message):
+        super().__init__(message)
+
+
+class APITesterPatchException(APITesterException):
+
+    def __init__(self, message=api_test_head_error_message):
+        super().__init__(message)

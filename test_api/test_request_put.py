@@ -1,6 +1,6 @@
 import requests
 
-put_task = "/task2"
+put_task = "/task3"
 
 new_task = {"task": "new task"}
 
