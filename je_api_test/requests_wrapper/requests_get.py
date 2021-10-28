@@ -16,7 +16,7 @@ def test_api_get(test_url, **kwargs):
     except APITesterGetDataException:
         raise APITesterGetDataException
 
-    return response_data
+    return {"response": response, "response_data": response_data}
 
 
 def test_api_get_json(test_url, **kwargs):
@@ -31,9 +31,9 @@ def test_api_get_json(test_url, **kwargs):
         }
     except APITesterGetJsonException:
         raise APITesterGetJsonException
-    return response_data
+    return {"response": response, "response_data": response_data}
 
 
 if __name__ == "__main__":
-    print(test_api_get("http://localhost:5000/tasks").get("status_code"))
-    print(test_api_get_json("http://localhost:5000/tasks").get("json_data"))
+    print(test_api_get("http://localhost:5000/tasks").get("response_data").get("status_code"))
+    print(test_api_get_json("http://localhost:5000/tasks").get("response_data").get("json_data"))

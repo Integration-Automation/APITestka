@@ -8,4 +8,4 @@ api_test_post_error_message = "API tester post error"
 api_test_head_error_message = "API tester head error"
 api_test_options_error_message = "API tester options error"
 api_test_patch_error_message = "API tester patch error"
-
+api_test_session_error_message = "API tester session error"

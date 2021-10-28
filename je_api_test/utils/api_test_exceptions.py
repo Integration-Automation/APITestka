@@ -5,6 +5,7 @@ from je_api_test.utils.api_test_eceptions_tag import api_test_put_error_message
 from je_api_test.utils.api_test_eceptions_tag import api_test_delete_error_message
 from je_api_test.utils.api_test_eceptions_tag import api_test_post_error_message
 from je_api_test.utils.api_test_eceptions_tag import api_test_head_error_message
+from je_api_test.utils.api_test_eceptions_tag import api_test_session_error_message
 
 
 class APITesterException(Exception):
@@ -68,4 +69,10 @@ class APITesterOptionsException(APITesterException):
 class APITesterPatchException(APITesterException):
 
     def __init__(self, message=api_test_head_error_message):
+        super().__init__(message)
+
+
+class APITesterSessionException(APITesterException):
+
+    def __init__(self, message=api_test_session_error_message):
         super().__init__(message)

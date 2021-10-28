@@ -14,10 +14,10 @@ def test_api_delete(test_url, **kwargs):
         response_data = get_api_response_data(response)
     except APITesterGetDataException:
         raise APITesterGetDataException
-    return response_data
+    return {"response": response, "response_data": response_data}
 
 
 if __name__ == "__main__":
-    test_response = test_api_delete("http://localhost:5000/tasks/task3")
+    test_response = test_api_delete("http://localhost:5000/tasks/task3").get("response_data")
     print(test_response.get("status_code"))
     print(test_response.get("headers"))
