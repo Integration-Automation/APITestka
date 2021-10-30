@@ -1,10 +1,8 @@
-import requests
+from je_api_test import test_api_get
+from je_api_test import test_api_get_json
 
-response = requests.get('http://localhost:5000/tasks')
-
-result = response.json()
-
-print(response.status_code)
-
-print(result)
-
+test_response = test_api_get("http://httpbin.org/get")
+print(test_response.get("response_data").get("status_code"))
+test_response = test_api_get_json("http://httpbin.org/get")
+print(test_response.get("response_data").get("status_code"))
+print(test_response.get("response_data").get("json_data"))

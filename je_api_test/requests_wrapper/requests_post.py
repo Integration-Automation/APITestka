@@ -1,4 +1,4 @@
-from je_api_test.requests_wrapper.requests_wrapper import api_tester_method
+from je_api_test.requests_wrapper.requests_data_structure import api_tester_method
 
 from je_api_test.utils.api_test_exceptions import APITesterPostException
 from je_api_test.utils.api_test_exceptions import APITesterGetDataException
@@ -17,7 +17,3 @@ def test_api_post(test_url, **kwargs):
     return {"response": response, "response_data": response_data}
 
 
-if __name__ == "__main__":
-    test_response = test_api_post("http://localhost:5000/tasks", params={"task": "new post task"}).get("response_data")
-    print(test_response.get("status_code"))
-    print(test_response.get("headers"))

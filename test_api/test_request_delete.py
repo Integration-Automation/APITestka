@@ -1,8 +1,4 @@
-import requests
+from je_api_test import test_api_delete
 
-delete_task = "/task3"
-
-response = requests.delete('http://localhost:5000/tasks'+ delete_task)
-
-print(response.status_code)
-
+test_response = test_api_delete("http://httpbin.org/delete")
+print(test_response.get("response_data").get("status_code"))

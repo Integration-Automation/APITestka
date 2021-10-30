@@ -17,6 +17,3 @@ def test_api_session(test_url, **kwargs):
 
     return {"response": response, "response_data": response_data}
 
-
-if __name__ == "__main__":
-    print(test_api_session("http://localhost:5000/tasks").get("response_data").get("status_code"))

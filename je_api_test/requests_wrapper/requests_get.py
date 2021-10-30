@@ -1,4 +1,4 @@
-from je_api_test.requests_wrapper.requests_wrapper import api_tester_method
+from je_api_test.requests_wrapper.requests_data_structure import api_tester_method
 
 from je_api_test.utils.api_test_exceptions import APITesterGetJsonException
 from je_api_test.utils.api_test_exceptions import APITesterGetException
@@ -33,7 +33,3 @@ def test_api_get_json(test_url, **kwargs):
         raise APITesterGetJsonException
     return {"response": response, "response_data": response_data}
 
-
-if __name__ == "__main__":
-    print(test_api_get("http://localhost:5000/tasks").get("response_data").get("status_code"))
-    print(test_api_get_json("http://localhost:5000/tasks").get("response_data").get("json_data"))

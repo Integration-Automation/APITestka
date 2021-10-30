@@ -1,12 +1,4 @@
-import requests
+from je_api_test import test_api_post
 
-new_task = {"task": "new task"}
-
-response = requests.post('http://localhost:5000/tasks', params=new_task)
-
-result = response.json()
-
-print(response.status_code)
-
-print(result)
-
+test_response = test_api_post("http://httpbin.org/post", params={"task": "new task"})
+print(test_response.get("response_data").get("status_code"))
