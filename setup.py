@@ -4,14 +4,14 @@ with open("README.md", "r") as README:
     long_description = README.read()
 
 setuptools.setup(
-    name="je_api_test",
+    name="je_api_testka",
     version="0.0.01",
     author="JE-Chen",
     author_email="zenmailman@gmail.com",
     description="api testing",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/JE-Chen/JEPost",
+    url="https://github.com/JE-Chen/APITestka",
     packages=setuptools.find_packages(),
     install_requires=[
         "requests",

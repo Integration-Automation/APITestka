@@ -1,0 +1,45 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@1.4.0
+
+jobs:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          command: pip install --user -r requirements.txt
+          name: pip requirements.txt
+      - run:
+          command: python ./circle_ci_test/test_request_delete.py
+          name: test_request_delete
+      - run:
+          command: python ./circle_ci_test/test_request_get.py
+          name: test_request_get
+      - run:
+          command: python ./circle_ci_test/test_request_head.py
+          name: test_request_head
+      - run:
+          command: python ./circle_ci_test/test_request_options.py
+          name: test_request_options
+      - run:
+          command: python ./circle_ci_test/test_request_patch.py
+          name: test_request_patch
+      - run:
+          command: python ./circle_ci_test/test_request_post.py
+          name: test_request_post
+      - run:
+          command: python ./circle_ci_test/test_request_put.py
+          name: request_session
+      - run:
+          command: python ./circle_ci_test/test_request_put.py
+          name: request_session
+
+
+workflows:
+  main:
+    jobs:
+      - build-and-test
