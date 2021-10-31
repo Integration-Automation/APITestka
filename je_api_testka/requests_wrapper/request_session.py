@@ -1,8 +1,8 @@
 from requests import Session
 
-from je_api_test.utils.api_test_exceptions import APITesterSessionException
-from je_api_test.utils.api_test_exceptions import APITesterGetDataException
-from je_api_test.utils.get_api_data import get_api_response_data
+from je_api_testka.utils.api_test_exceptions import APITesterSessionException
+from je_api_testka.utils.api_test_exceptions import APITesterGetDataException
+from je_api_testka.utils.get_api_data import get_api_response_data
 
 
 def test_api_session(test_url, **kwargs):

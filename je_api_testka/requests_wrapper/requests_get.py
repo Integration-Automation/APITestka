@@ -1,9 +1,9 @@
-from je_api_test.requests_wrapper.requests_data_structure import api_tester_method
+from je_api_testka.requests_wrapper.requests_data_structure import api_tester_method
 
-from je_api_test.utils.api_test_exceptions import APITesterGetJsonException
-from je_api_test.utils.api_test_exceptions import APITesterGetException
-from je_api_test.utils.api_test_exceptions import APITesterGetDataException
-from je_api_test.utils.get_api_data import get_api_response_data
+from je_api_testka.utils.api_test_exceptions import APITesterGetJsonException
+from je_api_testka.utils.api_test_exceptions import APITesterGetException
+from je_api_testka.utils.api_test_exceptions import APITesterGetDataException
+from je_api_testka.utils.get_api_data import get_api_response_data
 
 
 def test_api_get(test_url, **kwargs):
