@@ -8,8 +8,6 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pip
       - run:
           command: pip install --user -r requirements.txt
           name: pip requirements.txt
