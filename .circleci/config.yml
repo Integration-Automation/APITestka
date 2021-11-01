@@ -37,6 +37,10 @@ jobs:
       - run:
           command: python ./circle_ci_test/test_request_put.py
           name: request_session
+      - run:
+          command: python ./circle_ci_test/test_api_get_all_data.py
+          name: test_api_get_all_data
+
 
 
 workflows:
