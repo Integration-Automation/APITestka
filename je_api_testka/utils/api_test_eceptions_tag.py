@@ -18,3 +18,15 @@ api_test_response_code_error = "API tester get wrong response code"
 api_test_response_body_error = "API tester get wrong response body"
 # API response timeout error
 api_test_response_timeout_error = "API tester timeout"
+# API response history error
+api_test_response_history_error = "API tester history error"
+# API response encoding error
+api_test_response_encoding_error = "API tester encoding error"
+# API response cookies error
+api_test_response_cookies_error = "API tester cookies error"
+# API response headers error
+api_test_response_headers_error = "API tester headers error"
+# API response content error
+api_test_response_content_error = "API tester content error"
+# API response text error
+api_test_response_text_error = "API tester text error"
