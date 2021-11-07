@@ -38,7 +38,9 @@ jobs:
       - run:
           command: python ./circle_ci_test/test_api_get_all_data.py
           name: test_api_get_all_data
-
+      - run:
+          command: python ./circle_ci_test/test_json_process.py
+          name: test_json_process
 
 
 workflows:
