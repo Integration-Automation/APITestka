@@ -30,3 +30,8 @@ api_test_response_headers_error = "API tester headers error"
 api_test_response_content_error = "API tester content error"
 # API response text error
 api_test_response_text_error = "API tester text error"
+# API execute action error
+api_test_execute_action_error = "can't execute action"
+# API json error
+api_test_cant_find_json_error = "can't find json"
+api_test_cant_save_json_error = "can't save json"
