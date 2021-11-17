@@ -12,43 +12,43 @@ jobs:
           command: pip install --user -r requirements.txt
           name: pip requirements.txt
       - run:
-          command: python .circle_ci_test/ajax/test_ajax_requests.py
+          command: python ./circle_ci_test/ajax/test_ajax_requests.py
           name: test_ajax_requests
       - run:
-          command: python .circle_ci_test/api_delete/test_request_delete.py
+          command: python ./circle_ci_test/api_delete/test_request_delete.py
           name: test_request_delete
       - run:
-          command: python .circle_ci_test/api_get/test_api_get_all_data.py
+          command: python ./circle_ci_test/api_get/test_api_get_all_data.py
           name: test_api_get_all_data
       - run:
-          command: python .circle_ci_test/api_get/test_request_get.py
+          command: python ./circle_ci_test/api_get/test_request_get.py
           name: test_request_get
       - run:
-          command: python .circle_ci_test/api_head/test_request_head.py
+          command: python ./circle_ci_test/api_head/test_request_head.py
           name: test_request_head
       - run:
-          command: python .circle_ci_test/api_options/test_request_options.py
+          command: python ./circle_ci_test/api_options/test_request_options.py
           name: test_request_options
       - run:
-          command: python .circle_ci_test/api_patch/test_request_patch.py
+          command: python ./circle_ci_test/api_patch/test_request_patch.py
           name: test_request_patch
       - run:
-          command: python .circle_ci_test/api_post/test_request_post.py
+          command: python ./circle_ci_test/api_post/test_request_post.py
           name: test_request_post
       - run:
-          command: python .circle_ci_test/api_put/test_request_put.py
+          command: python ./circle_ci_test/api_put/test_request_put.py
           name: test_request_put
       - run:
-          command: python .circle_ci_test/api_session/test_request_session.py
+          command: python ./circle_ci_test/api_session/test_request_session.py
           name: test_request_session
       - run:
-          command: python .circle_ci_test/util_json_format/test_json_process.py
+          command: python ./circle_ci_test/util_json_format/test_json_process.py
           name: test_json_process
       - run:
-          command: python .circle_ci_test/json/json_test.py
+          command: python ./circle_ci_test/json/json_test.py
           name: json_test
       - run:
-          command: python .circle_ci_test/execute_test/execute_action_test.py
+          command: python ./circle_ci_test/execute_test/execute_action_test.py
           name: execute_action_test
 workflows:
   main:
