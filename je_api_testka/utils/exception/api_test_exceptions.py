@@ -103,3 +103,16 @@ json
 
 class APITesterJsonException(APITesterException):
     pass
+
+
+"""
+xml
+"""
+
+
+class APITesterXMLException(APITesterException):
+    pass
+
+
+class APITesterXMLTypeException(APITesterException):
+    pass

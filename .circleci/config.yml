@@ -61,6 +61,11 @@ jobs:
       - run:
           command: python ./circle_ci_test/execute_test/execute_action_test.py
           name: execute_action_test
+      # xml
+      - run:
+          command: python ./circle_ci_test/xml/xml_test.py
+          name: xml_test
+
 workflows:
   main:
     jobs:
