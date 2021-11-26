@@ -35,6 +35,7 @@ api_test_execute_action_error = "can't execute action"
 # API json error
 api_test_cant_find_json_error = "can't find json"
 api_test_cant_save_json_error = "can't save json"
+api_test_cant_find_element_in_json_error = "can't find element in json"
 # API XML error
 api_test_cant_read_xml_error = "can't read xml"
 api_test_xml_type_error = "xml type error"
