@@ -21,8 +21,5 @@ print(test_loads_json)
 list(test_loads_json)
 
 write_action_json(os.getcwd() + "/test.json", test_dumps_json)
-read_json = read_action_json(os.getcwd() + "/test.json")
-print(read_json)
 read_json = reformat_json(read_action_json(os.getcwd() + "/test.json"))
 print(read_json)
-#
