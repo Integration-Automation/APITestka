@@ -1,3 +1,5 @@
+from je_api_testka import APITesterException
+from je_api_testka import APITesterExecuteException
 from je_api_testka import execute_action
 
 test_action_list = [
@@ -11,3 +13,15 @@ test_action_list = [
 for action_response in execute_action(test_action_list)[1]:
     response = action_response.get("response_data")
     print(response.get("text"))
+
+test_action_list = [
+    ("post", "http://httpbin.org/post", False, {"params": {"task": "new task"}}, "dwadadwadadw", "we4ewa654e6d5w4ad"),
+    ("post", "http://httpbin.org/post")
+]
+
+try:
+    for action_response in execute_action(test_action_list)[1]:
+        response = action_response.get("response_data")
+        print(response.get("text"))
+except APITesterExecuteException as error:
+    print(repr(error))

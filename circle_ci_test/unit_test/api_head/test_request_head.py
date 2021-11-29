@@ -1,6 +1,8 @@
 from je_api_testka import test_api_method
 
 if __name__ == "__main__":
+    import requests
+
     test_response = test_api_method("head", "http://httpbin.org/get", headers={
         'x-requested-with': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -9,3 +11,13 @@ if __name__ == "__main__":
     print(test_response.get("response_data"))
     print(test_response.get("response_data").get("status_code"))
     print(test_response.get("response_data").get("elapsed"))
+    try:
+        test_response = test_api_method("head", "dawdwadaw")
+    except requests.exceptions.MissingSchema as error:
+        print(repr(error))
+    from je_api_testka import APITesterException
+
+    try:
+        test_response = test_api_method("http://httpbin.org/get", "head")
+    except APITesterException as error:
+        print(repr(error))

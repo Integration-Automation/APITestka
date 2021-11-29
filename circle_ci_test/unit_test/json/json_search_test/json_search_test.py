@@ -68,4 +68,3 @@ if __name__ == "__main__":
         print(json_element_find(test_json, "a"))
     except APITesterJsonException as error:
         print(repr(error), file=sys.stderr)
-        
