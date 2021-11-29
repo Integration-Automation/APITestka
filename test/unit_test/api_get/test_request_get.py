@@ -1,4 +1,7 @@
+import sys
+
 from je_api_testka import test_api_method
+
 
 if __name__ == "__main__":
     import requests
@@ -11,10 +14,10 @@ if __name__ == "__main__":
     try:
         test_response = test_api_method("get", "dawdwadaw")
     except requests.exceptions.MissingSchema as error:
-        print(repr(error))
+        print(repr(error), file=sys.stderr)
     from je_api_testka import APITesterException
 
     try:
         test_response = test_api_method("http://httpbin.org/get", "get")
     except APITesterException as error:
-        print(repr(error))
+        print(repr(error), file=sys.stderr)
