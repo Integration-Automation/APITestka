@@ -1,8 +1,9 @@
 # Unknown error
 api_test_error_message = "API tester error"
+wrong_http_method_error_message = "Wrong http method"
 # get data error
 api_test_get_data_error_message = "API tester can't get api data error"
-# API Function error
+# API Http Method error
 api_test_get_error_message = "API tester get error"
 api_test_get_json_error_message = "API tester get json error"
 api_test_put_error_message = "API tester put error"
@@ -35,3 +36,12 @@ api_test_execute_action_error = "can't execute action"
 # API json error
 api_test_cant_find_json_error = "can't find json"
 api_test_cant_save_json_error = "can't save json"
+api_test_cant_reformat_json_error = "can't reformat json is type right?"
+api_test_cant_find_element_in_json_error = "can't find element in json"
+api_test_json_type_error = "json type error"
+wrong_json_data_error = "can't parser json"
+# API XML error
+api_test_cant_read_xml_error = "can't read xml"
+api_test_xml_type_error = "xml type error"
+# Executor error
+executor_data_error = "executor receive wrong data"
