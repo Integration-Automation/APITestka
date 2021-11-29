@@ -1,10 +1,14 @@
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_execute_action_error
 from je_api_testka.utils.exception.api_test_exceptions import APITesterExecuteException
+from je_api_testka.utils.exception.api_test_eceptions_tag import executor_data_error
 
 
 def execute_event(action):
-    return test_api_method(action[0], action[1], action[2], **action[3])
+    if len(action) == 4:
+        return test_api_method(action[0], action[1], action[2], **action[3])
+    else:
+        raise APITesterExecuteException(executor_data_error)
 
 
 def execute_action(action_list):

@@ -1,3 +1,4 @@
+from requests import Session
 from requests import delete
 from requests import get
 from requests import head
@@ -5,7 +6,9 @@ from requests import options
 from requests import patch
 from requests import post
 from requests import put
-from requests import Session
+
+from je_api_testka.utils.exception.api_test_eceptions_tag import wrong_http_method_error_message
+from je_api_testka.utils.exception.api_test_exceptions import APITesterException
 
 session = Session()
 
@@ -30,8 +33,9 @@ def get_http_method(http_method: str):
 
 
 def api_tester_method(http_method: str, test_url: str, **kwargs):
-    if kwargs is None:
-        response = get_http_method(http_method)(test_url)
+    response = get_http_method(http_method)
+    if response is None:
+        raise APITesterException(wrong_http_method_error_message)
     else:
-        response = get_http_method(http_method)(test_url, **kwargs)
+        response = response(test_url, **kwargs)
     return response

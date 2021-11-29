@@ -12,6 +12,7 @@ jobs:
       - run:
           command: pip install --user -r requirements.txt
           name: pip requirements.txt
+      # unit test start
       # ajax test
       - run:
           command: python ./circle_ci_test/unit_test/ajax/test_ajax_requests.py
@@ -68,6 +69,11 @@ jobs:
       - run:
           command: python ./circle_ci_test/unit_test/xml/xml_test.py
           name: xml_test
+      # unit test end
+      # integrated test start
+      - run:
+          command: python ./circle_ci_test/integrated_test/get_and_reformat_json/get_and_get_json_data.py
+          name: get_and_get_json_data
 
 workflows:
   main:

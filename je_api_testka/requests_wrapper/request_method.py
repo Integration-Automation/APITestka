@@ -50,10 +50,6 @@ def get_response(response, get_json=False):
 
 
 def test_api_method(http_method: str, test_url: str, get_json=False, **kwargs):
-    try:
-        response = api_tester_method(http_method, test_url=test_url, **kwargs)
-    except APITesterException:
-        exception_message = exception_message_dict.get(http_method)
-        raise APITesterException(exception_message)
+    response = api_tester_method(http_method, test_url=test_url, **kwargs)
     response_data = get_response(response, get_json)
     return {"response": response, "response_data": response_data}

@@ -1,3 +1,5 @@
+import requests.exceptions
+
 from je_api_testka import test_api_method
 
 if __name__ == "__main__":
@@ -5,3 +7,13 @@ if __name__ == "__main__":
     print(test_response.get("response_data").get("status_code"))
     print(test_response.get("response_data").get("text"))
     print(test_response.get("response_data").get("elapsed"))
+    try:
+        test_response = test_api_method("delete", "wadwaddawdwa")
+    except requests.exceptions.MissingSchema as error:
+        print(repr(error))
+    from je_api_testka import APITesterException
+
+    try:
+        test_response = test_api_method("dwadadwawd", "delete")
+    except APITesterException as error:
+        print(repr(error))
