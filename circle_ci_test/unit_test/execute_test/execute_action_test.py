@@ -1,3 +1,5 @@
+import sys
+
 from je_api_testka import APITesterException
 from je_api_testka import APITesterExecuteException
 from je_api_testka import execute_action
@@ -24,4 +26,4 @@ try:
         response = action_response.get("response_data")
         print(response.get("text"))
 except APITesterExecuteException as error:
-    print(repr(error))
+    print(repr(error), file=sys.stderr)
