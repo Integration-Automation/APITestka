@@ -1,3 +1,6 @@
+import sys
+import xml.etree.ElementTree
+
 from je_api_testka import XMLParser
 
 test_xml_string = \
@@ -47,4 +50,75 @@ for event, elements in xml_parse.xml_iterparse("test.xml"):
         print()
     elements.clear()
 
+test_xml_string = \
+    """
+        wdadwdadwwawdwdawdwafmjawk;gkA:OH？lmkjha'l[wmjho[
+        jaHWOdwadwk;ajdwakdjda;awdkjl;jaw;daj;adjwda;jfgoa:KNWHiughdwa
+        MJw;pkgh
+        wpahkw'[spmjhaMJHW"{AML"OW
+        jWL"{jhao[wja[who
+        ja[lwjhm[W"JHahjm
+    """
+try:
+    xml_parse = XMLParser(test_xml_string, "string")
+except xml.etree.ElementTree.ParseError as error:
+    print(repr(error), file=sys.stderr)
+for child in xml_parse.find_tag():
+    child_content = [child.tag, child.attrib, child.text]
+    for content in child_content:
+        if content is not None:
+            print(content, end=" ")
+        else:
+            continue
+    print()
 
+test_xml_string = \
+    """
+        <?xml version="1.0"?>
+        <data>
+        </data>
+    """
+xml_parse = XMLParser(test_xml_string, "string")
+for child in xml_parse.find_tag():
+    child_content = [child.tag, child.attrib, child.text]
+    for content in child_content:
+        if content is not None:
+            print(content, end=" ")
+        else:
+            continue
+    print()
+
+test_xml_string = \
+    """
+        <?xml version="1.0"?>
+        <data>
+        '"''dwl;dwa;ldkawdl;kdwal;dk;lawd
+        </data>
+    """
+xml_parse = XMLParser(test_xml_string, "string")
+for child in xml_parse.find_tag():
+    child_content = [child.tag, child.attrib, child.text]
+    for content in child_content:
+        if content is not None:
+            print(content, end=" ")
+        else:
+            continue
+    print()
+
+test_xml_string = \
+    """
+        <?xml version="1.0"?>
+        dwadwadwaadwdadwdwa
+    """
+try:
+    xml_parse = XMLParser(test_xml_string, "string")
+except xml.etree.ElementTree.ParseError as error:
+    print(repr(error), file=sys.stderr)
+for child in xml_parse.find_tag():
+    child_content = [child.tag, child.attrib, child.text]
+    for content in child_content:
+        if content is not None:
+            print(content, end=" ")
+        else:
+            continue
+    print()
