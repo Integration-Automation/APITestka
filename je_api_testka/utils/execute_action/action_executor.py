@@ -3,10 +3,16 @@ from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_execut
 from je_api_testka.utils.exception.api_test_exceptions import APITesterExecuteException
 from je_api_testka.utils.exception.api_test_eceptions_tag import executor_data_error
 
+event_dict = {
+    # test api
+    "test_api_method": test_api_method,
+}
+
 
 def execute_event(action):
-    if len(action) == 1:
-        return test_api_method(**action[0])
+    event = event_dict.get(action[0])
+    if len(action) == 2:
+        return event(**action[1])
     else:
         raise APITesterExecuteException(executor_data_error)
 

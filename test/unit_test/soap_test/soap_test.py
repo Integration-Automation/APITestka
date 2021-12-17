@@ -1,5 +1,5 @@
-from je_api_testka import test_soap_method
 from je_api_testka import reformat_xml_file
+from je_api_testka import test_api_method
 
 url = "https://www.w3schools.com/xml/tempconvert.asmx"
 data = """
@@ -12,6 +12,6 @@ data = """
 </soap12:Envelope>
 """
 
-test_result = test_soap_method(http_method="POST", test_url=url, data=data)
+test_result = test_api_method(http_method="post", test_url=url, get_json=False, soap=True, data=data)
 print(test_result.get("response_data").get("text"))
 print(reformat_xml_file(test_result.get("response_data").get("text")))
