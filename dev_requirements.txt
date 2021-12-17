@@ -4,3 +4,4 @@ flask_restful
 wheel
 twine
 sphinx
+je_api_testka_dev

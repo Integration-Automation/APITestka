@@ -1,9 +1,18 @@
+import xml.dom.minidom
 from xml.etree import ElementTree
+from xml.dom.minidom import parse
+from xml.dom.minidom import parseString
+from xml.dom import minidom
 
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_read_xml_error
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_xml_type_error
 from je_api_testka.utils.exception.api_test_exceptions import APITesterXMLException
 from je_api_testka.utils.exception.api_test_exceptions import APITesterXMLTypeException
+
+
+def reformat_xml_file(xml_string: str):
+    dom = xml.dom.minidom.parseString(xml_string)
+    return dom.toprettyxml()
 
 
 class XMLParser(object):
@@ -12,7 +21,7 @@ class XMLParser(object):
         self.element_tree = ElementTree
         self.tree = None
         self.xml_root = None
-        self.xml_from = "string"
+        self.xml_from_type = "string"
         self.xml_string = xml_string.strip()
         type = type.lower()
         if type not in ["file", "string"]:
@@ -35,11 +44,11 @@ class XMLParser(object):
         except APITesterXMLException:
             raise APITesterXMLException(api_test_cant_read_xml_error)
         self.xml_root = self.tree.getroot()
-        self.xml_from = "file"
+        self.xml_from_type = "file"
         return self.xml_root
 
     def find_tag(self, tag_name: [str, None] = None):
-        if self.xml_from == "string":
+        if self.xml_from_type == "string":
             return self.xml_root.iter(tag_name)
         else:
             return self.tree.iter(tag_name)

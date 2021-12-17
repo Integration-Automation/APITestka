@@ -1,4 +1,5 @@
 from je_api_testka.requests_wrapper.requests_data_structure import api_tester_method
+from requests.structures import CaseInsensitiveDict
 
 from je_api_testka.utils.exception.api_test_exceptions import APITesterException
 from je_api_testka.utils.exception.api_test_exceptions import APITesterGetDataException
@@ -49,7 +50,12 @@ def get_response(response, get_json=False):
             raise APITesterGetDataException(api_test_get_data_error_message)
 
 
-def test_api_method(http_method: str, test_url: str, get_json=False, **kwargs):
-    response = api_tester_method(http_method, test_url=test_url, **kwargs)
+def test_api_method(http_method: str, test_url: str, get_json=False, soap=False, **kwargs):
+    if soap is False:
+        response = api_tester_method(http_method, test_url=test_url, **kwargs)
+    else:
+        headers = CaseInsensitiveDict()
+        headers["Content-Type"] = "application/soap+xml"
+        return test_api_method(http_method, test_url=test_url, headers=headers, **kwargs)
     response_data = get_response(response, get_json)
     return {"response": response, "response_data": response_data}
