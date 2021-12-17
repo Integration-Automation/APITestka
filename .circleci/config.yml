@@ -10,7 +10,7 @@ jobs:
       - checkout
       # pip require package
       - run:
-          command: pip install --user -r requirements.txt
+          command: pip install --user -r dev_requirements.txt
           name: pip requirements.txt
       # unit test start
       # ajax test
@@ -68,6 +68,10 @@ jobs:
       # xml
       - run:
           command: python ./circle_ci_test/unit_test/xml/xml_test.py
+          name: xml_test
+      # soap
+      - run:
+          command: python ./circle_ci_test/unit_test/soap_test/soap_test.py
           name: xml_test
       # unit test end
       # integrated test start

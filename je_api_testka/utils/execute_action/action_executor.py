@@ -5,8 +5,8 @@ from je_api_testka.utils.exception.api_test_eceptions_tag import executor_data_e
 
 
 def execute_event(action):
-    if len(action) == 4:
-        return test_api_method(action[0], action[1], action[2], **action[3])
+    if len(action) == 1:
+        return test_api_method(**action[0])
     else:
         raise APITesterExecuteException(executor_data_error)
 
