@@ -4,7 +4,7 @@ orbs:
   python: circleci/python@1.4.0
 
 jobs:
-  build-and-test:
+  build-and-test-dev:
     executor: python/default
     steps:
       - checkout
@@ -15,71 +15,149 @@ jobs:
       # unit test start
       # ajax test
       - run:
-          command: python ./circle_ci_test/unit_test/ajax/test_ajax_requests.py
+          command: python ./circle_ci_test_dev/unit_test/ajax/test_ajax_requests.py
           name: test_ajax_requests
       # api delete test
       - run:
-          command: python ./circle_ci_test/unit_test/api_delete/test_request_delete.py
+          command: python ./circle_ci_test_dev/unit_test/api_delete/test_request_delete.py
           name: test_request_delete
       # api get test
       - run:
-          command: python ./circle_ci_test/unit_test/api_get/test_api_get_all_data.py
+          command: python ./circle_ci_test_dev/unit_test/api_get/test_api_get_all_data.py
           name: test_api_get_all_data
       - run:
-          command: python ./circle_ci_test/unit_test/api_get/test_request_get.py
+          command: python ./circle_ci_test_dev/unit_test/api_get/test_request_get.py
           name: test_request_get
       # api head test
       - run:
-          command: python ./circle_ci_test/unit_test/api_head/test_request_head.py
+          command: python ./circle_ci_test_dev/unit_test/api_head/test_request_head.py
           name: test_request_head
       # api options test
       - run:
-          command: python ./circle_ci_test/unit_test/api_options/test_request_options.py
+          command: python ./circle_ci_test_dev/unit_test/api_options/test_request_options.py
           name: test_request_options
       - run:
-          command: python ./circle_ci_test/unit_test/api_patch/test_request_patch.py
+          command: python ./circle_ci_test_dev/unit_test/api_patch/test_request_patch.py
           name: test_request_patch
       # api post test
       - run:
-          command: python ./circle_ci_test/unit_test/api_post/test_request_post.py
+          command: python ./circle_ci_test_dev/unit_test/api_post/test_request_post.py
           name: test_request_post
       # api put test
       - run:
-          command: python ./circle_ci_test/unit_test/api_put/test_request_put.py
+          command: python ./circle_ci_test_dev/unit_test/api_put/test_request_put.py
           name: test_request_put
       # api session test
       - run:
-          command: python ./circle_ci_test/unit_test/api_session/test_request_session.py
+          command: python ./circle_ci_test_dev/unit_test/api_session/test_request_session.py
           name: test_request_session
       # json test
       - run:
-          command: python ./circle_ci_test/unit_test/json/json_reformat_test/test_json_process.py
+          command: python ./circle_ci_test_dev/unit_test/json/json_reformat_test/test_json_process.py
           name: test_json_process
       - run:
-          command: python ./circle_ci_test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
+          command: python ./circle_ci_test_dev/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
           name: rw_and_reformat_json_test
       - run:
-          command: python ./circle_ci_test/unit_test/json/json_search_test/json_search_test.py
+          command: python ./circle_ci_test_dev/unit_test/json/json_search_test/json_search_test.py
           name: json_search_test
       # execute test
       - run:
-          command: python ./circle_ci_test/unit_test/execute_test/execute_action_test.py
+          command: python ./circle_ci_test_dev/unit_test/execute_test/execute_action_test.py
           name: execute_action_test
       # xml
       - run:
-          command: python ./circle_ci_test/unit_test/xml/xml_test.py
+          command: python ./circle_ci_test_dev/unit_test/xml/xml_test.py
           name: xml_test
       # soap
       - run:
-          command: python ./circle_ci_test/unit_test/soap_test/soap_test.py
+          command: python ./circle_ci_test_dev/unit_test/soap_test/soap_test.py
           name: soap_test
       # unit test end
       # integrated test start
       - run:
-          command: python ./circle_ci_test/integrated_test/get_and_reformat_json/get_and_get_json_data.py
+          command: python ./circle_ci_test_dev/integrated_test/get_and_reformat_json/get_and_get_json_data.py
           name: get_and_get_json_data
+
+    build-and-test-stable:
+      executor: python/default
+      steps:
+        - checkout
+        # pip require package
+        - run:
+            command: pip install --user -r requirements.txt
+            name: pip requirements.txt
+        # unit test start
+        # ajax test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/ajax/test_ajax_requests.py
+            name: test_ajax_requests
+        # api delete test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_delete/test_request_delete.py
+            name: test_request_delete
+        # api get test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_get/test_api_get_all_data.py
+            name: test_api_get_all_data
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_get/test_request_get.py
+            name: test_request_get
+        # api head test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_head/test_request_head.py
+            name: test_request_head
+        # api options test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_options/test_request_options.py
+            name: test_request_options
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_patch/test_request_patch.py
+            name: test_request_patch
+        # api post test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_post/test_request_post.py
+            name: test_request_post
+        # api put test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_put/test_request_put.py
+            name: test_request_put
+        # api session test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/api_session/test_request_session.py
+            name: test_request_session
+        # json test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/json/json_reformat_test/test_json_process.py
+            name: test_json_process
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
+            name: rw_and_reformat_json_test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/json/json_search_test/json_search_test.py
+            name: json_search_test
+        # execute test
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/execute_test/execute_action_test.py
+            name: execute_action_test
+        # xml
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/xml/xml_test.py
+            name: xml_test
+        # soap
+        - run:
+            command: python ./circle_ci_test_stable/unit_test/soap_test/soap_test.py
+            name: soap_test
+        # unit test end
+        # integrated test start
+        - run:
+            command: python ./circle_ci_test_stable/integrated_test/get_and_reformat_json/get_and_get_json_data.py
+            name: get_and_get_json_data
 
 workflows:
   main:
     jobs:
-      - build-and-test
+      - build-and-test-dev
+      - build-and-test-stable:
+          requires:
+            - build-and-test-dev
