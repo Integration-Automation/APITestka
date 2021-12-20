@@ -92,3 +92,49 @@ class APITesterXMLException(APITesterException):
 
 class APITesterXMLTypeException(APITesterException):
     pass
+
+# API data check
+
+
+class APIStatusCodeException(APITesterException):
+    pass
+
+
+class APITextException(APITesterException):
+    pass
+
+
+class APIContentException(APITesterException):
+    pass
+
+
+class APIHeadersException(APITesterException):
+    pass
+
+
+class APIHistoryException(APITesterException):
+    pass
+
+
+class APIEncodingException(APITesterException):
+    pass
+
+
+class APICookiesException(APITesterException):
+    pass
+
+
+class APIElapsedException(APITesterException):
+    pass
+
+
+class APIRequestsMethodException(APITesterException):
+    pass
+
+
+class APIRequestsUrlException(APITesterException):
+    pass
+
+
+class APIRequestsBodyException(APITesterException):
+    pass
