@@ -13,6 +13,19 @@ from je_api_testka.utils.exception.api_test_exceptions import APITesterOptionsEx
 from je_api_testka.utils.exception.api_test_exceptions import APITesterPatchException
 from je_api_testka.utils.exception.api_test_exceptions import APITesterPostException
 from je_api_testka.utils.exception.api_test_exceptions import APITesterSessionException
+from je_api_testka.utils.exception.api_test_exceptions import APITesterXMLException
+from je_api_testka.utils.exception.api_test_exceptions import APITesterXMLTypeException
+from je_api_testka.utils.exception.api_test_exceptions import APIStatusCodeException
+from je_api_testka.utils.exception.api_test_exceptions import APITextException
+from je_api_testka.utils.exception.api_test_exceptions import APIContentException
+from je_api_testka.utils.exception.api_test_exceptions import APIHeadersException
+from je_api_testka.utils.exception.api_test_exceptions import APIHistoryException
+from je_api_testka.utils.exception.api_test_exceptions import APIEncodingException
+from je_api_testka.utils.exception.api_test_exceptions import APICookiesException
+from je_api_testka.utils.exception.api_test_exceptions import APIElapsedException
+from je_api_testka.utils.exception.api_test_exceptions import APIRequestsMethodException
+from je_api_testka.utils.exception.api_test_exceptions import APIRequestsUrlException
+from je_api_testka.utils.exception.api_test_exceptions import APIRequestsBodyException
 # execute
 from je_api_testka.utils.execute_action.action_executor import execute_action
 # json

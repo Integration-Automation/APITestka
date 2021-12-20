@@ -100,29 +100,41 @@ class APIStatusCodeException(APITesterException):
     pass
 
 
-class APITextCodeException(APITesterException):
+class APITextException(APITesterException):
     pass
 
 
-class APIContentCodeException(APITesterException):
+class APIContentException(APITesterException):
     pass
 
 
-class APIHeaderCodeException(APITesterException):
+class APIHeadersException(APITesterException):
     pass
 
 
-class APIHistoryCodeException(APITesterException):
+class APIHistoryException(APITesterException):
     pass
 
 
-class APIEncodingCodeException(APITesterException):
+class APIEncodingException(APITesterException):
     pass
 
 
-class APICookiesCodeException(APITesterException):
+class APICookiesException(APITesterException):
     pass
 
 
-class APIElapsedCodeException(APITesterException):
+class APIElapsedException(APITesterException):
+    pass
+
+
+class APIRequestsMethodException(APITesterException):
+    pass
+
+
+class APIRequestsUrlException(APITesterException):
+    pass
+
+
+class APIRequestsBodyException(APITesterException):
     pass
