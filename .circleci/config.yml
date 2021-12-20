@@ -82,6 +82,7 @@ jobs:
   build-and-test-stable:
     executor: python/default
     steps:
+      - checkout
       # pip require package
       - run:
           command: pip install --user -r requirements.txt
