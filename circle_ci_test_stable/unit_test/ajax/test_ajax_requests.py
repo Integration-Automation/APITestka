@@ -1,3 +1,5 @@
+import sys
+
 import requests.exceptions
 
 from je_api_testka import test_api_method
@@ -23,8 +25,8 @@ if __name__ == "__main__":
     try:
         test_response_get = test_api_method("dwadwadadw", "dwadawdwdadw", headers={"aa": "ttawtwafaw"})
     except APITesterException as error:
-        print(repr(error))
+        print(repr(error), file=sys.stderr)
     try:
         new_test_response_get = test_api_method("get", "dwadawdwdadw", headers={"aa": "ttawtwafaw"})
     except requests.exceptions.MissingSchema as error:
-        print(repr(error))
+        print(repr(error), file=sys.stderr)
