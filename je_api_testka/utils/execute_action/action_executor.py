@@ -9,7 +9,7 @@ event_dict = {
 }
 
 
-def execute_event(action):
+def execute_event(action: list):
     event = event_dict.get(action[0])
     if len(action) == 2:
         return event(**action[1])
@@ -17,7 +17,7 @@ def execute_event(action):
         raise APITesterExecuteException(executor_data_error)
 
 
-def execute_action(action_list):
+def execute_action(action_list: list):
     execute_record_string = ""
     event_response_list = []
     for action in action_list:

@@ -36,7 +36,7 @@ exception_message_dict = {
 }
 
 
-def get_response(response, get_json=False):
+def get_response(response, get_json: bool = False):
     if get_json:
         response_data = {
             "status_code": response.status_code,
@@ -50,7 +50,7 @@ def get_response(response, get_json=False):
             raise APITesterGetDataException(api_test_get_data_error_message)
 
 
-def test_api_method(http_method: str, test_url: str, get_json=False, soap=False, **kwargs):
+def test_api_method(http_method: str, test_url: str, get_json: bool = False, soap: bool = False, **kwargs):
     if soap is False:
         response = api_tester_method(http_method, test_url=test_url, **kwargs)
     else:

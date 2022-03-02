@@ -14,7 +14,7 @@ session = Session()
 
 
 def get_http_method(http_method: str):
-    http_method= str(http_method).lower()
+    http_method = str(http_method).lower()
     return {
         "get": get,
         "put": put,

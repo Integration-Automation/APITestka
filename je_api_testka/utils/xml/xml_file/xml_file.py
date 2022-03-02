@@ -17,16 +17,16 @@ def reformat_xml_file(xml_string: str):
 
 class XMLParser(object):
 
-    def __init__(self, xml_string: str, type: str):
+    def __init__(self, xml_string: str, xml_type: str):
         self.element_tree = ElementTree
         self.tree = None
         self.xml_root = None
         self.xml_from_type = "string"
         self.xml_string = xml_string.strip()
-        type = type.lower()
-        if type not in ["file", "string"]:
+        xml_type = xml_type.lower()
+        if xml_type not in ["file", "string"]:
             raise APITesterXMLTypeException(api_test_xml_type_error)
-        if type == "string":
+        if xml_type == "string":
             self.xml_parser_from_string()
         else:
             self.xml_parser_from_file()
