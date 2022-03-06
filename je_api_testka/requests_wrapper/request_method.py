@@ -16,6 +16,7 @@ from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_option
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_patch_error_message
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_session_error_message
 
+from je_api_testka.record.record import record
 
 exception_message_dict = {
     "get": api_test_get_error_message,
@@ -50,7 +51,9 @@ def get_response(response, get_json: bool = False):
             raise APITesterGetDataException(api_test_get_data_error_message)
 
 
-def test_api_method(http_method: str, test_url: str, get_json: bool = False, soap: bool = False, **kwargs):
+def test_api_method(http_method: str, test_url: str, get_json: bool = False,
+                    soap: bool = False, record_request_info: bool = False,
+                    clean_record: bool = False, **kwargs):
     if soap is False:
         response = api_tester_method(http_method, test_url=test_url, **kwargs)
     else:
@@ -58,4 +61,8 @@ def test_api_method(http_method: str, test_url: str, get_json: bool = False, soa
         headers["Content-Type"] = "application/soap+xml"
         return test_api_method(http_method, test_url=test_url, headers=headers, **kwargs)
     response_data = get_response(response, get_json)
+    if record_request_info:
+        record.record_list.append(response_data)
+    elif clean_record:
+        record.clean_record()
     return {"response": response, "response_data": response_data}

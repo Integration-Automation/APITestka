@@ -9,6 +9,8 @@ if __name__ == "__main__":
     print(test_response.get("response_data").get("status_code"))
     print(test_response.get("response_data").get("text"))
     print(test_response.get("response_data").get("elapsed"))
+    print(test_response.get("response_data").get("elapsed").total_seconds())
+    print(test_response.get("response_data").get("request_time_sec"))
     try:
         test_response = test_api_method("delete", "wadwaddawdwa")
     except requests.exceptions.MissingSchema as error:
