@@ -16,6 +16,9 @@ setuptools.setup(
     install_requires=[
         "requests",
     ],
+    extras_require=[
+        "je_matplotlib_wrapper",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3.5",
         "Development Status :: 2 - Pre-Alpha",

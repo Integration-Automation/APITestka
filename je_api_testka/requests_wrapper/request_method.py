@@ -52,7 +52,7 @@ def get_response(response, get_json: bool = False):
 
 
 def test_api_method(http_method: str, test_url: str, get_json: bool = False,
-                    soap: bool = False, record_request_info: bool = False,
+                    soap: bool = False, record_request_info: bool = True,
                     clean_record: bool = False, **kwargs):
     if soap is False:
         response = api_tester_method(http_method, test_url=test_url, **kwargs)

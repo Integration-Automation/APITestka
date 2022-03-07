@@ -10,8 +10,7 @@ test_action_list = [
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36',
     }}],
-    ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
-                         "record_request_info": True}]
+    ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}]
 ]
 
 for action_response in execute_action(test_action_list)[1]:
@@ -58,7 +57,8 @@ except APITesterExecuteException as error:
 test_action_list = [
     ["test_api_method", {"http_method": "dwadawdwaw",
                          "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
-    ["test_api_method", {"http_method": "dwadwadwadaw", "test_url": "http://httpbin.org/post"}]
+    ["test_api_method", {"http_method": "dwadwadwadaw", "test_url": "http://httpbin.org/post",
+                         "record_request_info": False}]
 ]
 
 try:
