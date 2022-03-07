@@ -10,8 +10,7 @@ test_action_list = [
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36',
     }}],
-    ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
-                         "record_request_info": True}]
+    ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}]
 ]
 
 for action_response in execute_action(test_action_list)[1]:
@@ -46,7 +45,6 @@ test_action_list = [
     ["test_api_method", {"http_method": "post", "test_url": url, "get_json": False, "soap": True, "data": data}],
 ]
 
-
 try:
     for action_response in execute_action(test_action_list)[1]:
         response = action_response.get("response_data")
@@ -54,11 +52,11 @@ try:
 except APITesterExecuteException as error:
     print(repr(error), file=sys.stderr)
 
-
 test_action_list = [
     ["test_api_method", {"http_method": "dwadawdwaw",
                          "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
-    ["test_api_method", {"http_method": "dwadwadwadaw", "test_url": "http://httpbin.org/post"}]
+    ["test_api_method", {"http_method": "dwadwadwadaw", "test_url": "http://httpbin.org/post",
+                         "record_request_info": False}]
 ]
 
 try:
@@ -68,6 +66,23 @@ try:
 except APITesterExecuteException as error:
     print(repr(error), file=sys.stderr)
 
-
 print(record.record_list)
 print(record.error_record_list)
+
+request_time_list = list()
+request_url_list = list()
+
+for i in record.record_list:
+    request_time_list.append(i.get("request_time_sec"))
+    request_url_list.append(i.get("request_url"))
+
+print(request_time_list)
+print(request_url_list)
+
+from je_matplotlib_wrapper import set_tkinter_embed_matplotlib_barh
+from tkinter import Tk
+
+set_tkinter_embed_matplotlib_barh(y_content_list=request_url_list,
+                                  x_content_list=request_time_list,
+                                  show_figure_window=Tk(),
+                                  )

@@ -5,3 +5,4 @@ wheel
 twine
 sphinx
 je_api_testka_dev
+je_matplotlib_wrapper_dev
