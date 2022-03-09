@@ -18,7 +18,7 @@ if __name__ == "__main__":
     print(test_response.get("response_data").get("request_method"))
     print(test_response.get("response_data").get("request_url"))
     print(test_response.get("response_data").get("request_body"))
-    test_response = test_api_method("get", "http://httpbin.org/get", get_json=True)
+    test_response = test_api_method("get", "http://httpbin.org/get")
     print(test_response.get("response_data").get("status_code"))
     print(test_response.get("response_data").get("json_data"))
     try:

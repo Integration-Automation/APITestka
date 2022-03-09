@@ -37,21 +37,14 @@ exception_message_dict = {
 }
 
 
-def get_response(response, get_json: bool = False):
-    if get_json:
-        response_data = {
-            "status_code": response.status_code,
-            "json_data": response.json()
-        }
-        return response_data
-    else:
-        try:
-            return get_api_response_data(response)
-        except APITesterGetDataException:
-            raise APITesterGetDataException(api_test_get_data_error_message)
+def get_response(response):
+    try:
+        return get_api_response_data(response)
+    except APITesterGetDataException:
+        raise APITesterGetDataException(api_test_get_data_error_message)
 
 
-def test_api_method(http_method: str, test_url: str, get_json: bool = False,
+def test_api_method(http_method: str, test_url: str,
                     soap: bool = False, record_request_info: bool = True,
                     clean_record: bool = False, **kwargs):
     if soap is False:
@@ -60,7 +53,7 @@ def test_api_method(http_method: str, test_url: str, get_json: bool = False,
         headers = CaseInsensitiveDict()
         headers["Content-Type"] = "application/soap+xml"
         return test_api_method(http_method, test_url=test_url, headers=headers, **kwargs)
-    response_data = get_response(response, get_json)
+    response_data = get_response(response)
     if record_request_info:
         record.record_list.append(response_data)
     elif clean_record:

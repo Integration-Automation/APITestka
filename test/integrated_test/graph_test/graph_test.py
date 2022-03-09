@@ -14,7 +14,7 @@ data = """
 """
 
 test_action_list = [
-    ["test_api_method", {"http_method": "post", "test_url": url, "get_json": False, "soap": True, "data": data}],
+    ["test_api_method", {"http_method": "post", "test_url": url, "soap": True, "data": data}],
 ]
 
 try:
