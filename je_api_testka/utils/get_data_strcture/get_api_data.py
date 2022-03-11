@@ -1,11 +1,11 @@
+import requests.exceptions
 from requests.utils import dict_from_cookiejar
 
 
 def get_api_response_data(response, start_time, end_time):
-    return {
+    response_data = {
         "status_code": response.status_code,
         "text": response.text,
-        "json": response.json(),
         "content": response.content,
         "headers": response.headers,
         "history": response.history,
@@ -19,3 +19,11 @@ def get_api_response_data(response, start_time, end_time):
         "start_time": start_time,
         "end_time": end_time
     }
+    try:
+        if response_data.get("status_code") == 200:
+            response_data.update({"json": response.json()})
+        else:
+            pass
+    except requests.exceptions.JSONDecodeError:
+        response_data.update({"json": "can't get json"})
+    return response_data
