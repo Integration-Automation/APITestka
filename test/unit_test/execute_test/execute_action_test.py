@@ -83,10 +83,3 @@ for i in record.record_list:
 print(request_time_list)
 print(request_url_list)
 
-from je_matplotlib_wrapper import set_tkinter_embed_matplotlib_barh
-from tkinter import Tk
-
-set_tkinter_embed_matplotlib_barh(y_content_list=request_url_list,
-                                  x_content_list=request_time_list,
-                                  show_figure_window=Tk(),
-                                  )
