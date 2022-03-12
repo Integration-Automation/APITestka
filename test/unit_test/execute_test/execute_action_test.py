@@ -16,6 +16,10 @@ test_action_list = [
 for action_response in execute_action(test_action_list)[1]:
     response = action_response.get("response_data")
     print(response.get("text"))
+    print(response.get("start_time"))
+    print(response.get("end_time"))
+    assert response.get("start_time") is not None
+    assert response.get("end_time") is not None
 
 test_action_list = [
     ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
@@ -42,7 +46,7 @@ data = """
 """
 
 test_action_list = [
-    ["test_api_method", {"http_method": "post", "test_url": url, "get_json": False, "soap": True, "data": data}],
+    ["test_api_method", {"http_method": "post", "test_url": url, "soap": True, "data": data}],
 ]
 
 try:
@@ -79,10 +83,3 @@ for i in record.record_list:
 print(request_time_list)
 print(request_url_list)
 
-from je_matplotlib_wrapper import set_tkinter_embed_matplotlib_barh
-from tkinter import Tk
-
-set_tkinter_embed_matplotlib_barh(y_content_list=request_url_list,
-                                  x_content_list=request_time_list,
-                                  show_figure_window=Tk(),
-                                  )
