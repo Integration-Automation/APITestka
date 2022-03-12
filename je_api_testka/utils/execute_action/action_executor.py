@@ -5,7 +5,7 @@ from je_api_testka.record.record import record
 
 event_dict = {
     # test api
-    "test_api_method": test_api_method,
+        "test_api_method": test_api_method,
 }
 
 
