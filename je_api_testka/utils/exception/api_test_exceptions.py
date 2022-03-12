@@ -93,6 +93,7 @@ class APITesterXMLException(APITesterException):
 class APITesterXMLTypeException(APITesterException):
     pass
 
+
 # API data check
 
 
@@ -137,4 +138,10 @@ class APIRequestsUrlException(APITesterException):
 
 
 class APIRequestsBodyException(APITesterException):
+    pass
+
+
+# check exception
+
+class APIAssertException(APITesterException):
     pass

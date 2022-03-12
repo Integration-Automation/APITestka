@@ -5,7 +5,7 @@ from je_api_testka.record.record import record
 
 event_dict = {
     # test api
-        "test_api_method": test_api_method,
+    "test_api_method": test_api_method,
 }
 
 
@@ -30,5 +30,3 @@ def execute_action(action_list: list):
             print(repr(error))
             record.error_record_list.append([action, repr(error)])
     return execute_record_string, event_response_list
-
-
