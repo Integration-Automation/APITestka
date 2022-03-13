@@ -3,7 +3,6 @@ import datetime
 from je_api_testka.requests_wrapper.requests_http_method_wrapper import api_tester_method
 from requests.structures import CaseInsensitiveDict
 
-from je_api_testka.utils.exception.api_test_exceptions import APITesterException
 from je_api_testka.utils.exception.api_test_exceptions import APITesterGetDataException
 from je_api_testka.utils.get_data_strcture.get_api_data import get_api_response_data
 
@@ -18,7 +17,7 @@ from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_option
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_patch_error_message
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_session_error_message
 
-from je_api_testka.record.record import record
+from je_api_testka.utils.record.record_class import record
 
 from je_api_testka.utils.assert_result.result_check import check_result
 
