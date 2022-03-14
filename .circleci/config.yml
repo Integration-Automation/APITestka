@@ -131,7 +131,7 @@ jobs:
           command: python ./test/unit_test/json/json_reformat_test/test_json_process.py
           name: test_json_process
       - run:
-          command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
+          command: python ./test/unit_test/json/rw_and_reformat_json_test
           name: rw_and_reformat_json_test
       - run:
           command: python ./test/unit_test/json/json_search_test/json_search_test.py
