@@ -6,6 +6,7 @@ from je_api_testka.utils.exception.api_test_exceptions import APITesterJsonExcep
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_find_json_error
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_save_json_error
 
+
 lock = Lock()
 
 
@@ -18,7 +19,7 @@ def read_action_json(json_file_path: str):
         file_path = Path(json_file_path)
         if file_path.exists() and file_path.is_file():
             with open(json_file_path) as read_file:
-                return read_file.read()
+                return json.load(read_file)
     except APITesterJsonException:
         raise APITesterJsonException(api_test_cant_find_json_error)
     finally:
