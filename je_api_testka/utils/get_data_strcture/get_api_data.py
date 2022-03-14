@@ -23,7 +23,7 @@ def get_api_response_data(response, start_time, end_time):
         if response_data.get("status_code") == 200:
             response_data.update({"json": response.json()})
         else:
-            pass
+            response_data.update({"json": None})
     except requests.exceptions.JSONDecodeError:
-        response_data.update({"json": "can't get json"})
+        response_data.update({"json": None})
     return response_data

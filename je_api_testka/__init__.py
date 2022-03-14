@@ -37,4 +37,4 @@ from je_api_testka.utils.json.json_search.json_search import json_element_find
 from je_api_testka.utils.xml.xml_file.xml_file import XMLParser
 from je_api_testka.utils.xml.xml_file.xml_file import reformat_xml_file
 # record
-from je_api_testka.record.record import record
+from je_api_testka.utils.record.record_class import record

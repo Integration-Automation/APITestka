@@ -73,6 +73,10 @@ jobs:
       - run:
           command: python ./test/unit_test/soap_test/soap_test.py
           name: soap_test
+      # argparse
+      - run:
+          command: python ./test/unit_test/argparse/argparse_test.py
+          name: argparse_test
       # unit test end
       # integrated test start
       - run:
@@ -148,6 +152,10 @@ jobs:
       - run:
           command: python ./test/unit_test/soap_test/soap_test.py
           name: soap_test
+      # argparse
+      - run:
+          command: python ./test/unit_test/argparse/argparse_test.py
+          name: argparse_test
       # unit test end
       # integrated test start
       - run:
