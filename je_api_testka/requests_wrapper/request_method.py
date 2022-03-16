@@ -17,7 +17,7 @@ from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_option
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_patch_error_message
 from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_session_error_message
 
-from je_api_testka.utils.record.record_class import record
+from je_api_testka.utils.test_record.record_test_result_class import test_record
 
 from je_api_testka.utils.assert_result.result_check import check_result
 
@@ -60,9 +60,9 @@ def test_api_method(http_method: str, test_url: str,
     end_time = datetime.datetime.now()
     response_data = get_response(response, start_time, end_time)
     if record_request_info:
-        record.record_list.append(response_data)
+        test_record.record_list.append(response_data)
     elif clean_record:
-        record.clean_record()
+        test_record.clean_record()
     if result_check_dict is None:
         return {"response": response, "response_data": response_data}
     else:

@@ -1,4 +1,4 @@
-class Record(object):
+class TestRecord(object):
 
     def __init__(self):
         self.record_list = list()
@@ -9,5 +9,5 @@ class Record(object):
         self.error_record_list = list()
 
 
-record = Record()
+test_record = TestRecord()
 
