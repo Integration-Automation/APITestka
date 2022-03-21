@@ -4,10 +4,18 @@ APITestka Executor Doc
 
 .. code-block:: python
 
-    from je_api_testka import test_record
-    from je_api_testka import APITesterExecuteException
-    from je_api_testka import execute_action
+    def execute_action(action_list: list):
+    """
+    action_list: action's list
+    """
 
+    from je_api_testka import execute_action
+    """
+    API Test with executor
+    format [[function, http_method: http method, test_url: url, params], ...]
+    param: headers, result_check_dict, params ... etc
+    result_check_dict: dict to check data is verify if not raise Exception
+    """
     test_action_list = [
     ["test_api_method",
      {"http_method": "get", "test_url": "http://httpbin.org/get",
@@ -24,14 +32,4 @@ APITestka Executor Doc
       }
      ]
     ]
-
-    for action_response in execute_action(test_action_list)[1]:
-        response = action_response.get("response_data")
-        print(response.get("text"))
-        print(response.get("start_time"))
-        print(response.get("end_time"))
-        assert response.get("start_time") is not None
-        assert response.get("end_time") is not None
-
-    print(test_record.record_list)
-    print(test_record.error_record_list)
+    execute_action(test_action_list)
