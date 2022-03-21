@@ -4,10 +4,13 @@ APITestka Compare Doc
 
 .. code-block:: python
 
+    def check_result(result_dict: dict, result_check_dict: dict):
+
     """
     use result_check_dict like bottom
     will auto compare all correct data on result_check_dict
     """
+
     import sys
 
     from je_api_testka import test_api_method

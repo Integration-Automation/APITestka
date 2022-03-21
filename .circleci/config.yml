@@ -79,10 +79,6 @@ jobs:
           command: python ./test/unit_test/compare_test/compare_test.py
           name: compare_test
       # unit test end
-      # integrated test start
-      - run:
-          command: python ./test/integrated_test/get_and_reformat_json/get_and_get_json_data.py
-          name: get_and_get_json_data
 
   build-and-test-stable:
     executor: python/default
@@ -159,10 +155,6 @@ jobs:
           command: python ./test/unit_test/compare_test/compare_test.py
           name: compare_test
       # unit test end
-      # integrated test start
-      - run:
-          command: python ./test/integrated_test/get_and_reformat_json/get_and_get_json_data.py
-          name: get_and_get_json_data
 
 workflows:
   main:
