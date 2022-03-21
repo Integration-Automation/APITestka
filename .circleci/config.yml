@@ -58,12 +58,9 @@ jobs:
       - run:
           command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
           name: rw_and_reformat_json_test
-      - run:
-          command: python ./test/unit_test/json/json_search_test/json_search_test.py
-          name: json_search_test
       # execute test
       - run:
-          command: python ./test/unit_test/execute_test/execute_action_test.py
+          command: python ./test/unit_test/executor_test/execute_action_test.py
           name: execute_action_test
       # xml
       - run:
@@ -77,6 +74,10 @@ jobs:
       - run:
           command: python ./test/unit_test/argparse/argparse_test.py
           name: argparse_test
+      # compare
+      - run:
+          command: python ./test/unit_test/compare_test/compare_test.py
+          name: compare_test
       # unit test end
       # integrated test start
       - run:
@@ -137,12 +138,9 @@ jobs:
       - run:
           command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
           name: rw_and_reformat_json_test
-      - run:
-          command: python ./test/unit_test/json/json_search_test/json_search_test.py
-          name: json_search_test
       # execute test
       - run:
-          command: python ./test/unit_test/execute_test/execute_action_test.py
+          command: python ./test/unit_test/executor_test/execute_action_test.py
           name: execute_action_test
       # xml
       - run:
@@ -156,6 +154,10 @@ jobs:
       - run:
           command: python ./test/unit_test/argparse/argparse_test.py
           name: argparse_test
+      # compare
+      - run:
+          command: python ./test/unit_test/compare_test/compare_test.py
+          name: compare_test
       # unit test end
       # integrated test start
       - run:
