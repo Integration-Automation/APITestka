@@ -1,4 +1,4 @@
-# je_api_test
+# je_api_testka
 
 ---
 
@@ -19,7 +19,9 @@
 
 ### Documentation
 
-need to do
+[![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
+
+https://apitestka.readthedocs.io/en/latest/
 
 ---
 
