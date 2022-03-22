@@ -4,11 +4,21 @@ APITestka Argument Doc
 
 .. code-block:: python
 
-    import requests.exceptions
-    from requests.utils import dict_from_cookiejar
-
-
-    def get_api_response_data(response, start_time, end_time):
+        """
+        status_code: response status code
+        text: response text
+        content: response content
+        headers: response headers
+        history: response history
+        encoding: response encoding
+        cookies: response cookies
+        elapsed: response encoding
+        request_time_sec: request time
+        request_url: request url
+        request_url: response body
+        start_time: request start time
+        end_time: request end time
+        """
         response_data = {
             "status_code": response.status_code,
             "text": response.text,
@@ -25,11 +35,4 @@ APITestka Argument Doc
             "start_time": start_time,
             "end_time": end_time
         }
-        try:
-            if response_data.get("status_code") == 200:
-                response_data.update({"json": response.json()})
-            else:
-                response_data.update({"json": None})
-        except requests.exceptions.JSONDecodeError:
-            response_data.update({"json": None})
-        return response_data
+
