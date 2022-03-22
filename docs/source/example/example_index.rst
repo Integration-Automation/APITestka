@@ -3,7 +3,7 @@ APITestka Example
 ==================
 
 .. toctree::
-   :maxdepth: 4
+    :maxdepth: 4
 
     get_example/get_example.rst
     delete_example/delete_example.rst
