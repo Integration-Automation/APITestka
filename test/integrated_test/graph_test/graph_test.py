@@ -1,4 +1,4 @@
-from je_api_testka import (execute_action, APITesterExecuteException, record)
+from je_api_testka import (execute_action, APITesterExecuteException, test_record)
 import sys
 
 # soap test
@@ -24,13 +24,13 @@ try:
 except APITesterExecuteException as error:
     print(repr(error), file=sys.stderr)
 
-print(record.record_list)
-print(record.error_record_list)
+print(test_record.record_list)
+print(test_record.error_record_list)
 
 request_time_list = list()
 request_url_list = list()
 
-for i in record.record_list:
+for i in test_record.record_list:
     request_time_list.append(i.get("request_time_sec"))
     request_url_list.append(i.get("request_url"))
 

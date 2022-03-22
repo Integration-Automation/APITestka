@@ -2,7 +2,7 @@
 import argparse
 
 from je_api_testka.utils.json.json_file.json_file import read_action_json
-from je_api_testka.utils.execute_action.action_executor import execute_action
+from je_api_testka.utils.executor.action_executor import execute_action
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

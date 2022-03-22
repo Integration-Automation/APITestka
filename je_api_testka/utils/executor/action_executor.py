@@ -3,7 +3,7 @@ import sys
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.api_test_exceptions import APITesterExecuteException
 from je_api_testka.utils.exception.api_test_eceptions_tag import executor_data_error
-from je_api_testka.utils.record.record_class import record
+from je_api_testka.utils.test_record.record_test_result_class import test_record
 
 event_dict = {
     # test api
@@ -30,5 +30,5 @@ def execute_action(action_list: list):
             event_response_list.append(event_response)
         except Exception as error:
             print(repr(error), file=sys.stderr)
-            record.error_record_list.append([action, repr(error)])
+            test_record.error_record_list.append([action, repr(error)])
     return execute_record_string, event_response_list

@@ -1,7 +1,6 @@
 import sys
 
 from je_api_testka import test_api_method
-from je_api_testka import reformat_json
 
 if __name__ == "__main__":
     import requests
