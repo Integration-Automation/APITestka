@@ -21,10 +21,6 @@ project = 'je_api_testka'
 copyright = '2022, JE-Chen'
 author = 'JE-Chen'
 
-# The full version, including alpha/beta/rc tags
-release = '0.0.52'
-
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
