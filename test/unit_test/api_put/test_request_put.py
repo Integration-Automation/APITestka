@@ -16,5 +16,5 @@ if __name__ == "__main__":
 
     try:
         test_response = test_api_method("http://httpbin.org/get", "put")
-    except APITesterException as error:
+    except Exception as error:
         print(repr(error), file=sys.stderr)

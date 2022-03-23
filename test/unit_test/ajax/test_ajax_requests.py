@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     try:
         test_response_get = test_api_method("dwadwadadw", "dwadawdwdadw", headers={"aa": "ttawtwafaw"})
-    except APITesterException as error:
+    except Exception as error:
         print(repr(error), file=sys.stderr)
     try:
         new_test_response_get = test_api_method("get", "dwadawdwdadw", headers={"aa": "ttawtwafaw"})
