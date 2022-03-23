@@ -145,3 +145,9 @@ class APIRequestsBodyException(APITesterException):
 
 class APIAssertException(APITesterException):
     pass
+
+
+# html exception
+
+class HTMLException(APITesterException):
+    pass

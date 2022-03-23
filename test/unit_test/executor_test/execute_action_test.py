@@ -1,8 +1,8 @@
 import sys
 
 from je_api_testka import test_record
-from je_api_testka import APITesterExecuteException
 from je_api_testka import execute_action
+from je_api_testka import generate_html
 
 test_action_list = [
     ["test_api_method",
@@ -38,7 +38,7 @@ try:
     for action_response in execute_action(test_action_list)[1]:
         response = action_response.get("response_data")
         print(response.get("text"))
-except APITesterExecuteException as error:
+except Exception as error:
     print(repr(error), file=sys.stderr)
 
 # soap test
@@ -65,7 +65,7 @@ try:
     for action_response in execute_action(test_action_list)[1]:
         response = action_response.get("response_data")
         print(response.get("text"))
-except APITesterExecuteException as error:
+except Exception as error:
     print(repr(error), file=sys.stderr)
 
 test_action_list = [
@@ -77,9 +77,8 @@ test_action_list = [
 
 try:
     for action_response in execute_action(test_action_list)[1]:
-        response = action_response.get("response_data")
-        print(response.get("text"))
-except APITesterExecuteException as error:
+        assert action_response is None
+except Exception as error:
     print(repr(error), file=sys.stderr)
 
 test_action_list = [
@@ -91,14 +90,18 @@ test_action_list = [
 
 try:
     for action_response in execute_action(test_action_list)[1]:
-        response = action_response.get("response_data")
-        print(response.get("text"))
-except APITesterExecuteException as error:
+        if action_response is None:
+            print(action_response)
+        else:
+            response = action_response.get("response_data")
+            print(response.get("text"))
+except Exception as error:
     print(repr(error), file=sys.stderr)
 
 print(test_record.record_list)
+print(len(test_record.record_list))
 print(test_record.error_record_list)
-
+print(len(test_record.error_record_list))
 request_time_list = list()
 request_url_list = list()
 
@@ -108,3 +111,5 @@ for i in test_record.record_list:
 
 print(request_time_list)
 print(request_url_list)
+
+generate_html("test")

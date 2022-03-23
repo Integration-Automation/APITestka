@@ -32,4 +32,7 @@ APITestka Http Method Doc
     record_request_info: enable record True or False
     clean_record: clean record list True or False
     result_check_dict: iter and check value on result_check_dict
+    if some exception have rise will return None
+    else return [response, response_data]
+    response_data: structure on structure doc
     """

@@ -23,12 +23,8 @@ def execute_action(action_list: list):
     execute_record_string = ""
     event_response_list = []
     for action in action_list:
-        try:
-            event_response = execute_event(action)
-            print("execute: ", str(action))
-            execute_record_string = "".join(execute_record_string)
-            event_response_list.append(event_response)
-        except Exception as error:
-            print(repr(error), file=sys.stderr)
-            test_record.error_record_list.append([action, repr(error)])
+        event_response = execute_event(action)
+        print("execute: ", str(action))
+        execute_record_string = "".join(execute_record_string)
+        event_response_list.append(event_response)
     return execute_record_string, event_response_list
