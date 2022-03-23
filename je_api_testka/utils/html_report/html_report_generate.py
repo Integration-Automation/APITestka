@@ -142,6 +142,7 @@ success_table = \
         </tr>
         </tbody>
     </table>
+    <br>
     """.strip()
 
 failure_table = \
@@ -183,6 +184,7 @@ failure_table = \
     </tr>
     </tbody>
 </table>
+<br>
     """.strip()
 
 
@@ -202,7 +204,7 @@ def generate_html(html_name: str):
                     success_table.format(
                         status_code=record_data.get("status_code"),
                         text=record_data.get("text"),
-                        content=record_data.get("content"),
+                        content=str(record_data.get("content"), encoding="utf-8"),
                         headers=record_data.get("headers"),
                         history=record_data.get("history"),
                         encoding=record_data.get("encoding"),
@@ -233,16 +235,18 @@ def generate_html(html_name: str):
                             clean_record=record_data[0].get("clean_record"),
                             result_check_dict=record_data[0].get("result_check_dict"),
                             error=record_data[1]
-                        )
+                        ),
                     ]
                 )
+        new_html_string = html_string.format(success_table=success, failure_table=failure)
         try:
             lock.acquire()
             with open(html_name + ".html", "w+") as file_to_write:
                 file_to_write.write(
-                    html_string.format(success_table=success, failure_table=failure)
+                    new_html_string
                 )
         except Exception as error:
             print(repr(error), file=sys.stderr)
         finally:
             lock.release()
+    return new_html_string

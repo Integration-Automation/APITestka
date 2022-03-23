@@ -112,4 +112,4 @@ for i in test_record.record_list:
 print(request_time_list)
 print(request_url_list)
 
-generate_html("test")
+print(generate_html("test"))
