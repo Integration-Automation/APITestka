@@ -1,7 +1,6 @@
 import json
 import sys
 
-from je_api_testka import APITesterException
 from je_api_testka import reformat_json
 from je_api_testka import test_api_method
 

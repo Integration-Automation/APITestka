@@ -12,7 +12,6 @@ if __name__ == "__main__":
         test_response = test_api_method("put", "dawdwadaw")
     except requests.exceptions.MissingSchema as error:
         print(repr(error), file=sys.stderr)
-    from je_api_testka import APITesterException
 
     try:
         test_response = test_api_method("http://httpbin.org/get", "put")
