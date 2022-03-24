@@ -1,6 +1,6 @@
 import sys
 
-from je_api_testka import test_record
+from je_api_testka.utils.test_record.record_test_result_class import test_record
 from je_api_testka.utils.exception.api_test_exceptions import HTMLException
 from je_api_testka.utils.exception.api_test_eceptions_tag import html_generate_no_data_tag
 from threading import Lock
