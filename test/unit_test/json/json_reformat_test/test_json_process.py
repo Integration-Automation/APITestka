@@ -1,7 +1,6 @@
 import json
 import sys
 
-from je_api_testka import APITesterException
 from je_api_testka import reformat_json
 from je_api_testka import test_api_method
 
@@ -23,7 +22,7 @@ if __name__ == "__main__":
     try:
         test_json = {("{90}{DW]dadw[dladwkadodkawokdwadwadaw}")}
         print(reformat_json(test_json))
-    except APITesterException as error:
+    except Exception as error:
         print(repr(error), file=sys.stderr)
     try:
         test_fstring = "dwadaw6d54wa65d46wa54d6w5a4d5w6a4dw56a4d65aw41d23.wsa51d453aw64ythgnbmgjnuki]"

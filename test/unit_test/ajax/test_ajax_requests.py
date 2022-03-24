@@ -20,11 +20,10 @@ if __name__ == "__main__":
     test_response_get = test_api_method("session_get", welcome_url, headers=login_headers)
     print(test_response_get.get("response_data").get("status_code"))
     print(test_response_get.get("response_data").get("text"))
-    from je_api_testka import APITesterException
 
     try:
         test_response_get = test_api_method("dwadwadadw", "dwadawdwdadw", headers={"aa": "ttawtwafaw"})
-    except APITesterException as error:
+    except Exception as error:
         print(repr(error), file=sys.stderr)
     try:
         new_test_response_get = test_api_method("get", "dwadawdwdadw", headers={"aa": "ttawtwafaw"})

@@ -15,9 +15,8 @@ if __name__ == "__main__":
         test_response = test_api_method("delete", "wadwaddawdwa")
     except requests.exceptions.MissingSchema as error:
         print(repr(error), file=sys.stderr)
-    from je_api_testka import APITesterException
 
     try:
         test_response = test_api_method("dwadadwawd", "delete")
-    except APITesterException as error:
+    except Exception as error:
         print(repr(error), file=sys.stderr)
