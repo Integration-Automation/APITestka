@@ -13,6 +13,10 @@ event_dict = {
 
 
 def execute_event(action: list):
+    """
+    :param action: execute action
+    :return: what event return
+    """
     event = event_dict.get(action[0])
     if len(action) == 2:
         return event(**action[1])
@@ -21,6 +25,15 @@ def execute_event(action: list):
 
 
 def execute_action(action_list: list):
+    """
+    :param action_list: like this structure
+    [
+        ["method on event_dict", {"param": params}],
+        ["method on event_dict", {"param": params}]
+    ]
+    for loop and use execute_event function to execute
+    :return: recode string, response as list
+    """
     execute_record_string = ""
     event_response_list = []
     for action in action_list:

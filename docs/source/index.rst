@@ -1,6 +1,14 @@
 ==================
 APITestka
 ==================
+* Features
+    * HTTP Method test
+    * Get response data body etc...
+    * Action file and executor
+    * result compare
+    * xml to json and json to xml
+    * Soap test
+    * CLI with action file
 
 .. toctree::
     :maxdepth: 4

@@ -11,3 +11,4 @@ APITestka Doc
     http_method_doc/http_method_doc.rst
     structure_doc/structure_doc.rst
     xml_doc/xml_doc.rst
+    generate_html_doc/generate_html_doc.rst

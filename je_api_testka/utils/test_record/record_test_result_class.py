@@ -1,4 +1,7 @@
 class TestRecord(object):
+    """
+    data class to record success and failure test
+    """
 
     def __init__(self):
         self.record_list = list()

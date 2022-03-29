@@ -9,6 +9,11 @@ from je_api_testka.utils.exception.api_test_exceptions import APITesterJsonExcep
 
 
 def __process_json(json_string: str, **kwargs):
+    """
+    :param json_string: full json str (not json type)
+    :param kwargs: any another kwargs for dumps
+    :return: reformat str
+    """
     try:
         return dumps(loads(json_string), indent=4, sort_keys=True, **kwargs)
     except json.JSONDecodeError as error:

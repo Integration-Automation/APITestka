@@ -1,6 +1,6 @@
-import json
 import os
 
+from je_api_testka import reformat_json
 from je_api_testka import read_action_json
 from je_api_testka import write_action_json
 from je_api_testka import execute_action
@@ -22,13 +22,11 @@ test_list = \
       }
      ]
 ]
-test_dumps_json = json.dumps(test_list)
-print(test_dumps_json)
-test_loads_json = json.loads(test_dumps_json)
-print(test_loads_json)
 
-write_action_json(os.getcwd() + "/test.json", test_dumps_json)
+write_action_json(os.getcwd() + "/test.json", test_list)
 read_json = read_action_json(os.getcwd() + "/test.json")
 print(read_json)
 print(type(read_json))
+print(reformat_json(read_json))
 execute_action(read_json)
+

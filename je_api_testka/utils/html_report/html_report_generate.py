@@ -13,13 +13,23 @@ html_string = \
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>api_testka_report</title>
+    <title>API Testka Report</title>
 
     <style>
+      
+        body{{
+            font-size: 100%;
+        }}
+
+        h1{{
+            font-size: 2em;
+        }}
+
         .main_table {{
             margin: 0 auto;
             border-collapse: collapse;
             width: 75%;
+            font-size: 1.5em;
         }}
 
         .success_table_head {{
@@ -63,13 +73,13 @@ html_string = \
     </style>
 </head>
 <body>
-<h3 class="text">
+<h1 class="text">
     Success
-</h3>
+</h1>
 {success_table}
-<h3 class="text">
+<h1 class="text">
     Failure
-</h3>
+</h1>
 {failure_table}
 </body>
 </html>
@@ -188,7 +198,7 @@ failure_table = \
     """.strip()
 
 
-def generate_html(html_name: str):
+def generate_html(html_name: str = "default_name"):
     """
     :param html_name: save html file name
     :return: html_string
