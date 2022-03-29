@@ -43,5 +43,6 @@ APITestka Json Example
     ]
 
     write_action_json(os.getcwd() + "/test.json", test_list)
+    # reformat json
     read_json = reformat_json(read_action_json(os.getcwd() + "/test.json"))
     print(read_json)

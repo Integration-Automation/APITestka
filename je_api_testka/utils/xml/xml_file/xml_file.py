@@ -16,6 +16,10 @@ def reformat_xml_file(xml_string: str):
 class XMLParser(object):
 
     def __init__(self, xml_string: str, xml_type: str):
+        """
+        :param xml_string: full xml string
+        :param xml_type: file or string
+        """
         self.element_tree = ElementTree
         self.tree = None
         self.xml_root = None
@@ -30,6 +34,10 @@ class XMLParser(object):
             self.xml_parser_from_file()
 
     def xml_parser_from_string(self, **kwargs):
+        """
+        :param kwargs: any another param
+        :return: xml root element tree
+        """
         try:
             self.xml_root = ElementTree.fromstring(self.xml_string, **kwargs)
         except APITesterXMLException:
@@ -37,6 +45,10 @@ class XMLParser(object):
         return self.xml_root
 
     def xml_parser_from_file(self, **kwargs):
+        """
+        :param kwargs: any another param
+        :return: xml root element tree
+        """
         try:
             self.tree = ElementTree.parse(self.xml_string, **kwargs)
         except APITesterXMLException:
@@ -45,16 +57,11 @@ class XMLParser(object):
         self.xml_from_type = "file"
         return self.xml_root
 
-    def iter(self, tag_name: [str, None] = None):
-        if self.xml_from_type == "string":
-            return self.xml_root.iter(tag_name)
-        else:
-            return self.tree.iter(tag_name)
-
-    def xml_iterparse(self, xml_string: str, **kwargs):
-        return self.element_tree.iterparse(xml_string, **kwargs)
-
     def write_xml(self, write_xml_filename: str, write_content: str):
+        """
+        :param write_xml_filename:  xml file name
+        :param write_content: content to write
+        """
         write_content = write_content.strip()
         content = self.element_tree.fromstring(write_content)
         tree = self.element_tree.ElementTree(content)
@@ -62,6 +69,10 @@ class XMLParser(object):
 
 
 def elements_tree_to_dict(elements_tree):
+    """
+    :param elements_tree: xml root (element tree)
+    :return: xml tree to dict
+    """
     elements_dict = {elements_tree.tag: {} if elements_tree.attrib else None}
     children = list(elements_tree)
     if children:
@@ -84,6 +95,10 @@ def elements_tree_to_dict(elements_tree):
 
 
 def dict_to_elements_tree(json_dict):
+    """
+    :param json_dict: json dict
+    :return: json dict to xml string
+    """
     def _to_elements_tree(json_dict, root):
         if not json_dict:
             pass

@@ -15,7 +15,6 @@ if __name__ == "__main__":
         test_response = test_api_method("delete", "wadwaddawdwa")
     except requests.exceptions.MissingSchema as error:
         print(repr(error), file=sys.stderr)
-
     try:
         test_response = test_api_method("dwadadwawd", "delete")
     except Exception as error:
