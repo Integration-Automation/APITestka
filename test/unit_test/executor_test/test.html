@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>API Testka Report</title>
+
+    <style>
+      
+        body{
+            font-size: 100%;
+        }
+
+        h1{
+            font-size: 2em;
+        }
+
+        .main_table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 75%;
+            font-size: 1.5em;
+        }
+
+        .success_table_head {
+            border: 3px solid #262626;
+            background-color: aqua;
+            font-family: "Times New Roman", sans-serif;
+            text-align: center;
+        }
+
+        .failure_table_head {
+            border: 3px solid #262626;
+            background-color: #f84c5f;
+            font-family: "Times New Roman", sans-serif;
+            text-align: center;
+        }
+
+        .table_data_field_title {
+            border: 3px solid #262626;
+            padding: 0;
+            margin: 0;
+            background-color: #dedede;
+            font-family: "Times New Roman", sans-serif;
+            text-align: center;
+            width: 25%;
+        }
+
+        .table_data_field_text {
+            border: 3px solid #262626;
+            padding: 0;
+            margin: 0;
+            background-color: #dedede;
+            font-family: "Times New Roman", sans-serif;
+            text-align: left;
+            width: 75%;
+        }
+
+        .text {
+            text-align: center;
+            font-family: "Times New Roman", sans-serif;
+        }
+    </style>
+</head>
+<body>
+<h1 class="text">
+    Success
+</h1>
+<table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text">{
+  "args": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Type": "application/x-www-form-urlencoded", 
+    "Host": "httpbin.org", 
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36", 
+    "X-Amzn-Trace-Id": "Root=1-62488dba-40b856ce6d3fe5571cdf53ab", 
+    "X-Requested-With": "XMLHttpRequest"
+  }, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/get"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text">{
+  "args": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Type": "application/x-www-form-urlencoded", 
+    "Host": "httpbin.org", 
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36", 
+    "X-Amzn-Trace-Id": "Root=1-62488dba-40b856ce6d3fe5571cdf53ab", 
+    "X-Requested-With": "XMLHttpRequest"
+  }, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/get"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Date': 'Sat, 02 Apr 2022 17:54:02 GMT', 'Content-Type': 'application/json', 'Content-Length': '499', 'Connection': 'keep-alive', 'Server': 'gunicorn/19.9.0', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:00.553278</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">0.553278</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">GET</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">http://httpbin.org/get</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">None</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:00.823135</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:01.379773</td>
+        </tr>
+        </tbody>
+    </table>
+    <br><table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text">{
+  "args": {
+    "task": "new task"
+  }, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dba-34137cfe6389614e0b379a61"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post?task=new+task"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text">{
+  "args": {
+    "task": "new task"
+  }, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dba-34137cfe6389614e0b379a61"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post?task=new+task"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Date': 'Sat, 02 Apr 2022 17:54:02 GMT', 'Content-Type': 'application/json', 'Content-Length': '437', 'Connection': 'keep-alive', 'Server': 'gunicorn/19.9.0', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:00.482788</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">0.482788</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">POST</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">http://httpbin.org/post?task=new+task</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">None</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:01.379773</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:01.863186</td>
+        </tr>
+        </tbody>
+    </table>
+    <br><table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text">{
+  "args": {
+    "task": "new task"
+  }, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbb-7366f83d297a96bb1fa0021e"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post?task=new+task"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text">{
+  "args": {
+    "task": "new task"
+  }, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbb-7366f83d297a96bb1fa0021e"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post?task=new+task"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Date': 'Sat, 02 Apr 2022 17:54:03 GMT', 'Content-Type': 'application/json', 'Content-Length': '437', 'Connection': 'keep-alive', 'Server': 'gunicorn/19.9.0', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:00.477899</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">0.477899</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">POST</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">http://httpbin.org/post?task=new+task</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">None</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:01.864137</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:02.342563</td>
+        </tr>
+        </tbody>
+    </table>
+    <br><table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text">{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbb-5e1f441a7c4e3b48175a9d4f"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text">{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbb-5e1f441a7c4e3b48175a9d4f"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Date': 'Sat, 02 Apr 2022 17:54:04 GMT', 'Content-Type': 'application/json', 'Content-Length': '397', 'Connection': 'keep-alive', 'Server': 'gunicorn/19.9.0', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:00.610280</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">0.61028</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">POST</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">http://httpbin.org/post</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">None</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:02.342563</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:02.954374</td>
+        </tr>
+        </tbody>
+    </table>
+    <br><table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text"><?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><FahrenheitToCelsiusResponse xmlns="https://www.w3schools.com/xml/"><FahrenheitToCelsiusResult>15.5555555555556</FahrenheitToCelsiusResult></FahrenheitToCelsiusResponse></soap:Body></soap:Envelope></td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text"><?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><FahrenheitToCelsiusResponse xmlns="https://www.w3schools.com/xml/"><FahrenheitToCelsiusResult>15.5555555555556</FahrenheitToCelsiusResult></FahrenheitToCelsiusResponse></soap:Body></soap:Envelope></td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Cache-Control': 'private, max-age=0,public', 'Content-Security-Policy': "frame-ancestors 'self' https://mycourses.w3schools.com;", 'Content-Type': 'application/soap+xml; charset=utf-8', 'Date': 'Sat, 02 Apr 2022 17:54:05 GMT', 'Server': 'Microsoft-IIS/10.0', 'X-AspNet-Version': '4.0.30319', 'X-Content-Security-Policy': "frame-ancestors 'self' https://mycourses.w3schools.com;", 'X-Powered-By': 'ASP.NET', 'Content-Length': '413'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:01.144170</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">1.14417</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">POST</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">https://www.w3schools.com/xml/tempconvert.asmx</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">
+<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
+  <soap12:Body>
+    <FahrenheitToCelsius xmlns="https://www.w3schools.com/xml/">
+      <Fahrenheit>60</Fahrenheit>
+    </FahrenheitToCelsius>
+  </soap12:Body>
+</soap12:Envelope>
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:02.954374</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:04.101141</td>
+        </tr>
+        </tbody>
+    </table>
+    <br><table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text">{
+  "args": {
+    "task": "new task"
+  }, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbd-7ac7dc6c1156326f7aca0ab3"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post?task=new+task"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text">{
+  "args": {
+    "task": "new task"
+  }, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbd-7ac7dc6c1156326f7aca0ab3"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post?task=new+task"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Date': 'Sat, 02 Apr 2022 17:54:05 GMT', 'Content-Type': 'application/json', 'Content-Length': '437', 'Connection': 'keep-alive', 'Server': 'gunicorn/19.9.0', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:00.473460</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">0.47346</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">POST</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">http://httpbin.org/post?task=new+task</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">None</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:04.101141</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:04.575470</td>
+        </tr>
+        </tbody>
+    </table>
+    <br><table class="main_table">
+        <thead>
+        <tr>
+            <th colspan="2" class="success_table_head">Test Report</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="table_data_field_title">status_code</td>
+            <td class="table_data_field_text">200</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">text</td>
+            <td class="table_data_field_text">{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbe-039d7bcb256b62032395d598"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">content</td>
+            <td class="table_data_field_text">{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Content-Length": "0", 
+    "Host": "httpbin.org", 
+    "User-Agent": "python-requests/2.27.1", 
+    "X-Amzn-Trace-Id": "Root=1-62488dbe-039d7bcb256b62032395d598"
+  }, 
+  "json": null, 
+  "origin": "101.9.238.57", 
+  "url": "http://httpbin.org/post"
+}
+</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">headers</td>
+            <td class="table_data_field_text">{'Date': 'Sat, 02 Apr 2022 17:54:06 GMT', 'Content-Type': 'application/json', 'Content-Length': '397', 'Connection': 'keep-alive', 'Server': 'gunicorn/19.9.0', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Credentials': 'true'}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">history</td>
+            <td class="table_data_field_text">[]</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">encoding</td>
+            <td class="table_data_field_text">utf-8</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">cookies</td>
+            <td class="table_data_field_text">{}</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">elapsed</td>
+            <td class="table_data_field_text">0:00:00.508303</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_time_sec</td>
+            <td class="table_data_field_text">0.508303</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_method</td>
+            <td class="table_data_field_text">POST</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_url</td>
+            <td class="table_data_field_text">http://httpbin.org/post</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">request_body</td>
+            <td class="table_data_field_text">None</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">start_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:04.575470</td>
+        </tr>
+        <tr>
+            <td class="table_data_field_title">end_time</td>
+            <td class="table_data_field_text">2022-04-03 01:54:05.085021</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+<h1 class="text">
+    Failure
+</h1>
+<table class="main_table">
+    <thead>
+    <tr>
+        <th colspan="2" class="failure_table_head">Test Report</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="table_data_field_title">http_method</td>
+        <td class="table_data_field_text">dwadawdwaw</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">test_url</td>
+        <td class="table_data_field_text">http://httpbin.org/post</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">soap</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">record_request_info</td>
+        <td class="table_data_field_text">True</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">clean_record</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">result_check_dict</td>
+        <td class="table_data_field_text">None</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">error</td>
+        <td class="table_data_field_text">APITesterException('Wrong http method')</td>
+    </tr>
+    </tbody>
+</table>
+<br><table class="main_table">
+    <thead>
+    <tr>
+        <th colspan="2" class="failure_table_head">Test Report</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="table_data_field_title">http_method</td>
+        <td class="table_data_field_text">dwadwadwadaw</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">test_url</td>
+        <td class="table_data_field_text">http://httpbin.org/post</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">soap</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">record_request_info</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">clean_record</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">result_check_dict</td>
+        <td class="table_data_field_text">None</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">error</td>
+        <td class="table_data_field_text">APITesterException('Wrong http method')</td>
+    </tr>
+    </tbody>
+</table>
+<br><table class="main_table">
+    <thead>
+    <tr>
+        <th colspan="2" class="failure_table_head">Test Report</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="table_data_field_title">http_method</td>
+        <td class="table_data_field_text">post</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">test_url</td>
+        <td class="table_data_field_text">http://httpbin.org/post</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">soap</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">record_request_info</td>
+        <td class="table_data_field_text">True</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">clean_record</td>
+        <td class="table_data_field_text">False</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">result_check_dict</td>
+        <td class="table_data_field_text">{'status_code': 300}</td>
+    </tr>
+    <tr>
+        <td class="table_data_field_title">error</td>
+        <td class="table_data_field_text">APIAssertException('value should be 200 but value is 300')</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+</body>
+</html>
