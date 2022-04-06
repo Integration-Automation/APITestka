@@ -1,4 +1,5 @@
 import json
+import os.path
 from pathlib import Path
 from threading import Lock
 
@@ -17,6 +18,7 @@ def read_action_json(json_file_path: str):
     try:
         lock.acquire()
         file_path = Path(json_file_path)
+        file_path = os.path.abspath(file_path)
         if file_path.exists() and file_path.is_file():
             with open(json_file_path) as read_file:
                 return json.load(read_file)
