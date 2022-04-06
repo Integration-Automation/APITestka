@@ -12,6 +12,6 @@ def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extensio
     return [
         abspath(file) for root, dirs, files in walk(dir_path)
         for file in files
-        if file.lower().endswith(default_search_file_extension)
+        if file.endswith(default_search_file_extension.lower())
     ]
 

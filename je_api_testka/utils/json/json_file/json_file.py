@@ -16,10 +16,7 @@ def read_action_json(json_file_path: str):
     """
     try:
         lock.acquire()
-        file_path = Path(json_file_path)
-        print(file_path)
-        print(file_path.exists())
-        print(file_path.is_file())
+        file_path = Path(str(json_file_path).strip())
         if file_path.exists() and file_path.is_file():
             with open(json_file_path) as read_file:
                 return json.load(read_file)
