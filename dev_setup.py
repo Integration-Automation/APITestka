@@ -5,7 +5,7 @@ with open("README.md", "r") as README:
 
 setuptools.setup(
     name="je_api_testka_dev",
-    version="0.0.25",
+    version="0.0.26",
     author="JE-Chen",
     author_email="zenmailman@gmail.com",
     description="api testing",
