@@ -1,6 +1,7 @@
 from os import walk
 from os import getcwd
-from pathlib import Path
+from os.path import abspath
+from os.path import join
 
 
 def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extension: str = ".json"):
@@ -10,7 +11,7 @@ def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extensio
     :return: [] if nothing searched or [file1, file2.... files] file was searched
     """
     return [
-        str(Path(file).resolve()) for root, dirs, files in walk(dir_path)
+        abspath(join(dir_path, file)) for root, dirs, files in walk(dir_path)
         for file in files
         if file.endswith(default_search_file_extension.lower())
     ]
