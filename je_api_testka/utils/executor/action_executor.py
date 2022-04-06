@@ -1,6 +1,9 @@
+import sys
+
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.api_test_exceptions import APITesterExecuteException
 from je_api_testka.utils.exception.api_test_eceptions_tag import executor_data_error
+from je_api_testka.utils.exception.api_test_eceptions_tag import executor_list_error
 from je_api_testka.utils.html_report.html_report_generate import generate_html
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 
@@ -35,12 +38,18 @@ def execute_action(action_list: list):
     """
     execute_record_string = ""
     event_response_list = []
-    for action in action_list:
-        event_response = execute_event(action)
-        print("execute: ", str(action))
-        execute_record_string = "".join(execute_record_string)
-        event_response_list.append(event_response)
-    return execute_record_string, event_response_list
+    try:
+        if len(action_list) > 0 or type(action_list) is not list:
+            for action in action_list:
+                event_response = execute_event(action)
+                print("execute: ", str(action))
+                execute_record_string = "".join(execute_record_string)
+                event_response_list.append(event_response)
+        else:
+            raise APITesterExecuteException(executor_list_error)
+        return execute_record_string, event_response_list
+    except Exception as error:
+        print(repr(error), file=sys.stderr)
 
 
 def execute_files(execute_files_list: list):
@@ -48,8 +57,5 @@ def execute_files(execute_files_list: list):
     :param execute_files_list:
     :return:
     """
-    if type(execute_files_list) is not list:
-        raise APITesterExecuteException(executor_data_error)
-    else:
-        for file in execute_files_list:
-            execute_action(read_action_json(file))
+    for file in execute_files_list:
+        execute_action(read_action_json(file))
