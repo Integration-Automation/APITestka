@@ -10,4 +10,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.execute_file is not None:
         execute_action(read_action_json(args.execute_file))
+    else:
+        print("No argument, Hello There :)")
 
