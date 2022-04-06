@@ -58,4 +58,6 @@ def execute_files(execute_files_list: list):
     :return:
     """
     for file in execute_files_list:
-        execute_action(read_action_json(file))
+        exec_file = read_action_json(file)
+        print(exec_file)
+        execute_action(exec_file)
