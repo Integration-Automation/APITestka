@@ -45,6 +45,7 @@ api_test_cant_read_xml_error = "can't read xml"
 api_test_xml_type_error = "xml type error"
 # Executor error
 executor_data_error = "executor receive wrong data"
+executor_list_error = "executor receive wrong data list is none or wrong type"
 # API data check
 status_code_error = "request status code error"
 status_text_error = "request text error"

@@ -2,6 +2,7 @@
 from je_api_testka.requests_wrapper.request_method import test_api_method
 # execute
 from je_api_testka.utils.executor.action_executor import execute_action
+from je_api_testka.utils.executor.action_executor import execute_files
 # json
 from je_api_testka.utils.json.json_file.json_file import write_action_json
 from je_api_testka.utils.json.json_file.json_file import read_action_json
@@ -15,3 +16,5 @@ from je_api_testka.utils.xml.xml_file.xml_file import dict_to_elements_tree
 from je_api_testka.utils.test_record.record_test_result_class import test_record
 # html_output
 from je_api_testka.utils.html_report.html_report_generate import generate_html
+# file process
+from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
