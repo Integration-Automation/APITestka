@@ -12,3 +12,4 @@ APITestka Doc
     structure_doc/structure_doc.rst
     xml_doc/xml_doc.rst
     generate_html_doc/generate_html_doc.rst
+    file_process_doc/file_process_doc.rst

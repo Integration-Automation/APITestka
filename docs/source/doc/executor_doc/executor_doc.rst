@@ -33,3 +33,11 @@ APITestka Executor Doc
      ]
     ]
     execute_action(test_action_list)
+
+.. code-block:: python
+
+    def execute_files(execute_files_list: list):
+    """
+    :param execute_files_list: list include execute files path
+    :return: every execute detail as list
+    """
