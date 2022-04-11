@@ -1,5 +1,7 @@
-from je_api_testka import (execute_action, APITesterExecuteException, test_record)
+from je_api_testka import (execute_action, test_record)
 import sys
+from je_matplotlib_wrapper import set_tkinter_embed_matplotlib_barh
+from tkinter import Tk
 
 # soap test
 url = "https://www.w3schools.com/xml/tempconvert.asmx"
@@ -21,7 +23,7 @@ try:
     for action_response in execute_action(test_action_list)[1]:
         response = action_response.get("response_data")
         print(response.get("text"))
-except APITesterExecuteException as error:
+except Exception as error:
     print(repr(error), file=sys.stderr)
 
 print(test_record.record_list)
@@ -37,10 +39,8 @@ for i in test_record.record_list:
 print(request_time_list)
 print(request_url_list)
 
-from je_matplotlib_wrapper import set_tkinter_embed_matplotlib_barh
-from tkinter import Tk
-
-set_tkinter_embed_matplotlib_barh(y_content_list=request_url_list,
-                                  x_content_list=request_time_list,
-                                  show_figure_window=Tk(),
-                                  )
+set_tkinter_embed_matplotlib_barh(
+    y_content_list=request_url_list,
+    x_content_list=request_time_list,
+    show_figure_window=Tk(),
+)

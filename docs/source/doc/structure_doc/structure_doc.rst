@@ -1,5 +1,5 @@
 ==================
-APITestka Argument Doc
+APITestka Structure Doc
 ==================
 
 .. code-block:: python
