@@ -74,12 +74,9 @@ html_string = \
 </head>
 <body>
 <h1 class="text">
-    Success
+    Test Report
 </h1>
 {success_table}
-<h1 class="text">
-    Failure
-</h1>
 {failure_table}
 </body>
 </html>
@@ -203,7 +200,7 @@ def generate_html(html_name: str = "default_name"):
     :param html_name: save html file name
     :return: html_string
     """
-    if len(test_record.record_list) == 0:
+    if len(test_record.record_list) == 0 and len(test_record.error_record_list) == 0:
         raise HTMLException(html_generate_no_data_tag)
     else:
         success = ""
