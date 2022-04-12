@@ -18,3 +18,4 @@ from je_api_testka.utils.test_record.record_test_result_class import test_record
 from je_api_testka.utils.html_report.html_report_generate import generate_html
 # file process
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
+from je_api_testka.utils.file_process.create_project_structure import create_template_dir

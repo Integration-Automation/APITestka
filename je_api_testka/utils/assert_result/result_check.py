@@ -6,6 +6,6 @@ def check_result(result_dict: dict, result_check_dict: dict):
         if result_dict.get(key) != value:
             raise APIAssertException(
                 "value should be {right_value} but value was {wrong_value}".format(
-                    right_value=result_dict.get(key), wrong_value=value
+                    right_value=value, wrong_value=result_dict.get(key)
                 )
             )
