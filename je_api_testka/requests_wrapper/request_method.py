@@ -1,6 +1,8 @@
 import datetime
 import sys
 
+import requests
+
 from je_api_testka.requests_wrapper.requests_http_method_wrapper import api_tester_method
 from requests.structures import CaseInsensitiveDict
 
@@ -42,7 +44,7 @@ exception_message_dict = {
 }
 
 
-def get_response(response, start_time, end_time):
+def get_response(response, start_time, end_time) -> dict:
     try:
         return get_api_response_data(response, start_time, end_time)
     except APITesterGetDataException:
@@ -51,7 +53,8 @@ def get_response(response, start_time, end_time):
 
 def test_api_method(http_method: str, test_url: str,
                     soap: bool = False, record_request_info: bool = True,
-                    clean_record: bool = False, result_check_dict: dict = None, **kwargs):
+                    clean_record: bool = False, result_check_dict: dict = None, **kwargs)\
+        -> (requests.Response, dict):
     try:
         try:
             start_time = datetime.datetime.now()

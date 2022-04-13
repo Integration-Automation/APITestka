@@ -2,7 +2,7 @@ import requests.exceptions
 from requests.utils import dict_from_cookiejar
 
 
-def get_api_response_data(response, start_time, end_time):
+def get_api_response_data(response, start_time, end_time) -> dict:
     response_data = {
         "status_code": response.status_code,
         "text": response.text,
