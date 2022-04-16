@@ -42,16 +42,14 @@ def get_http_method(http_method: str) -> [
             Session.get, Session.put, Session.patch, Session.post, Session.head, Session.head, Session.options
         ]:
     try:
-        if http_method is not str or http_method not in http_method_dict.keys:
-            if http_method is not str:
-                raise APITesterException(wrong_http_method_error_message)
-            else:
-                raise APITesterException(http_method_have_wrong_type)
+        if type(http_method) is not str:
+            raise APITesterException(wrong_http_method_error_message)
         http_method = str(http_method).lower()
+        if http_method not in http_method_dict:
+            raise APITesterException(http_method_have_wrong_type)
         return http_method_dict.get(http_method)
     except APITesterException as error:
         print(repr(error), file=sys.stderr)
-        test_record.error_record_list.append(repr(error))
 
 
 def api_tester_method(http_method: str, test_url: str, **kwargs) -> requests.Response:
