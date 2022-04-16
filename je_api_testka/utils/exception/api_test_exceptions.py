@@ -1,13 +1,10 @@
 # general
 
-
 class APITesterException(Exception):
     pass
 
 
 # get method
-
-
 class APITesterGetDataException(APITesterException):
     pass
 
@@ -21,43 +18,31 @@ class APITesterGetJsonException(APITesterException):
 
 
 # put method
-
-
 class APITesterPutException(APITesterException):
     pass
 
 
 # delete method
-
-
 class APITesterDeleteException(APITesterException):
     pass
 
 
 # put method
-
-
 class APITesterPostException(APITesterException):
     pass
 
 
 # head method
-
-
 class APITesterHeadException(APITesterException):
     pass
 
 
 # options method
-
-
 class APITesterOptionsException(APITesterException):
     pass
 
 
 # patch method
-
-
 class APITesterPatchException(APITesterException):
     pass
 
@@ -77,15 +62,11 @@ class APITesterExecuteException(APITesterException):
 
 
 # json
-
-
 class APITesterJsonException(APITesterException):
     pass
 
 
 # xml
-
-
 class APITesterXMLException(APITesterException):
     pass
 
@@ -95,8 +76,6 @@ class APITesterXMLTypeException(APITesterException):
 
 
 # API data check
-
-
 class APIStatusCodeException(APITesterException):
     pass
 

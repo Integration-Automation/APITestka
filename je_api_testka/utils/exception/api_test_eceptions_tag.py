@@ -1,6 +1,7 @@
 # Unknown error
 api_test_error_message = "API tester error"
-wrong_http_method_error_message = "Wrong http method"
+wrong_http_method_error_message = "wrong http method"
+http_method_have_wrong_type = "get wrong type param"
 # get data error
 api_test_get_data_error_message = "API tester can't get api data error"
 # API Http Method error
@@ -60,3 +61,4 @@ status_requests_url_error = "requests url error"
 status_requests_body_error = "requests body error"
 # HTML
 html_generate_no_data_tag = "record is None"
+
