@@ -23,6 +23,6 @@ test_list = \
          ]
     ]
 
-write_action_json(os.getcwd() + "/test.json", test_list)
-read_json = reformat_json(read_action_json(os.getcwd() + "/test.json"))
+write_action_json(os.getcwd() + "/test1.json", test_list)
+read_json = reformat_json(read_action_json(os.getcwd() + "/test1.json"))
 print(read_json)

@@ -3,6 +3,7 @@ import sys
 import requests.exceptions
 
 from je_api_testka import test_api_method
+from je_api_testka import generate_html
 
 if __name__ == "__main__":
     test_response = test_api_method("delete", "http://httpbin.org/delete")
@@ -19,3 +20,5 @@ if __name__ == "__main__":
         test_response = test_api_method("dwadadwawd", "delete")
     except Exception as error:
         print(repr(error), file=sys.stderr)
+
+generate_html()
