@@ -2,10 +2,10 @@ import xml.dom.minidom
 from xml.etree import ElementTree
 from collections import defaultdict
 
-from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_read_xml_error
-from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_xml_type_error
-from je_api_testka.utils.exception.api_test_exceptions import APITesterXMLException
-from je_api_testka.utils.exception.api_test_exceptions import APITesterXMLTypeException
+from je_api_testka.utils.exception.exceptions_tag import api_test_cant_read_xml_error
+from je_api_testka.utils.exception.exceptions_tag import api_test_xml_type_error
+from je_api_testka.utils.exception.exceptions import APITesterXMLException
+from je_api_testka.utils.exception.exceptions import APITesterXMLTypeException
 
 
 def reformat_xml_file(xml_string: str):

@@ -1,9 +1,9 @@
 import sys
 
 from je_api_testka.requests_wrapper.request_method import test_api_method
-from je_api_testka.utils.exception.api_test_exceptions import APITesterExecuteException
-from je_api_testka.utils.exception.api_test_eceptions_tag import executor_data_error
-from je_api_testka.utils.exception.api_test_eceptions_tag import executor_list_error
+from je_api_testka.utils.exception.exceptions import APITesterExecuteException
+from je_api_testka.utils.exception.exceptions_tag import executor_data_error
+from je_api_testka.utils.exception.exceptions_tag import executor_list_error
 from je_api_testka.utils.html_report.html_report_generate import generate_html
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 
