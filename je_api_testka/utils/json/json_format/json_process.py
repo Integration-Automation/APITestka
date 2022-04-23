@@ -3,9 +3,9 @@ import sys
 from json import dumps
 from json import loads
 
-from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_reformat_json_error
-from je_api_testka.utils.exception.api_test_eceptions_tag import wrong_json_data_error
-from je_api_testka.utils.exception.api_test_exceptions import APITesterJsonException
+from je_api_testka.utils.exception.exceptions_tag import api_test_cant_reformat_json_error
+from je_api_testka.utils.exception.exceptions_tag import wrong_json_data_error
+from je_api_testka.utils.exception.exceptions import APITesterJsonException
 
 
 def __process_json(json_string: str, **kwargs):

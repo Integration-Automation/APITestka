@@ -10,9 +10,9 @@ from requests import patch
 from requests import post
 from requests import put
 
-from je_api_testka.utils.exception.api_test_eceptions_tag import http_method_have_wrong_type
-from je_api_testka.utils.exception.api_test_exceptions import APITesterException
-from je_api_testka.utils.exception.api_test_eceptions_tag import wrong_http_method_error_message
+from je_api_testka.utils.exception.exceptions_tag import http_method_have_wrong_type
+from je_api_testka.utils.exception.exceptions import APITesterException
+from je_api_testka.utils.exception.exceptions_tag import wrong_http_method_error_message
 
 from je_api_testka.utils.test_record.record_test_result_class import test_record
 

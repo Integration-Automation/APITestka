@@ -1,6 +1,5 @@
-==================
-APITestka
-==================
+Welcome to APITestka's documentation!
+=====================================
 * Features
     * HTTP Method test
     * Get response data body etc...

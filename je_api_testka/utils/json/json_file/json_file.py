@@ -3,9 +3,9 @@ import os.path
 from pathlib import Path
 from threading import Lock
 
-from je_api_testka.utils.exception.api_test_exceptions import APITesterJsonException
-from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_find_json_error
-from je_api_testka.utils.exception.api_test_eceptions_tag import api_test_cant_save_json_error
+from je_api_testka.utils.exception.exceptions import APITesterJsonException
+from je_api_testka.utils.exception.exceptions_tag import api_test_cant_find_json_error
+from je_api_testka.utils.exception.exceptions_tag import api_test_cant_save_json_error
 
 
 lock = Lock()
