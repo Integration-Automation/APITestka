@@ -14,9 +14,6 @@ from je_api_testka.utils.exception.exceptions_tag import http_method_have_wrong_
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.exception.exceptions_tag import wrong_http_method_error_message
 
-from je_api_testka.utils.test_record.record_test_result_class import test_record
-
-
 session = Session()
 
 http_method_dict = {
