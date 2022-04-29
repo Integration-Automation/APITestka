@@ -249,7 +249,7 @@ def generate_html(html_name: str = "default_name"):
                 )
                 for success in success_list:
                     file_to_write.write(success)
-                for failure in success_list:
+                for failure in failure_list:
                     file_to_write.write(failure)
                 file_to_write.writelines(
                     _html_string_bottom
