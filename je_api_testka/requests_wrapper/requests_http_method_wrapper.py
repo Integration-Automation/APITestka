@@ -38,6 +38,10 @@ def get_http_method(http_method: str) -> [
             requests.get, requests.put, requests.patch, requests.post, requests.head, requests.delete,
             Session.get, Session.put, Session.patch, Session.post, Session.head, Session.head, Session.options
         ]:
+    """
+    :param http_method: what http method we use to api test
+    :return: one of method in http_method_dict if not exists will raise exception
+    """
     try:
         if type(http_method) is not str:
             raise APITesterException(wrong_http_method_error_message)
@@ -50,6 +54,12 @@ def get_http_method(http_method: str) -> [
 
 
 def api_tester_method(http_method: str, test_url: str, **kwargs) -> requests.Response:
+    """
+    :param http_method: what http method we use to api test
+    :param test_url: what url we want to test
+    :param kwargs: use to setting
+    :return: test response
+    """
     response = get_http_method(http_method)
     if response is None:
         raise APITesterException(wrong_http_method_error_message)
