@@ -69,6 +69,9 @@ jobs:
       - run:
           command: python ./test/unit_test/xml/xml_test.py
           name: xml_test
+      - run:
+          command: python ./test/integrated_test/soap_to_dict_test/soap_to_dict_test.py
+          name: soap_to_dict_test
       # soap
       - run:
           command: python ./test/unit_test/soap_test/soap_test.py
@@ -148,6 +151,9 @@ jobs:
       - run:
           command: python ./test/unit_test/xml/xml_test.py
           name: xml_test
+      - run:
+          command: python ./test/integrated_test/soap_to_dict_test/soap_to_dict_test.py
+          name: soap_to_dict_test
       # soap
       - run:
           command: python ./test/unit_test/soap_test/soap_test.py
