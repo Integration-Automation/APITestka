@@ -14,7 +14,7 @@ from je_api_testka.utils.exception.exceptions_tag import http_method_have_wrong_
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.exception.exceptions_tag import wrong_http_method_error_message
 
-session = Session()
+_session = Session()
 
 http_method_dict = {
     "get": get,
@@ -24,13 +24,13 @@ http_method_dict = {
     "head": head,
     "delete": delete,
     "options": options,
-    "session_get": session.get,
-    "session_put": session.put,
-    "session_patch": session.patch,
-    "session_post": session.post,
-    "session_head": session.head,
-    "session_delete": session.delete,
-    "session_options": session.options,
+    "session_get": _session.get,
+    "session_put": _session.put,
+    "session_patch": _session.patch,
+    "session_post": _session.post,
+    "session_head": _session.head,
+    "session_delete": _session.delete,
+    "session_options": _session.options,
 }
 
 
