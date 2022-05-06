@@ -5,7 +5,7 @@ with open("README.md", "r") as README:
 
 setuptools.setup(
     name="je_api_testka",
-    version="0.0.65",
+    version="0.0.66",
     author="JE-Chen",
     author_email="zenmailman@gmail.com",
     description="api testing",
@@ -15,7 +15,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "requests",
-        "je_matplotlib_wrapper",
     ],
     classifiers=[
         "Programming Language :: Python :: 3.5",
