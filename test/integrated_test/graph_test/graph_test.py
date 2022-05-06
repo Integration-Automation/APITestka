@@ -1,8 +1,7 @@
-from je_api_testka import (execute_action, test_record)
 import sys
-from je_matplotlib_wrapper import set_tkinter_embed_matplotlib_barh
-from tkinter import Tk
 
+from je_api_testka import make_tkinter_request_time_graph
+from je_api_testka import execute_action
 # soap test
 url = "https://www.w3schools.com/xml/tempconvert.asmx"
 data = """
@@ -26,21 +25,8 @@ try:
 except Exception as error:
     print(repr(error), file=sys.stderr)
 
-print(test_record.record_list)
-print(test_record.error_record_list)
-
-request_time_list = list()
-request_url_list = list()
-
-for i in test_record.record_list:
-    request_time_list.append(i.get("request_time_sec"))
-    request_url_list.append(i.get("request_url"))
-
-print(request_time_list)
-print(request_url_list)
-
-set_tkinter_embed_matplotlib_barh(
-    y_content_list=request_url_list,
-    x_content_list=request_time_list,
-    show_figure_window=Tk(),
-)
+try:
+    make_tkinter_request_time_graph()
+except Exception as error:
+    print(repr(error))
+    print("yep this should be raise an exception")
