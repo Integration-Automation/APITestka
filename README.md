@@ -30,3 +30,9 @@ https://apitestka.readthedocs.io/en/latest/
 ```
 pip install je_api_testka
 ```
+
+## Requires
+
+```
+python 3.5 or later
+```

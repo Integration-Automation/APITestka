@@ -29,4 +29,4 @@ try:
     make_tkinter_request_time_graph()
 except Exception as error:
     print(repr(error))
-    print("yep this should be raise an exception")
+    print("yep this should be raise an exception", file=sys.stderr)

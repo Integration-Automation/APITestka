@@ -1,8 +1,9 @@
-import requests.exceptions
+from json import JSONDecodeError
+from requests import Response
 from requests.utils import dict_from_cookiejar
 
 
-def get_api_response_data(response: requests.Response,
+def get_api_response_data(response: Response,
                           start_time: [str, float, int],
                           end_time: [str, float, int]) -> dict:
     """
@@ -34,6 +35,6 @@ def get_api_response_data(response: requests.Response,
             response_data.update({"json": response.json()})
         else:
             response_data.update({"json": None})
-    except requests.exceptions.JSONDecodeError:
+    except JSONDecodeError:
         response_data.update({"json": None})
     return response_data
