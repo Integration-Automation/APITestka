@@ -1,3 +1,2 @@
 requests
 je_api_testka
-je_matplotlib_wrapper
