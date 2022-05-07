@@ -4,6 +4,7 @@ from je_api_testka import test_record
 from je_api_testka import execute_action
 from je_api_testka import generate_html
 
+
 test_action_list = [
     ["test_api_method",
      {"http_method": "get", "test_url": "http://httpbin.org/get",
