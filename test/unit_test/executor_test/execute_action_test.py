@@ -1,6 +1,6 @@
 import sys
 
-from je_api_testka import test_record
+from je_api_testka import test_record_instance
 from je_api_testka import execute_action
 from je_api_testka import generate_html
 
@@ -100,14 +100,14 @@ try:
 except Exception as error:
     print(repr(error), file=sys.stderr)
 
-print(test_record.record_list)
-print(len(test_record.record_list))
-print(test_record.error_record_list)
-print(len(test_record.error_record_list))
+print(test_record_instance.test_record_list)
+print(len(test_record_instance.test_record_list))
+print(test_record_instance.error_record_list)
+print(len(test_record_instance.error_record_list))
 request_time_list = list()
 request_url_list = list()
 
-for i in test_record.record_list:
+for i in test_record_instance.test_record_list:
     request_time_list.append(i.get("request_time_sec"))
     request_url_list.append(i.get("request_url"))
 

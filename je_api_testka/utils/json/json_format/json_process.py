@@ -3,8 +3,8 @@ import sys
 from json import dumps
 from json import loads
 
-from je_api_testka.utils.exception.exceptions_tag import api_test_cant_reformat_json_error
-from je_api_testka.utils.exception.exceptions_tag import wrong_json_data_error
+from je_api_testka.utils.exception.exception_tag import cant_reformat_json_error
+from je_api_testka.utils.exception.exception_tag import wrong_json_data_error
 from je_api_testka.utils.exception.exceptions import APITesterJsonException
 
 
@@ -30,4 +30,4 @@ def reformat_json(json_string: str, **kwargs):
     try:
         return __process_json(json_string, **kwargs)
     except APITesterJsonException:
-        raise APITesterJsonException(api_test_cant_reformat_json_error)
+        raise APITesterJsonException(cant_reformat_json_error)

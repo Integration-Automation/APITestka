@@ -2,13 +2,13 @@ from typing import Tuple
 
 from tkinter import Tk
 
-from je_api_testka.utils.test_record.record_test_result_class import test_record
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 
 def get_list(get_data_horizontal: str, get_data_vertical: str) -> Tuple[list, list]:
     list_vertical = list()
     list_horizontal = list()
-    for i in test_record.record_list:
+    for i in test_record_instance.test_record_list:
         list_vertical.append(i.get(get_data_vertical))
         list_horizontal.append(i.get(get_data_horizontal))
     return list_vertical, list_horizontal
