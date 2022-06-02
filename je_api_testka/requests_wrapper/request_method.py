@@ -10,36 +10,36 @@ from je_api_testka.utils.exception.exceptions import APITesterGetDataException
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException
 from je_api_testka.utils.get_data_strcture.get_api_data import get_api_response_data
 
-from je_api_testka.utils.exception.exceptions_tag import api_test_get_data_error_message
+from je_api_testka.utils.exception.exception_tag import get_data_error_message
 
-from je_api_testka.utils.exception.exceptions_tag import api_test_get_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_put_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_delete_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_post_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_head_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_options_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_patch_error_message
-from je_api_testka.utils.exception.exceptions_tag import api_test_session_error_message
+from je_api_testka.utils.exception.exception_tag import get_error_message
+from je_api_testka.utils.exception.exception_tag import put_error_message
+from je_api_testka.utils.exception.exception_tag import delete_error_message
+from je_api_testka.utils.exception.exception_tag import post_error_message
+from je_api_testka.utils.exception.exception_tag import head_error_message
+from je_api_testka.utils.exception.exception_tag import options_error_message
+from je_api_testka.utils.exception.exception_tag import patch_error_message
+from je_api_testka.utils.exception.exception_tag import session_error_message
 
-from je_api_testka.utils.test_record.record_test_result_class import test_record
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 from je_api_testka.utils.assert_result.result_check import check_result
 
 exception_message_dict = {
-    "get": api_test_get_error_message,
-    "put": api_test_put_error_message,
-    "delete": api_test_delete_error_message,
-    "post": api_test_post_error_message,
-    "head": api_test_head_error_message,
-    "options": api_test_options_error_message,
-    "patch": api_test_patch_error_message,
-    "session_get": api_test_session_error_message,
-    "session_put": api_test_session_error_message,
-    "session_patch": api_test_session_error_message,
-    "session_post": api_test_session_error_message,
-    "session_head": api_test_session_error_message,
-    "session_delete": api_test_session_error_message,
-    "session_options": api_test_session_error_message,
+    "get": get_error_message,
+    "put": put_error_message,
+    "delete": delete_error_message,
+    "post": post_error_message,
+    "head": head_error_message,
+    "options": options_error_message,
+    "patch": patch_error_message,
+    "session_get": session_error_message,
+    "session_put": session_error_message,
+    "session_patch": session_error_message,
+    "session_post": session_error_message,
+    "session_head": session_error_message,
+    "session_delete": session_error_message,
+    "session_options": session_error_message,
 
 }
 
@@ -58,7 +58,7 @@ def get_response(response: requests.Response,
     try:
         return get_api_response_data(response, start_time, end_time)
     except APITesterGetDataException:
-        raise APITesterGetDataException(api_test_get_data_error_message)
+        raise APITesterGetDataException(get_data_error_message)
 
 
 def test_api_method(http_method: str, test_url: str,
@@ -88,21 +88,21 @@ def test_api_method(http_method: str, test_url: str,
             end_time = datetime.datetime.now()
             response_data = get_response(response, start_time, end_time)
             if clean_record:
-                test_record.clean_record()
+                test_record_instance.clean_record()
             if result_check_dict is None:
                 if record_request_info:
-                    test_record.record_list.append(response_data)
+                    test_record_instance.test_record_list.append(response_data)
                 return {"response": response, "response_data": response_data}
             else:
                 check_result(response_data, result_check_dict)
                 if record_request_info:
-                    test_record.record_list.append(response_data)
+                    test_record_instance.test_record_list.append(response_data)
                 return {"response": response, "response_data": response_data}
         except APITesterExecuteException as error:
             raise repr(error)
     except Exception as error:
         print(repr(error), file=sys.stderr)
-        test_record.error_record_list.append([
+        test_record_instance.error_record_list.append([
             {
                 "http_method": http_method,
                 "test_url": test_url,

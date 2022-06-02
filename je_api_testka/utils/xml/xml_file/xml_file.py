@@ -1,8 +1,8 @@
 import xml.dom.minidom
 from xml.etree import ElementTree
 
-from je_api_testka.utils.exception.exceptions_tag import api_test_cant_read_xml_error
-from je_api_testka.utils.exception.exceptions_tag import api_test_xml_type_error
+from je_api_testka.utils.exception.exception_tag import cant_read_xml_error
+from je_api_testka.utils.exception.exception_tag import xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException
 from je_api_testka.utils.exception.exceptions import APITesterXMLTypeException
 
@@ -26,7 +26,7 @@ class XMLParser(object):
         self.xml_string = xml_string.strip()
         xml_type = xml_type.lower()
         if xml_type not in ["file", "string"]:
-            raise APITesterXMLTypeException(api_test_xml_type_error)
+            raise APITesterXMLTypeException(xml_type_error)
         if xml_type == "string":
             self.xml_parser_from_string()
         else:
@@ -40,7 +40,7 @@ class XMLParser(object):
         try:
             self.xml_root = ElementTree.fromstring(self.xml_string, **kwargs)
         except APITesterXMLException:
-            raise APITesterXMLException(api_test_cant_read_xml_error)
+            raise APITesterXMLException(cant_read_xml_error)
         return self.xml_root
 
     def xml_parser_from_file(self, **kwargs):
@@ -51,7 +51,7 @@ class XMLParser(object):
         try:
             self.tree = ElementTree.parse(self.xml_string, **kwargs)
         except APITesterXMLException:
-            raise APITesterXMLException(api_test_cant_read_xml_error)
+            raise APITesterXMLException(cant_read_xml_error)
         self.xml_root = self.tree.getroot()
         self.xml_from_type = "file"
         return self.xml_root

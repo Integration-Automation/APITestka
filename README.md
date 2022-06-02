@@ -2,7 +2,7 @@
 
 ---
 
-### API Testka as a tool for API Test
+### API Testka as automation framework for API testing
 
 #### Features
 * HTTP Method test 
@@ -12,7 +12,6 @@
 * xml to json and json to xml
 * Soap test
 * CLI with action file
-
 ---
 
 [![CircleCI](https://circleci.com/gh/JE-Chen/APITestka/tree/main.svg?style=svg&circle-token=32826b3cccdffba93891691795bbded287a0b7fe)](https://circleci.com/gh/JE-Chen/APITestka/tree/main)

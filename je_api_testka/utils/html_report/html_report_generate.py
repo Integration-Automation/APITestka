@@ -1,8 +1,8 @@
 import sys
 
-from je_api_testka.utils.test_record.record_test_result_class import test_record
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 from je_api_testka.utils.exception.exceptions import HTMLException
-from je_api_testka.utils.exception.exceptions_tag import html_generate_no_data_tag
+from je_api_testka.utils.exception.exception_tag import html_generate_no_data_tag
 from threading import Lock
 
 lock = Lock()
@@ -84,7 +84,7 @@ _html_string_bottom = \
     </html>
     """.strip()
 
-success_table = \
+_success_table = \
     r"""
     <table class="main_table">
         <thead>
@@ -154,7 +154,7 @@ success_table = \
     <br>
     """.strip()
 
-failure_table = \
+_failure_table = \
     r"""
     <table class="main_table">
     <thead>
@@ -202,13 +202,13 @@ def generate_html(html_name: str = "default_name"):
     :param html_name: save html file name
     :return: html_string
     """
-    if len(test_record.record_list) == 0 and len(test_record.error_record_list) == 0:
+    if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise HTMLException(html_generate_no_data_tag)
     else:
         success_list = list()
-        for record_data in test_record.record_list:
+        for record_data in test_record_instance.test_record_list:
             success_list.append(
-                success_table.format(
+                _success_table.format(
                     status_code=record_data.get("status_code"),
                     text=record_data.get("text"),
                     content=str(record_data.get("content"), encoding="utf-8"),
@@ -226,12 +226,12 @@ def generate_html(html_name: str = "default_name"):
                 )
             )
         failure_list = list()
-        if len(test_record.error_record_list) == 0:
+        if len(test_record_instance.error_record_list) == 0:
             pass
         else:
-            for record_data in test_record.error_record_list:
+            for record_data in test_record_instance.error_record_list:
                 failure_list.append(
-                    failure_table.format(
+                    _failure_table.format(
                         http_method=record_data[0].get("http_method"),
                         test_url=record_data[0].get("test_url"),
                         soap=record_data[0].get("soap"),
