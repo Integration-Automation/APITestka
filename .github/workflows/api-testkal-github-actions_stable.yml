@@ -1,4 +1,4 @@
-name: AutoControl GitHub Actions Dev
+name: AutoControl GitHub Actions Stable
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build_dev_version:
+  build_stable_version:
     runs-on: ubuntu-20.04
 
     steps:
