@@ -33,5 +33,5 @@ pip install je_api_testka
 ## Requires
 
 ```
-python 3.5 or later
+python 3.6 or later
 ```
