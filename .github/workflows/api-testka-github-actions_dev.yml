@@ -1,4 +1,4 @@
-name: AutoControl GitHub Actions Dev
+name: APITestka GitHub Actions Dev
 
 on:
   push:

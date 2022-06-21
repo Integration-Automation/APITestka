@@ -16,9 +16,9 @@
 
 [![CircleCI](https://circleci.com/gh/JE-Chen/APITestka/tree/main.svg?style=svg&circle-token=32826b3cccdffba93891691795bbded287a0b7fe)](https://circleci.com/gh/JE-Chen/APITestka/tree/main)
 
-[![AutoControl GitHub Actions Dev](https://github.com/JE-Chen/APITestka/actions/workflows/api-testkal-github-actions_dev.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testkal-github-actions_dev.yml)
+[![APITestka GitHub Actions Dev](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_dev.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_dev.yml)
 
-[![AutoControl GitHub Actions Dev](https://github.com/JE-Chen/APITestka/actions/workflows/api-testkal-github-actions_stable.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testkal-github-actions_stable.yml)
+[![AutoControl GitHub Actions Stable](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_stable.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_stable.yml)
 
 ### Documentation
 
