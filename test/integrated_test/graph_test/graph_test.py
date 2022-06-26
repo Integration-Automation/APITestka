@@ -1,7 +1,8 @@
 import sys
 
-from je_api_testka import make_tkinter_request_time_graph
 from je_api_testka import execute_action
+from je_api_testka import make_tkinter_request_time_graph
+
 # soap test
 url = "https://www.w3schools.com/xml/tempconvert.asmx"
 data = """

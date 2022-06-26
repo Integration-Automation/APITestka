@@ -1,6 +1,5 @@
-from typing import Tuple
-
 from tkinter import Tk
+from typing import Tuple
 
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 

@@ -1,9 +1,8 @@
-import json
 import os
 
 from je_api_testka import read_action_json
-from je_api_testka import write_action_json
 from je_api_testka import reformat_json
+from je_api_testka import write_action_json
 
 test_list = \
     [

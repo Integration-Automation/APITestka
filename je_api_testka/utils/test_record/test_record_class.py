@@ -13,4 +13,3 @@ class TestRecord(object):
 
 
 test_record_instance = TestRecord()
-

@@ -1,4 +1,5 @@
 from json import JSONDecodeError
+
 from requests import Response
 from requests.utils import dict_from_cookiejar
 

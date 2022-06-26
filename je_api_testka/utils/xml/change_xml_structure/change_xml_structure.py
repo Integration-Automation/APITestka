@@ -33,6 +33,7 @@ def dict_to_elements_tree(json_dict: dict):
     :param json_dict: json dict
     :return: json dict to xml string
     """
+
     def _to_elements_tree(json_dict, root):
         if not json_dict:
             pass
@@ -54,6 +55,7 @@ def dict_to_elements_tree(json_dict: dict):
                     _to_elements_tree(value, ElementTree.SubElement(root, key))
         else:
             raise TypeError('invalid type: ' + str(type(json_dict)))
+
     assert isinstance(json_dict, dict) and len(json_dict) == 1
     tag, body = next(iter(json_dict.items()))
     node = ElementTree.Element(tag)

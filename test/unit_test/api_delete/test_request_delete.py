@@ -2,8 +2,8 @@ import sys
 
 import requests.exceptions
 
-from je_api_testka import test_api_method
 from je_api_testka import generate_html
+from je_api_testka import test_api_method
 
 if __name__ == "__main__":
     test_response = test_api_method("delete", "http://httpbin.org/delete")

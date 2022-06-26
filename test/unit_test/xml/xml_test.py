@@ -1,7 +1,8 @@
-from je_api_testka import XMLParser
-from je_api_testka import elements_tree_to_dict
-from je_api_testka import dict_to_elements_tree
 from pprint import pprint
+
+from je_api_testka import XMLParser
+from je_api_testka import dict_to_elements_tree
+from je_api_testka import elements_tree_to_dict
 
 dict_test_xml_string = \
     """<?xml version="1.0"?>
