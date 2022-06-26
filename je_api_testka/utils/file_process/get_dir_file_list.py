@@ -1,5 +1,5 @@
-from os import walk
 from os import getcwd
+from os import walk
 from os.path import abspath
 from os.path import join
 
@@ -16,4 +16,3 @@ def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extensio
         for file in files
         if file.endswith(default_search_file_extension.lower())
     ]
-

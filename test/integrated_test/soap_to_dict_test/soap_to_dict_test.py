@@ -1,8 +1,8 @@
+from je_api_testka import XMLParser
+from je_api_testka import dict_to_elements_tree
+from je_api_testka import elements_tree_to_dict
 from je_api_testka import reformat_xml_file
 from je_api_testka import test_api_method
-from je_api_testka import elements_tree_to_dict
-from je_api_testka import dict_to_elements_tree
-from je_api_testka import XMLParser
 
 url = "https://www.w3schools.com/xml/tempconvert.asmx"
 data = """

@@ -1,9 +1,9 @@
 import sys
-
-from je_api_testka.utils.test_record.test_record_class import test_record_instance
-from je_api_testka.utils.exception.exceptions import HTMLException
-from je_api_testka.utils.exception.exception_tag import html_generate_no_data_tag
 from threading import Lock
+
+from je_api_testka.utils.exception.exception_tag import html_generate_no_data_tag
+from je_api_testka.utils.exception.exceptions import HTMLException
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 lock = Lock()
 

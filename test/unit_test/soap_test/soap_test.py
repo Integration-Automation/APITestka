@@ -16,5 +16,3 @@ test_result = test_api_method(http_method="post", test_url=url, soap=True, data=
 print(test_result.get("response_data").get("text"))
 print(reformat_xml_file(test_result.get("response_data").get("text")))
 print(test_result.get("response_data"))
-
-

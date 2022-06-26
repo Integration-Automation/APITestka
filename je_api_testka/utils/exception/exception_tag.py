@@ -61,4 +61,3 @@ status_requests_url_error = "requests url error"
 status_requests_body_error = "requests body error"
 # HTML
 html_generate_no_data_tag = "record is None"
-

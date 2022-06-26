@@ -2,7 +2,6 @@ import sys
 
 from je_api_testka import test_api_method
 
-
 if __name__ == "__main__":
     import requests
 

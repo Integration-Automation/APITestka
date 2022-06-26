@@ -11,8 +11,8 @@ from requests import post
 from requests import put
 
 from je_api_testka.utils.exception.exception_tag import http_method_have_wrong_type
-from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.exception.exception_tag import wrong_http_method_error_message
+from je_api_testka.utils.exception.exceptions import APITesterException
 
 _session = Session()
 
@@ -35,9 +35,9 @@ http_method_dict = {
 
 
 def get_http_method(http_method: str) -> [
-            requests.get, requests.put, requests.patch, requests.post, requests.head, requests.delete,
-            Session.get, Session.put, Session.patch, Session.post, Session.head, Session.head, Session.options
-        ]:
+    requests.get, requests.put, requests.patch, requests.post, requests.head, requests.delete,
+    Session.get, Session.put, Session.patch, Session.post, Session.head, Session.head, Session.options
+]:
     """
     :param http_method: what http method we use to api test
     :return: one of method in http_method_dict if not exists will raise exception

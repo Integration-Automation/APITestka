@@ -1,12 +1,10 @@
 import json
-import os.path
 from pathlib import Path
 from threading import Lock
 
-from je_api_testka.utils.exception.exceptions import APITesterJsonException
 from je_api_testka.utils.exception.exception_tag import cant_find_json_error
 from je_api_testka.utils.exception.exception_tag import cant_save_json_error
-
+from je_api_testka.utils.exception.exceptions import APITesterJsonException
 
 lock = Lock()
 
@@ -42,4 +40,3 @@ def write_action_json(json_save_path: str, action_json: list):
         raise APITesterJsonException(cant_save_json_error)
     finally:
         lock.release()
-

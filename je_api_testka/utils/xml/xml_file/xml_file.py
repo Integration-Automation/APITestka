@@ -65,5 +65,3 @@ class XMLParser(object):
         content = self.element_tree.fromstring(write_content)
         tree = self.element_tree.ElementTree(content)
         tree.write(write_xml_filename, encoding="utf-8")
-
-

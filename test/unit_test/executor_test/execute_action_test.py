@@ -1,9 +1,8 @@
 import sys
 
-from je_api_testka import test_record_instance
 from je_api_testka import execute_action
 from je_api_testka import generate_html
-
+from je_api_testka import test_record_instance
 
 test_action_list = [
     ["test_api_method",
