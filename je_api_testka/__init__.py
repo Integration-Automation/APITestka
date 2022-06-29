@@ -6,6 +6,7 @@ from je_api_testka.utils.create_graph.create_graph import make_tkinter_request_t
 from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.executor.action_executor import execute_files
 from je_api_testka.utils.executor.action_executor import executor
+from je_api_testka.utils.executor.action_executor import add_command_to_executor
 # project
 from je_api_testka.utils.file_process.create_project_structure import create_template_dir
 # file process

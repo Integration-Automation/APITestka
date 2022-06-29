@@ -128,5 +128,9 @@ class APIAssertException(APITesterException):
 
 # html exception
 
-class HTMLException(APITesterException):
+class APIHTMLException(APITesterException):
+    pass
+
+
+class APIAddCommandException(APITesterException):
     pass

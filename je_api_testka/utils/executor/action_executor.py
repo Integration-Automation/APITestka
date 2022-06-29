@@ -1,9 +1,10 @@
 import sys
+import types
 
 from je_api_testka.requests_wrapper.request_method import test_api_method
-from je_api_testka.utils.exception.exception_tag import executor_data_error
-from je_api_testka.utils.exception.exception_tag import executor_list_error
-from je_api_testka.utils.exception.exceptions import APITesterExecuteException
+from je_api_testka.utils.exception.exception_tag import executor_data_error, executor_list_error
+from je_api_testka.utils.exception.exception_tag import add_command_exception_tag
+from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
 from je_api_testka.utils.html_report.html_report_generate import generate_html
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 
@@ -69,6 +70,14 @@ class Executor(object):
 
 
 executor = Executor()
+
+
+def add_command_to_executor(command_dict: dict):
+    for command_name, command in command_dict.items():
+        if isinstance(command, (types.MethodType, types.FunctionType)):
+            executor.event_dict.update({command_name: command})
+        else:
+            raise APIAddCommandException(add_command_exception_tag)
 
 
 def execute_action(action_list: list):
