@@ -2,7 +2,7 @@ import sys
 from threading import Lock
 
 from je_api_testka.utils.exception.exception_tag import html_generate_no_data_tag
-from je_api_testka.utils.exception.exceptions import HTMLException
+from je_api_testka.utils.exception.exceptions import APIHTMLException
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 lock = Lock()
@@ -203,7 +203,7 @@ def generate_html(html_name: str = "default_name"):
     :return: html_string
     """
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
-        raise HTMLException(html_generate_no_data_tag)
+        raise APIHTMLException(html_generate_no_data_tag)
     else:
         success_list = list()
         for record_data in test_record_instance.test_record_list:
