@@ -39,8 +39,7 @@ class Executor(object):
         for loop and use execute_event function to execute
         :return: recode string, response as list
         """
-        execute_record_string = ""
-        event_response_list = []
+        execute_record_dict = dict()
         try:
             if len(action_list) > 0 or type(action_list) is not list:
                 pass
@@ -51,12 +50,11 @@ class Executor(object):
         for action in action_list:
             try:
                 event_response = self.execute_event(action)
-                print("execute: ", str(action))
-                execute_record_string = "".join(execute_record_string)
-                event_response_list.append(event_response)
+                execute_record = "execute: " + str(action)
+                execute_record_dict.update({execute_record: event_response})
             except Exception as error:
                 print(repr(error), file=sys.stderr)
-        return execute_record_string, event_response_list
+        return execute_record_dict
 
     def execute_files(self, execute_files_list: list):
         """

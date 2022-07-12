@@ -21,7 +21,7 @@ test_action_list = [
      ]
 ]
 
-for action_response in execute_action(test_action_list)[1]:
+for action_response in execute_action(test_action_list).values():
     response = action_response.get("response_data")
     print(response.get("text"))
     print(response.get("start_time"))
@@ -35,7 +35,7 @@ test_action_list = [
 ]
 
 try:
-    for action_response in execute_action(test_action_list)[1]:
+    for action_response in execute_action(test_action_list).values():
         response = action_response.get("response_data")
         print(response.get("text"))
 except Exception as error:
@@ -62,7 +62,7 @@ test_action_list = [
 ]
 
 try:
-    for action_response in execute_action(test_action_list)[1]:
+    for action_response in execute_action(test_action_list).values():
         response = action_response.get("response_data")
         print(response.get("text"))
 except Exception as error:
@@ -76,7 +76,7 @@ test_action_list = [
 ]
 
 try:
-    for action_response in execute_action(test_action_list)[1]:
+    for action_response in execute_action(test_action_list).values():
         assert action_response is None
 except Exception as error:
     print(repr(error), file=sys.stderr)
@@ -89,20 +89,17 @@ test_action_list = [
     ["generate_html", {"html_name": "generate_html_test"}]
 ]
 
+action_response = execute_action(test_action_list)
 try:
-    for action_response in execute_action(test_action_list)[1]:
+    for action_response in execute_action(test_action_list).values():
         if action_response is None:
-            print(action_response)
+            pass
         else:
-            response = action_response.get("response_data")
-            print(response.get("text"))
+            print(action_response)
+
 except Exception as error:
     print(repr(error), file=sys.stderr)
 
-print(test_record_instance.test_record_list)
-print(len(test_record_instance.test_record_list))
-print(test_record_instance.error_record_list)
-print(len(test_record_instance.error_record_list))
 request_time_list = list()
 request_url_list = list()
 
@@ -113,4 +110,6 @@ for i in test_record_instance.test_record_list:
 print(request_time_list)
 print(request_url_list)
 
+
 print(generate_html("test"))
+
