@@ -18,7 +18,7 @@ class Executor(object):
             "generate_html": generate_html,
         }
 
-    def execute_event(self, action: list):
+    def _execute_event(self, action: list):
         """
         :param action: execute action
         :return: what event return
@@ -27,9 +27,9 @@ class Executor(object):
         if len(action) == 2:
             return event(**action[1])
         else:
-            raise APITesterExecuteException(executor_data_error)
+            raise APITesterExecuteException(executor_data_error + " " + str(action))
 
-    def execute_action(self, action_list: list):
+    def execute_action(self, action_list: [list, dict]) -> dict:
         """
         :param action_list: like this structure
         [
@@ -39,6 +39,10 @@ class Executor(object):
         for loop and use execute_event function to execute
         :return: recode string, response as list
         """
+        if type(action_list) is dict:
+            action_list = action_list.get("api_testka", None)
+            if action_list is None:
+                raise APITesterExecuteException(executor_list_error)
         execute_record_dict = dict()
         try:
             if len(action_list) > 0 or type(action_list) is not list:
@@ -49,11 +53,15 @@ class Executor(object):
             print(repr(error), file=sys.stderr)
         for action in action_list:
             try:
-                event_response = self.execute_event(action)
+                event_response = self._execute_event(action)
                 execute_record = "execute: " + str(action)
                 execute_record_dict.update({execute_record: event_response})
             except Exception as error:
                 print(repr(error), file=sys.stderr)
+                print(action, file=sys.stderr)
+        for key, value in execute_record_dict.items():
+            print(key)
+            print(value)
         return execute_record_dict
 
     def execute_files(self, execute_files_list: list):
