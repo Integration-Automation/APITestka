@@ -12,6 +12,7 @@
 * result compare
 * xml to json and json to xml
 * Soap test
+* Generate HTML Report
 * CLI with action file
 
 ---
