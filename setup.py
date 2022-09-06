@@ -17,7 +17,7 @@ setuptools.setup(
         "requests",
     ],
     classifiers=[
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.7",
         "Development Status :: 2 - Pre-Alpha",
         "Environment :: Win32 (MS Windows)",
         "Environment :: MacOS X",
