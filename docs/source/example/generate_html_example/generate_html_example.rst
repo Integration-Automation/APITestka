@@ -6,18 +6,17 @@ APITestka Generate Html Example
 
     import sys
 
-    from je_api_testka import test_record
     from je_api_testka import execute_action
     from je_api_testka import generate_html
+    from je_api_testka import test_record_instance
 
-    # do something test then we can output test report
     test_action_list = [
         ["test_api_method",
          {"http_method": "get", "test_url": "http://httpbin.org/get",
           "headers": {
-              'x-requested-with': 'XMLHttpRequest',
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36',
+              "x-requested-with": "XMLHttpRequest",
+              "Content-Type": "application/x-www-form-urlencoded",
+              "User-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
           }
           }
          ],
@@ -28,7 +27,7 @@ APITestka Generate Html Example
          ]
     ]
 
-    for action_response in execute_action(test_action_list)[1]:
+    for action_response in execute_action(test_action_list).values():
         response = action_response.get("response_data")
         print(response.get("text"))
         print(response.get("start_time"))
@@ -42,7 +41,7 @@ APITestka Generate Html Example
     ]
 
     try:
-        for action_response in execute_action(test_action_list)[1]:
+        for action_response in execute_action(test_action_list).values():
             response = action_response.get("response_data")
             print(response.get("text"))
     except Exception as error:
@@ -69,7 +68,7 @@ APITestka Generate Html Example
     ]
 
     try:
-        for action_response in execute_action(test_action_list)[1]:
+        for action_response in execute_action(test_action_list).values():
             response = action_response.get("response_data")
             print(response.get("text"))
     except Exception as error:
@@ -83,7 +82,7 @@ APITestka Generate Html Example
     ]
 
     try:
-        for action_response in execute_action(test_action_list)[1]:
+        for action_response in execute_action(test_action_list).values():
             assert action_response is None
     except Exception as error:
         print(repr(error), file=sys.stderr)
@@ -96,20 +95,26 @@ APITestka Generate Html Example
         ["generate_html", {"html_name": "generate_html_test"}]
     ]
 
+    action_response = execute_action(test_action_list)
     try:
-        for action_response in execute_action(test_action_list)[1]:
+        for action_response in execute_action(test_action_list).values():
             if action_response is None:
-                print(action_response)
+                pass
             else:
-                response = action_response.get("response_data")
-                print(response.get("text"))
+                print(action_response)
+
     except Exception as error:
         print(repr(error), file=sys.stderr)
 
-    print(test_record.record_list)
-    print(len(test_record.record_list))
-    print(test_record.error_record_list)
-    print(len(test_record.error_record_list))
+    request_time_list = list()
+    request_url_list = list()
 
-    # html name is test.html and this html will recode all test detail
+    for i in test_record_instance.test_record_list:
+        request_time_list.append(i.get("request_time_sec"))
+        request_url_list.append(i.get("request_url"))
+
+    print(request_time_list)
+    print(request_url_list)
+
+
     print(generate_html("test"))
