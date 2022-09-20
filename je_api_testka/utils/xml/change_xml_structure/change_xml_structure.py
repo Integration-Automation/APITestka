@@ -7,15 +7,15 @@ def elements_tree_to_dict(elements_tree):
     :param elements_tree: full xml string
     :return: xml str to dict
     """
-    elements_dict = {elements_tree.tag: {} if elements_tree.attrib else None}
-    children = list(elements_tree)
+    elements_dict: dict = {elements_tree.tag: {} if elements_tree.attrib else None}
+    children: list = list(elements_tree)
     if children:
         default_dict = defaultdict(list)
         for dc in map(elements_tree_to_dict, children):
             for key, value in dc.items():
                 default_dict[key].append(value)
-        elements_dict = {elements_tree.tag: {key: value[0] if len(value) == 1 else value
-                                             for key, value in default_dict.items()}}
+        elements_dict: dict = {
+            elements_tree.tag: {key: value[0] if len(value) == 1 else value for key, value in default_dict.items()}}
     if elements_tree.attrib:
         elements_dict[elements_tree.tag].update(('@' + key, value) for key, value in elements_tree.attrib.items())
     if elements_tree.text:
@@ -34,7 +34,7 @@ def dict_to_elements_tree(json_dict: dict):
     :return: json dict to xml string
     """
 
-    def _to_elements_tree(json_dict, root):
+    def _to_elements_tree(json_dict: dict, root):
         if not json_dict:
             pass
         elif isinstance(json_dict, str):
