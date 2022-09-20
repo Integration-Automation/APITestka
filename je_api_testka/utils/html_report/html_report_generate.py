@@ -205,7 +205,7 @@ def generate_html(html_name: str = "default_name"):
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIHTMLException(html_generate_no_data_tag)
     else:
-        success_list = list()
+        success_list: list = list()
         for record_data in test_record_instance.test_record_list:
             success_list.append(
                 _success_table.format(
@@ -225,7 +225,7 @@ def generate_html(html_name: str = "default_name"):
                     end_time=record_data.get("end_time"),
                 )
             )
-        failure_list = list()
+        failure_list: list = list()
         if len(test_record_instance.error_record_list) == 0:
             pass
         else:

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import sys
 
 import requests
@@ -72,14 +72,14 @@ def test_api_method(http_method: str, test_url: str,
     :return:
     """
     try:
-        start_time = datetime.datetime.now()
+        start_time: datetime = datetime.now()
         if soap is False:
             response = api_tester_method(http_method, test_url=test_url, **kwargs)
         else:
             headers = CaseInsensitiveDict()
             headers["Content-Type"] = "application/soap+xml"
             return test_api_method(http_method, test_url=test_url, headers=headers, **kwargs)
-        end_time = datetime.datetime.now()
+        end_time = datetime.now()
         response_data = get_response(response, start_time, end_time)
         if clean_record:
             test_record_instance.clean_record()

@@ -1,5 +1,6 @@
 import sys
 import types
+import typing
 
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tag import executor_data_error, executor_list_error
@@ -23,7 +24,7 @@ class Executor(object):
         :param action: execute action
         :return: what event return
         """
-        event = self.event_dict.get(action[0])
+        event: typing.Callable = self.event_dict.get(action[0])
         if len(action) == 2:
             return event(**action[1])
         else:
@@ -40,7 +41,7 @@ class Executor(object):
         :return: recode string, response as list
         """
         if type(action_list) is dict:
-            action_list = action_list.get("api_testka", None)
+            action_list: list = action_list.get("api_testka", None)
             if action_list is None:
                 raise APITesterExecuteException(executor_list_error)
         execute_record_dict = dict()
@@ -54,7 +55,7 @@ class Executor(object):
         for action in action_list:
             try:
                 event_response = self._execute_event(action)
-                execute_record = "execute: " + str(action)
+                execute_record: str = "execute: " + str(action)
                 execute_record_dict.update({execute_record: event_response})
             except Exception as error:
                 print(repr(error), file=sys.stderr)
@@ -69,7 +70,7 @@ class Executor(object):
         :param execute_files_list: list include execute files path
         :return: every execute detail as list
         """
-        execute_detail_list = list()
+        execute_detail_list: list = list()
         for file in execute_files_list:
             execute_detail_list.append(self.execute_action(read_action_json(file)))
         return execute_detail_list

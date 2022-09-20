@@ -18,7 +18,7 @@ def make_tkinter_request_time_graph():
         from je_tk_plot import set_tkinter_embed_matplotlib_barh
     except ImportError as error:
         raise ImportError(repr(error) + " you need install je_tk_plot to use this")
-    show_data = get_list("request_time_sec", "request_url")
+    show_data: Tuple[list, list] = get_list("request_time_sec", "request_url")
     set_tkinter_embed_matplotlib_barh(
         y_content_list=show_data[0],
         x_content_list=show_data[1],

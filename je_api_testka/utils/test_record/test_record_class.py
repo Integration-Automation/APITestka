@@ -4,12 +4,12 @@ class TestRecord(object):
     """
 
     def __init__(self):
-        self.test_record_list = list()
-        self.error_record_list = list()
+        self.test_record_list: list = list()
+        self.error_record_list: list = list()
 
     def clean_record(self):
-        self.test_record_list = list()
-        self.error_record_list = list()
+        self.test_record_list: list = list()
+        self.error_record_list: list = list()
 
 
 test_record_instance = TestRecord()
