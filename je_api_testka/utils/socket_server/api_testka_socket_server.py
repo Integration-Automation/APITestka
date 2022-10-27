@@ -1,14 +1,16 @@
 import json
 import socketserver
+import sys
 import threading
 
-from je_api_testka import execute_action
+from je_api_testka.utils.executor.action_executor import execute_action
 
 
 class TCPServerHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         command_string = str(self.request.recv(8192).strip(), encoding="utf-8")
+        socket = self.request
         print("command is: " + command_string, flush=True)
         if command_string == "quit_server":
             self.server.shutdown()
@@ -17,9 +19,19 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
         else:
             try:
                 execute_str = json.loads(command_string)
-                execute_action(execute_str)
+                for execute_function, execute_return in execute_action(execute_str).items():
+                    socket.sendto(str(execute_return).encode("utf-8"), self.client_address)
+                    socket.sendto("\n".encode("utf-8"), self.client_address)
+                socket.sendto("Return_Data_Over_JE".encode("utf-8"), self.client_address)
+                socket.sendto("\n".encode("utf-8"), self.client_address)
             except Exception as error:
-                print(repr(error))
+                try:
+                    socket.sendto(str(error).encode("utf-8"), self.client_address)
+                    socket.sendto("\n".encode("utf-8"), self.client_address)
+                    socket.sendto("Return_Data_Over_JE".encode("utf-8"), self.client_address)
+                    socket.sendto("\n".encode("utf-8"), self.client_address)
+                except Exception as error:
+                    print(repr(error))
 
 
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
@@ -29,7 +41,12 @@ class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         self.close_flag: bool = False
 
 
-def start_autocontrol_socket_server(host: str = "localhost", port: int = 9939):
+def start_apitestka_socket_server(host: str = "localhost", port: int = 9939):
+    if len(sys.argv) == 2:
+        host = sys.argv[1]
+    elif len(sys.argv) == 3:
+        host = sys.argv[1]
+        port = int(sys.argv[2])
     server = TCPServer((host, port), TCPServerHandler)
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.daemon = True

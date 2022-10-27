@@ -60,6 +60,8 @@ class Executor(object):
             except Exception as error:
                 print(repr(error), file=sys.stderr)
                 print(action, file=sys.stderr)
+                execute_record = "execute: " + str(action)
+                execute_record_dict.update({execute_record: repr(error)})
         for key, value in execute_record_dict.items():
             print(key)
             print(value)
