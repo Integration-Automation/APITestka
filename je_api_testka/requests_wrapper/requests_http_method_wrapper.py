@@ -53,16 +53,20 @@ def get_http_method(http_method: str) -> [
         print(repr(error), file=sys.stderr)
 
 
-def api_tester_method(http_method: str, test_url: str, **kwargs) -> requests.Response:
+def api_tester_method(http_method: str, test_url: str, verify: bool = False, timeout: int = 5,
+                      allow_redirects: bool = False, **kwargs) -> requests.Response:
     """
     :param http_method: what http method we use to api test
     :param test_url: what url we want to test
     :param kwargs: use to setting
+    :param verify:
+    :param timeout:
+    :param allow_redirects:
     :return: test response
     """
     response = get_http_method(http_method)
     if response is None:
         raise APITesterException(wrong_http_method_error_message)
     else:
-        response = response(test_url, **kwargs)
+        response = response(test_url, verify=verify, timeout=timeout, allow_redirects=allow_redirects, **kwargs)
     return response

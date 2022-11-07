@@ -58,7 +58,9 @@ def get_response(response: requests.Response,
 
 def test_api_method(http_method: str, test_url: str,
                     soap: bool = False, record_request_info: bool = True,
-                    clean_record: bool = False, result_check_dict: dict = None, **kwargs) \
+                    clean_record: bool = False, result_check_dict: dict = None
+                    , verify: bool = False, timeout: int = 5, allow_redirects: bool = False,
+                    **kwargs) \
         -> (requests.Response, dict):
     """
     set requests http_method url headers and record response and record report
@@ -74,13 +76,15 @@ def test_api_method(http_method: str, test_url: str,
     try:
         start_time: datetime = datetime.now()
         if soap is False:
-            response = api_tester_method(http_method, test_url=test_url, **kwargs)
+            response = api_tester_method(http_method, test_url=test_url, verify=verify, timeout=timeout,
+                                         allow_redirects=allow_redirects, **kwargs)
         else:
             headers = CaseInsensitiveDict()
             headers["Content-Type"] = "application/soap+xml"
             return test_api_method(http_method, test_url=test_url, headers=headers, **kwargs)
         end_time = datetime.now()
         response_data = get_response(response, start_time, end_time)
+        response.raise_for_status()
         if clean_record:
             test_record_instance.clean_record()
         if result_check_dict is None:
