@@ -29,3 +29,4 @@ if __name__ == "__main__":
         test_response = test_api_method("http://httpbin.org/get", "get")
     except Exception as error:
         print(repr(error), file=sys.stderr)
+
