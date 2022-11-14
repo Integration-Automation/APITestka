@@ -2,9 +2,9 @@
 
 ---
 
-### API Testka as automation framework for API testing
+## API Testka as automation framework for API testing
 
-#### Features
+### Features
 
 * HTTP Method test
 * Get response data body etc...

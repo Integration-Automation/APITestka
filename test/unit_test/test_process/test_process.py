@@ -20,7 +20,7 @@ def read_program_error_output_from_process():
 
 
 test_list = ["python", "-m", "je_api_testka", "--execute_str",
-        '{"api_testka":[["test_api_method",{ "http_method": "post", "test_url": "http://httpbin.org/post", "params": { "task": "new task" } }], ["test_api_method", { "http_method": "post", "test_url": "http://httpbin.org/post"}]]}'
+             '{"api_testka":[["test_api_method",{ "http_method": "post", "test_url": "http://httpbin.org/post", "params": { "task": "new task" } }], ["test_api_method", { "http_method": "post", "test_url": "http://httpbin.org/post"}]]}'
              ]
 
 std_out_queue = queue.Queue()
@@ -42,7 +42,6 @@ read_program_error_output_from_thread = Thread(
     daemon=True
 ).start()
 
-
 while True:
     if not std_out_queue.empty():
         print(std_out_queue.get_nowait())
@@ -52,6 +51,3 @@ while True:
     if process.returncode is not None:
         process.terminate()
         break
-
-
-
