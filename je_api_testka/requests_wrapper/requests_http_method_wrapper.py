@@ -43,7 +43,7 @@ def get_http_method(http_method: str) -> [
     :return: one of method in http_method_dict if not exists will raise exception
     """
     try:
-        if type(http_method) is not str:
+        if not isinstance(http_method, str):
             raise APITesterException(wrong_http_method_error_message)
         http_method = str(http_method).lower()
         if http_method not in http_method_dict:
