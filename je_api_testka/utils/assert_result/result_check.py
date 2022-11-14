@@ -1,7 +1,5 @@
 import sys
 
-from je_api_testka.utils.exception.exceptions import APIAssertException
-
 
 def check_result(result_dict: dict, result_check_dict: dict):
     """

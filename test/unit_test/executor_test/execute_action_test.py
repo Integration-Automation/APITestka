@@ -110,6 +110,4 @@ for i in test_record_instance.test_record_list:
 print(request_time_list)
 print(request_url_list)
 
-
 print(generate_html("test"))
-

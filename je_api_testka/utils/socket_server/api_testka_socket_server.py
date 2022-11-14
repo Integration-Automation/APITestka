@@ -37,7 +37,6 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
                     socket.sendto("\n".encode("utf-8"), self.client_address)
 
 
-
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
     def __init__(self, server_address, RequestHandlerClass):
@@ -56,4 +55,3 @@ def start_apitestka_socket_server(host: str = "localhost", port: int = 9939):
     server_thread.daemon = True
     server_thread.start()
     return server
-

@@ -11,4 +11,3 @@ try:
     test_response = test_api_method("get", "http://httpbin.org/get", result_check_dict={"status_code": "300"})
 except Exception as error:
     print(repr(error), file=sys.stderr)
-
