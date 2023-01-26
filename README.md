@@ -17,6 +17,8 @@
 
 ---
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f243c4edfc1f4aa3ac87752e3e86b399)](https://www.codacy.com/gh/JE-Chen/APITestka/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JE-Chen/APITestka&amp;utm_campaign=Badge_Grade)
+
 [![CircleCI](https://circleci.com/gh/JE-Chen/APITestka/tree/main.svg?style=svg&circle-token=32826b3cccdffba93891691795bbded287a0b7fe)](https://circleci.com/gh/JE-Chen/APITestka/tree/main)
 
 [![APITestka GitHub Actions Dev](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_dev.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_dev.yml)
