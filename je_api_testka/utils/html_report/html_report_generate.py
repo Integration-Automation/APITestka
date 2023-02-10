@@ -1,7 +1,7 @@
 import sys
 from threading import Lock
 
-from je_api_testka.utils.exception.exception_tag import html_generate_no_data_tag
+from je_api_testka.utils.exception.exception_tags import html_generate_no_data_tag
 from je_api_testka.utils.exception.exceptions import APIHTMLException
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 

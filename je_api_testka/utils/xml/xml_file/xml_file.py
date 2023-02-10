@@ -1,8 +1,8 @@
 import xml.dom.minidom
 from xml.etree import ElementTree
 
-from je_api_testka.utils.exception.exception_tag import cant_read_xml_error
-from je_api_testka.utils.exception.exception_tag import xml_type_error
+from je_api_testka.utils.exception.exception_tags import cant_read_xml_error
+from je_api_testka.utils.exception.exception_tags import xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException
 from je_api_testka.utils.exception.exceptions import APITesterXMLTypeException
 
