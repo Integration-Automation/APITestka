@@ -3,8 +3,8 @@ import sys
 from json import dumps
 from json import loads
 
-from je_api_testka.utils.exception.exception_tag import cant_reformat_json_error
-from je_api_testka.utils.exception.exception_tag import wrong_json_data_error
+from je_api_testka.utils.exception.exception_tags import cant_reformat_json_error
+from je_api_testka.utils.exception.exception_tags import wrong_json_data_error
 from je_api_testka.utils.exception.exceptions import APITesterJsonException
 
 

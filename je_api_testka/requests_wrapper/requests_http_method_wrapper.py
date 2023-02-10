@@ -10,8 +10,8 @@ from requests import patch
 from requests import post
 from requests import put
 
-from je_api_testka.utils.exception.exception_tag import http_method_have_wrong_type
-from je_api_testka.utils.exception.exception_tag import wrong_http_method_error_message
+from je_api_testka.utils.exception.exception_tags import http_method_have_wrong_type
+from je_api_testka.utils.exception.exception_tags import wrong_http_method_error_message
 from je_api_testka.utils.exception.exceptions import APITesterException
 
 _session = Session()

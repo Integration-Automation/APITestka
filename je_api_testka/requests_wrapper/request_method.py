@@ -6,15 +6,15 @@ from requests.structures import CaseInsensitiveDict
 
 from je_api_testka.requests_wrapper.requests_http_method_wrapper import api_tester_method
 from je_api_testka.utils.assert_result.result_check import check_result
-from je_api_testka.utils.exception.exception_tag import delete_error_message
-from je_api_testka.utils.exception.exception_tag import get_data_error_message
-from je_api_testka.utils.exception.exception_tag import get_error_message
-from je_api_testka.utils.exception.exception_tag import head_error_message
-from je_api_testka.utils.exception.exception_tag import options_error_message
-from je_api_testka.utils.exception.exception_tag import patch_error_message
-from je_api_testka.utils.exception.exception_tag import post_error_message
-from je_api_testka.utils.exception.exception_tag import put_error_message
-from je_api_testka.utils.exception.exception_tag import session_error_message
+from je_api_testka.utils.exception.exception_tags import delete_error_message
+from je_api_testka.utils.exception.exception_tags import get_data_error_message
+from je_api_testka.utils.exception.exception_tags import get_error_message
+from je_api_testka.utils.exception.exception_tags import head_error_message
+from je_api_testka.utils.exception.exception_tags import options_error_message
+from je_api_testka.utils.exception.exception_tags import patch_error_message
+from je_api_testka.utils.exception.exception_tags import post_error_message
+from je_api_testka.utils.exception.exception_tags import put_error_message
+from je_api_testka.utils.exception.exception_tags import session_error_message
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException
 from je_api_testka.utils.exception.exceptions import APITesterGetDataException
 from je_api_testka.utils.get_data_strcture.get_api_data import get_api_response_data
