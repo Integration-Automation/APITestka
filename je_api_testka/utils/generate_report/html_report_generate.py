@@ -197,9 +197,9 @@ _failure_table = \
     """.strip()
 
 
-def generate_html(html_name: str = "default_name"):
+def generate_html(html_file_name: str = "default_name"):
     """
-    :param html_name: save html file name
+    :param html_file_name: save html file name
     :return: html_string
     """
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
@@ -243,7 +243,7 @@ def generate_html(html_name: str = "default_name"):
                 )
         try:
             lock.acquire()
-            with open(html_name + ".html", "w+") as file_to_write:
+            with open(html_file_name + ".html", "w+") as file_to_write:
                 file_to_write.writelines(
                     _html_string_head
                 )

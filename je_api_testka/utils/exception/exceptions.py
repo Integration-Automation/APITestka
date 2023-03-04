@@ -132,5 +132,9 @@ class APIHTMLException(APITesterException):
     pass
 
 
+class APIJsonReportException(APITesterException):
+    pass
+
+
 class APIAddCommandException(APITesterException):
     pass

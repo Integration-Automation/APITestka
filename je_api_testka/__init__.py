@@ -10,11 +10,12 @@ from je_api_testka.utils.executor.action_executor import executor
 # file process
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
 # html_output
-from je_api_testka.utils.html_report.html_report_generate import generate_html
+from je_api_testka.utils.generate_report.html_report_generate import generate_html
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 # json
 from je_api_testka.utils.json.json_file.json_file import write_action_json
 from je_api_testka.utils.json.json_format.json_process import reformat_json
+from je_api_testka.utils.generate_report.json_report import generate_json_report
 # socket server
 from je_api_testka.utils.socket_server.api_testka_socket_server import start_apitestka_socket_server
 # test_record

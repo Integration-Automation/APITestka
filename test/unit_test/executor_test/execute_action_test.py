@@ -1,7 +1,6 @@
 import sys
 
 from je_api_testka import execute_action
-from je_api_testka import generate_html
 from je_api_testka import test_record_instance
 
 test_action_list = [
@@ -87,7 +86,7 @@ test_action_list = [
     ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post",
                          "result_check_dict": {"status_code": 300}}
      ],
-    ["generate_html", {"html_name": "generate_html_test"}]
+    ["generate_html", {"html_file_name": "generate_html_test"}]
 ]
 
 action_response = execute_action(test_action_list)
@@ -111,4 +110,4 @@ for i in test_record_instance.test_record_list:
 print(request_time_list)
 print(request_url_list)
 
-print(generate_html("test"))
+

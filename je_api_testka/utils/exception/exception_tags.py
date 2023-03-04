@@ -37,6 +37,7 @@ execute_action_error: str = "can't execute action"
 # API json error
 cant_find_json_error: str = "can't find json"
 cant_save_json_error: str = "can't save json"
+cant_save_json_report_record_us_null: str = "can't save json record is null"
 cant_reformat_json_error: str = "can't reformat json is type right?"
 cant_find_element_in_json_error: str = "can't find element in json"
 json_type_error: str = "json type error"
