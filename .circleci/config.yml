@@ -58,6 +58,13 @@ jobs:
       - run:
           command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
           name: rw_and_reformat_json_test
+      - run:
+          command: python ./test/unit_test/generate_report/json_report_test.py
+          name: json_report_test
+      # html report
+      - run:
+          command: python ./test/unit_test/generate_report/html_report_test.py
+          name: html_report_test
       # execute test
       - run:
           command: python ./test/unit_test/executor_test/execute_action_test.py
@@ -140,6 +147,13 @@ jobs:
       - run:
           command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
           name: rw_and_reformat_json_test
+      - run:
+          command: python ./test/unit_test/generate_report/json_report_test.py
+          name: json_report_test
+      # html report
+      - run:
+          command: python ./test/unit_test/generate_report/html_report_test.py
+          name: html_report_test
       # execute test
       - run:
           command: python ./test/unit_test/executor_test/execute_action_test.py

@@ -6,7 +6,7 @@ from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
 from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
-from je_api_testka.utils.html_report.html_report_generate import generate_html
+from je_api_testka.utils.generate_report.html_report_generate import generate_html
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 
 
