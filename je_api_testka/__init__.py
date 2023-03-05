@@ -31,7 +31,7 @@ __all__ = ["test_api_method",
            "execute_action", "execute_files", "executor",
            "get_dir_files_as_list",
            "generate_html", "read_action_json",
-           "write_action_json", "reformat_json",
+           "write_action_json", "reformat_json", "generate_json_report",
            "start_apitestka_socket_server",
            "test_record_instance", "dict_to_elements_tree", "elements_tree_to_dict",
            "XMLParser", "reformat_xml_file"
