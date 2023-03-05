@@ -9,8 +9,7 @@ from je_api_testka.utils.exception.exceptions import APIJsonReportException
 
 def generate_json_report(json_file_name: str = "default_name"):
     """
-    :param json_file_name:
-    :return:
+    :param json_file_name: save json file's name
     """
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
@@ -50,7 +49,7 @@ def generate_json_report(json_file_name: str = "default_name"):
             for record_data in test_record_instance.error_record_list:
                 failure_dict.update(
                     {
-                        failure_test_str + str(failure_count): {
+                        failure_test_str: {
                             "http_method": str(record_data[0].get("http_method")),
                             "test_url": str(record_data[0].get("test_url")),
                             "soap": str(record_data[0].get("soap")),
