@@ -5,15 +5,16 @@ class APITesterException(Exception):
 
 
 # get method
-class APITesterGetDataException(APITesterException):
-    pass
-
 
 class APITesterGetException(APITesterException):
     pass
 
 
-class APITesterGetJsonException(APITesterException):
+class APITesterGetDataException(APITesterGetException):
+    pass
+
+
+class APITesterGetJsonException(APITesterGetException):
     pass
 
 
@@ -71,56 +72,60 @@ class APITesterXMLException(APITesterException):
     pass
 
 
-class APITesterXMLTypeException(APITesterException):
+class APITesterXMLTypeException(APITesterXMLException):
     pass
 
 
 # API data check
-class APIStatusCodeException(APITesterException):
+class APICheckException(APITesterException):
     pass
 
 
-class APITextException(APITesterException):
+class APIStatusCodeException(APICheckException):
     pass
 
 
-class APIContentException(APITesterException):
+class APITextException(APICheckException):
     pass
 
 
-class APIHeadersException(APITesterException):
+class APIContentException(APICheckException):
     pass
 
 
-class APIHistoryException(APITesterException):
+class APIHeadersException(APICheckException):
     pass
 
 
-class APIEncodingException(APITesterException):
+class APIHistoryException(APICheckException):
     pass
 
 
-class APICookiesException(APITesterException):
+class APIEncodingException(APICheckException):
     pass
 
 
-class APIElapsedException(APITesterException):
+class APICookiesException(APICheckException):
     pass
 
 
-class APIRequestsMethodException(APITesterException):
+class APIElapsedException(APICheckException):
     pass
 
 
-class APIRequestsUrlException(APITesterException):
+class APIRequestsMethodException(APICheckException):
     pass
 
 
-class APIRequestsBodyException(APITesterException):
+class APIRequestsUrlException(APICheckException):
     pass
 
 
-# check exception
+class APIRequestsBodyException(APICheckException):
+    pass
+
+
+# Assert exception
 
 class APIAssertException(APITesterException):
     pass
@@ -132,9 +137,13 @@ class APIHTMLException(APITesterException):
     pass
 
 
+# Json
+
 class APIJsonReportException(APITesterException):
     pass
 
+
+# Executor
 
 class APIAddCommandException(APITesterException):
     pass
