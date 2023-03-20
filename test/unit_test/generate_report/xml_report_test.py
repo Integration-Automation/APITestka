@@ -1,7 +1,5 @@
-from je_api_testka import generate_html
-from je_api_testka import generate_html_report
+from je_api_testka import generate_xml, generate_xml_report
 from je_api_testka import execute_action
-
 test_action_list = [
     ["test_api_method",
      {"http_method": "get", "test_url": "http://httpbin.org/get",
@@ -24,5 +22,5 @@ test_action_list = [
      ]
 ]
 execute_action(test_action_list)
-generate_html()
-generate_html_report()
+generate_xml()
+generate_xml_report()

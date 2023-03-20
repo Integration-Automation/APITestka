@@ -197,10 +197,9 @@ _failure_table = \
     """.strip()
 
 
-def generate_html(html_file_name: str = "default_name"):
+def generate_html():
     """
-    :param html_file_name: save html file name
-    :return: html_string
+    :return: test success_list & test failure_list
     """
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIHTMLException(html_generate_no_data_tag)
@@ -241,21 +240,30 @@ def generate_html(html_file_name: str = "default_name"):
                         error=record_data[1]
                     ),
                 )
-        try:
-            lock.acquire()
-            with open(html_file_name + ".html", "w+") as file_to_write:
-                file_to_write.writelines(
-                    _html_string_head
-                )
-                for success in success_list:
-                    file_to_write.write(success)
-                for failure in failure_list:
-                    file_to_write.write(failure)
-                file_to_write.writelines(
-                    _html_string_bottom
-                )
-        except Exception as error:
-            print(repr(error), file=sys.stderr)
-        finally:
-            lock.release()
     return success_list, failure_list
+
+
+def generate_html_report(html_file_name: str = "default_name"):
+    """
+    :param html_file_name: save html file name
+    :return:
+    """
+    success_list, failure_list = generate_html()
+    try:
+        lock.acquire()
+        with open(html_file_name + ".html", "w+") as file_to_write:
+            file_to_write.writelines(
+                _html_string_head
+            )
+            for success in success_list:
+                file_to_write.write(success)
+            for failure in failure_list:
+                file_to_write.write(failure)
+            file_to_write.writelines(
+                _html_string_bottom
+            )
+    except Exception as error:
+        print(repr(error), file=sys.stderr)
+    finally:
+        lock.release()
+

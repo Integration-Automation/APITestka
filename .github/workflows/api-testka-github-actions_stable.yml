@@ -72,6 +72,8 @@ jobs:
         run: python ./test/unit_test/xml/xml_test.py
       - name: soap_to_dict_test
         run: python ./test/integrated_test/soap_to_dict_test/soap_to_dict_test.py
+      - name: xml report test
+        run: python ./test/unit_test/generate_report/xml_report_test.py
         # soap
       - name: soap_test
         run: python ./test/unit_test/soap_test/soap_test.py

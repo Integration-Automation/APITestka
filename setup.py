@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.92",
     author="JE-Chen",
     author_email="zenmailman@gmail.com",
-    description="api testing",
+    description="APT Testing Automation Framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/JE-Chen/APITestka",
