@@ -1,5 +1,5 @@
-from je_api_testka import generate_json_report, execute_action
-
+from je_api_testka import generate_json, generate_json_report
+from je_api_testka import execute_action
 test_action_list = [
     ["test_api_method",
      {"http_method": "get", "test_url": "http://httpbin.org/get",
@@ -22,4 +22,5 @@ test_action_list = [
      ]
 ]
 execute_action(test_action_list)
+generate_json()
 generate_json_report()

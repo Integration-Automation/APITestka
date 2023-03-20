@@ -4,7 +4,7 @@ wrong_http_method_error_message: str = "wrong http method"
 http_method_have_wrong_type: str = "get wrong type param"
 # get data error
 get_data_error_message: str = "API tester can't get api data error"
-# API Http Method error
+# Http Method error
 get_error_message: str = "API tester get error"
 get_json_error_message: str = "API tester get json error"
 put_error_message: str = "API tester put error"
@@ -14,27 +14,27 @@ head_error_message: str = "API tester head error"
 options_error_message: str = "API tester options error"
 patch_error_message: str = "API tester patch error"
 session_error_message: str = "API tester session error"
-# API response code error
+# response code error
 response_code_error: str = "API tester get wrong response code"
-# API response body error
+# response body error
 response_body_error: str = "API tester get wrong response body"
-# API response timeout error
+# response timeout error
 response_timeout_error: str = "API tester timeout"
-# API response history error
+# response history error
 response_history_error: str = "API tester history error"
-# API response encoding error
+# response encoding error
 response_encoding_error: str = "API tester encoding error"
-# API response cookies error
+# response cookies error
 response_cookies_error: str = "API tester cookies error"
-# API response headers error
+# response headers error
 response_headers_error: str = "API tester headers error"
-# API response content error
+# response content error
 response_content_error: str = "API tester content error"
-# API response text error
+# response text error
 response_text_error: str = "API tester text error"
-# API execute action error
+# execute action error
 execute_action_error: str = "can't execute action"
-# API json error
+# json error
 cant_find_json_error: str = "can't find json"
 cant_save_json_error: str = "can't save json"
 cant_save_json_report_record_us_null: str = "can't save json record is null"
@@ -42,7 +42,7 @@ cant_reformat_json_error: str = "can't reformat json is type right?"
 cant_find_element_in_json_error: str = "can't find element in json"
 json_type_error: str = "json type error"
 wrong_json_data_error: str = "can't parser json"
-# API XML error
+# XML error
 cant_read_xml_error: str = "can't read xml"
 xml_type_error: str = "xml type error"
 # Executor error

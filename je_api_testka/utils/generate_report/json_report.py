@@ -7,17 +7,16 @@ from je_api_testka.utils.exception.exception_tags import cant_save_json_report_r
 from je_api_testka.utils.exception.exceptions import APIJsonReportException
 
 
-def generate_json_report(json_file_name: str = "default_name"):
+def generate_json():
     """
-    :param json_file_name: save json file's name
+    :return: test success_dict test failure_dict
     """
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
     else:
-        lock = Lock()
         success_dict = dict()
         success_count: int = 1
-        success_test_str: str = "Success Test"
+        success_test_str: str = "Success_Test"
         for record_data in test_record_instance.test_record_list:
             success_dict.update(
                 {
@@ -45,7 +44,7 @@ def generate_json_report(json_file_name: str = "default_name"):
             pass
         else:
             failure_count: int = 1
-            failure_test_str: str = "Failure Test"
+            failure_test_str: str = "Failure_Test"
             for record_data in test_record_instance.error_record_list:
                 failure_dict.update(
                     {
@@ -61,19 +60,28 @@ def generate_json_report(json_file_name: str = "default_name"):
                     }
                 )
                 failure_count = failure_count + 1
-                try:
-                    lock.acquire()
-                    with open(json_file_name + "_failure.json", "w+") as file_to_write:
-                        json.dump(dict(failure_dict), file_to_write, indent = 4)
-                except Exception as error:
-                    print(repr(error), file=sys.stderr)
-                finally:
-                    lock.release()
-        try:
-            lock.acquire()
-            with open(json_file_name + "_success.json", "w+") as file_to_write:
-                json.dump(dict(success_dict), file_to_write, indent = 4)
-        except Exception as error:
-            print(repr(error), file=sys.stderr)
-        finally:
-            lock.release()
+        return success_dict, failure_dict
+
+
+def generate_json_report(json_file_name: str = "default_name"):
+    """
+    :param json_file_name: save json file's name
+    """
+    lock = Lock()
+    success_dict, failure_dict = generate_json()
+    try:
+        lock.acquire()
+        with open(json_file_name + "_failure.json", "w+") as file_to_write:
+            json.dump(dict(failure_dict), file_to_write, indent=4)
+    except Exception as error:
+        print(repr(error), file=sys.stderr)
+    finally:
+        lock.release()
+    try:
+        lock.acquire()
+        with open(json_file_name + "_success.json", "w+") as file_to_write:
+            json.dump(dict(success_dict), file_to_write, indent=4)
+    except Exception as error:
+        print(repr(error), file=sys.stderr)
+    finally:
+        lock.release()

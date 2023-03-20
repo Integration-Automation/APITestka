@@ -11,10 +11,12 @@ from je_api_testka.utils.executor.action_executor import executor
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
 # html_output
 from je_api_testka.utils.generate_report.html_report_generate import generate_html
+from je_api_testka.utils.generate_report.html_report_generate import generate_html_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 # json
 from je_api_testka.utils.json.json_file.json_file import write_action_json
 from je_api_testka.utils.json.json_format.json_process import reformat_json
+from je_api_testka.utils.generate_report.json_report import generate_json
 from je_api_testka.utils.generate_report.json_report import generate_json_report
 # socket server
 from je_api_testka.utils.socket_server.api_testka_socket_server import start_apitestka_socket_server
@@ -25,14 +27,16 @@ from je_api_testka.utils.xml.change_xml_structure.change_xml_structure import el
 # xml
 from je_api_testka.utils.xml.xml_file.xml_file import XMLParser
 from je_api_testka.utils.xml.xml_file.xml_file import reformat_xml_file
+from je_api_testka.utils.generate_report.xml_report import generate_xml
+from je_api_testka.utils.generate_report.xml_report import generate_xml_report
 
 __all__ = ["test_api_method",
            "make_tkinter_request_time_graph", "add_command_to_executor",
            "execute_action", "execute_files", "executor",
            "get_dir_files_as_list",
-           "generate_html", "read_action_json",
-           "write_action_json", "reformat_json", "generate_json_report",
+           "generate_html", "generate_html_report","read_action_json",
+           "write_action_json", "reformat_json", "generate_json", "generate_json_report",
            "start_apitestka_socket_server",
            "test_record_instance", "dict_to_elements_tree", "elements_tree_to_dict",
-           "XMLParser", "reformat_xml_file"
+           "XMLParser", "reformat_xml_file", "generate_xml", "generate_xml_report"
            ]

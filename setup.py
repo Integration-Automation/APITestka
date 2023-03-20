@@ -5,10 +5,10 @@ with open("README.md", "r") as README:
 
 setuptools.setup(
     name="je_api_testka",
-    version="0.0.91",
+    version="0.0.92",
     author="JE-Chen",
     author_email="zenmailman@gmail.com",
-    description="api testing",
+    description="APT Testing Automation Framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/JE-Chen/APITestka",

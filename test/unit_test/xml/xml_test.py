@@ -34,5 +34,5 @@ process_xml_parse = XMLParser(dict_test_xml_string, "string")
 xml_to_json = elements_tree_to_dict(process_xml_parse.xml_root)
 pprint(xml_to_json)
 json_to_xml = dict_to_elements_tree(xml_to_json)
-pprint(json_to_xml)
-process_xml_parse = XMLParser(dict_test_xml_string, "string")
+print(json_to_xml)
+

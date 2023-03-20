@@ -1,0 +1,34 @@
+# Rename to build dev version
+# This is dev version
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "je_api_testka"
+version = "0.0.93"
+authors = [
+    { name = "JE-Chen", email = "zenmailman@gmail.com" },
+]
+description = "APT Testing Automation Framework"
+readme = { file = "README.md", content-type = "text/plain" }
+requires-python = ">=3.7"
+license = { text = "MIT" }
+dependencies = [
+    "requests"
+]
+classifiers = [
+    "Programming Language :: Python :: 3.7",
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+    "Environment :: X11 Applications",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/JE-Chen/APITestka"
+
+[tool.setuptools.packages]
+find = { }
