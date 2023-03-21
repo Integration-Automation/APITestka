@@ -1,6 +1,6 @@
 import setuptools
 
-with open("README.md", "r") as README:
+with open("../README.md", "r") as README:
     long_description = README.read()
 
 setuptools.setup(
@@ -27,5 +27,5 @@ setuptools.setup(
     ]
 )
 
-# python dev_setup.py sdist bdist_wheel
+# python deprecation_dev_setup.py sdist bdist_wheel
 # python -m twine upload dist/*
