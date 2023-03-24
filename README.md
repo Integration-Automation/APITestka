@@ -1,19 +1,24 @@
-# je_api_testka
-
+### APITestka
+> Simple way to testing HTTP/S & Soap \
+> Wrapper for Requests package, designed for those with experience using Requests. \
+> Send HTTP/S and SOAP requests with a simple line of code or keyword. \
+> Detailed information on Requests and Responses. \
+> Solves problems such as:
+>> * Detailed testing reports on Requests and Responses.
+>> * Testing for SOAP protocol.
+>> * Data comparison for each Request.
+>> * API Testing in pure CLI mode.
 ---
-
-## API Testka as automation framework for API testing
-
 ### Features
 
-* HTTP Method test
-* Get response data body etc...
-* Action file and executor
-* result compare
-* xml to json and json to xml
-* Soap test
-* Generate HTML Report
-* CLI with action file
+>* HTTP Method test
+>* Get response data body etc...
+>* Action file and executor
+>* result compare
+>* xml to json and json to xml
+>* Soap test
+>* Generate HTML Report
+>* CLI with action file
 
 ---
 
