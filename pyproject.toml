@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka_dev"
-version = "0.0.70"
+version = "0.0.71"
 authors = [
     { name = "JE-Chen", email = "zenmailman@gmail.com" },
 ]
@@ -31,4 +31,4 @@ classifiers = [
 "Homepage" = "https://github.com/JE-Chen/APITestka"
 
 [tool.setuptools.packages]
-find = { }
+find = { namespaces = false }
