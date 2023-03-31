@@ -147,3 +147,8 @@ class APIJsonReportException(APITesterException):
 
 class APIAddCommandException(APITesterException):
     pass
+
+
+# Execute callback
+class CallbackExecutorException(APITesterException):
+    pass
