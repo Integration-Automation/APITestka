@@ -10,9 +10,10 @@ if __name__ == "__main__":
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36',
     })
-    print(test_response.get("response_data"))
-    print(test_response.get("response_data").get("status_code"))
-    print(test_response.get("response_data").get("elapsed"))
+    if test_response.get("response_data", None) is not None:
+        print(test_response.get("response_data"))
+        print(test_response.get("response_data").get("status_code"))
+        print(test_response.get("response_data").get("elapsed"))
     try:
         test_response = test_api_method("head", "dawdwadaw")
     except requests.exceptions.MissingSchema as error:
