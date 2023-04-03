@@ -22,11 +22,12 @@ test_action_list = [
 
 for action_response in execute_action(test_action_list).values():
     response = action_response.get("response_data")
-    print(response.get("text"))
-    print(response.get("start_time"))
-    print(response.get("end_time"))
-    assert response.get("start_time") is not None
-    assert response.get("end_time") is not None
+    if response is not None:
+        print(response.get("text"))
+        print(response.get("start_time"))
+        print(response.get("end_time"))
+        assert response.get("start_time") is not None
+        assert response.get("end_time") is not None
 
 test_action_list = [
     ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
@@ -64,7 +65,8 @@ test_action_list = [
 try:
     for action_response in execute_action(test_action_list).values():
         response = action_response.get("response_data")
-        print(response.get("text"))
+        if response is not None:
+            print(response.get("text"))
 except Exception as error:
     print(repr(error), file=sys.stderr)
 

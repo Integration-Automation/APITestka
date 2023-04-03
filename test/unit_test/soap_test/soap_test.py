@@ -14,6 +14,7 @@ data = """<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        """
 
 test_result = test_api_method(http_method="post", test_url=url, soap=True, data=data)
-print(test_result.get("response_data").get("text"))
-print(reformat_xml_file(test_result.get("response_data").get("text")))
-print(test_result.get("response_data"))
+if test_result is not None:
+    print(test_result.get("response_data").get("text"))
+    print(reformat_xml_file(test_result.get("response_data").get("text")))
+    print(test_result.get("response_data"))

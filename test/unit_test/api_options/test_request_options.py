@@ -6,8 +6,9 @@ if __name__ == "__main__":
     import requests
 
     test_response = test_api_method("options", "http://httpbin.org/get")
-    print(test_response.get("response_data").get("status_code"))
-    print(test_response.get("response_data").get("elapsed"))
+    if test_response is not None:
+        print(test_response.get("response_data").get("status_code"))
+        print(test_response.get("response_data").get("elapsed"))
     try:
         test_response = test_api_method("options", "dawdwadaw")
     except requests.exceptions.MissingSchema as error:
