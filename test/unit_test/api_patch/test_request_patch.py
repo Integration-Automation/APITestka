@@ -6,7 +6,7 @@ if __name__ == "__main__":
     import requests
 
     test_response = test_api_method("patch", "http://httpbin.org/patch", params={"task": "new task"})
-    if test_response.get("response_data", None) is not None:
+    if test_response is not None:
         print(test_response.get("response_data").get("status_code"))
         print(test_response.get("response_data").get("text"))
     try:

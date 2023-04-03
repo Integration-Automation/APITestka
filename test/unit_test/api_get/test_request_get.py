@@ -6,7 +6,7 @@ if __name__ == "__main__":
     import requests
 
     test_response = test_api_method("get", "http://httpbin.org/get")
-    if test_response.get("response_data", None) is not None:
+    if test_response is not None:
         print(test_response.get("response_data").get("status_code"))
         print(test_response.get("response_data").get("text"))
         print(test_response.get("response_data").get("headers"))
@@ -19,7 +19,7 @@ if __name__ == "__main__":
         print(test_response.get("response_data").get("request_url"))
         print(test_response.get("response_data").get("request_body"))
     test_response = test_api_method("get", "http://httpbin.org/get")
-    if test_response.get("response_data", None) is not None:
+    if test_response is not None:
         print(test_response.get("response_data").get("status_code"))
         print(test_response.get("response_data").get("json_data"))
     try:
