@@ -1,18 +1,20 @@
 import sys
+import time
 import types
 import typing
+from inspect import getmembers, isbuiltin
 
-from je_api_testka.utils.generate_report.json_report import generate_json
-from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
 from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
 from je_api_testka.utils.generate_report.html_report_generate import generate_html
 from je_api_testka.utils.generate_report.html_report_generate import generate_html_report
-from je_api_testka.utils.json.json_file.json_file import read_action_json
+from je_api_testka.utils.generate_report.json_report import generate_json
+from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.utils.generate_report.xml_report import generate_xml
 from je_api_testka.utils.generate_report.xml_report import generate_xml_report
+from je_api_testka.utils.json.json_file.json_file import read_action_json
 
 
 class Executor(object):
@@ -27,7 +29,13 @@ class Executor(object):
             "generate_json_report": generate_json_report,
             "generate_xml": generate_xml,
             "generate_xml_report": generate_xml_report,
+            # execute
+            "execute_action": self.execute_action,
+            "execute_files": self.execute_files,
         }
+        # get all time module builtin function and add to event dict
+        for function in getmembers(time, isbuiltin):
+            self.event_dict.update({str(function): function})
 
     def _execute_event(self, action: list):
         """
