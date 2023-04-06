@@ -99,6 +99,7 @@ class Executor(object):
 
 
 executor = Executor()
+package_manager.executor = executor
 
 
 def add_command_to_executor(command_dict: dict):
