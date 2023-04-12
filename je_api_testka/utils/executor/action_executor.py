@@ -46,7 +46,10 @@ class Executor(object):
         """
         event: typing.Callable = self.event_dict.get(action[0])
         if len(action) == 2:
-            return event(**action[1])
+            if isinstance(action[1], dict):
+                return event(**action[1])
+            else:
+                return event(*action[1])
         else:
             raise APITesterExecuteException(executor_data_error + " " + str(action))
 
