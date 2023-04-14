@@ -1,5 +1,5 @@
+import builtins
 import sys
-import time
 import types
 import typing
 from inspect import getmembers, isbuiltin
@@ -35,9 +35,9 @@ class Executor(object):
             "execute_files": self.execute_files,
             "add_package_to_executor": package_manager.add_package_to_executor,
         }
-        # get all time module builtin function and add to event dict
-        for function in getmembers(time, isbuiltin):
-            self.event_dict.update({str(function): function})
+        # get all builtin function and add to event dict
+        for function in getmembers(builtins, isbuiltin):
+            self.event_dict.update({str(function[0]): function[1]})
 
     def _execute_event(self, action: list):
         """

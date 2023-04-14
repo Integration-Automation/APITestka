@@ -35,7 +35,7 @@ def write_action_json(json_save_path: str, action_json: list):
     try:
         lock.acquire()
         with open(json_save_path, "w+") as file_to_write:
-            file_to_write.write(json.dumps(action_json))
+            file_to_write.write(json.dumps(action_json, indent=4))
     except APITesterJsonException:
         raise APITesterJsonException(cant_save_json_error)
     finally:
