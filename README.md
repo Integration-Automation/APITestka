@@ -1,6 +1,6 @@
 ### APITestka
 > Project Kanban \
-> https://github.com/users/JE-Chen/projects/35 \
+> https://github.com/orgs/Integrated-Testing-Environment/projects/4/views/1 \
 > Simple way to testing HTTP/S & Soap \
 > Wrapper for Requests package, designed for those with experience using Requests. \
 > Send HTTP/S and SOAP requests with a simple line of code or keyword. \
