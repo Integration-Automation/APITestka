@@ -31,6 +31,8 @@ from je_api_testka.utils.xml.change_xml_structure.change_xml_structure import el
 # xml
 from je_api_testka.utils.xml.xml_file.xml_file import XMLParser
 from je_api_testka.utils.xml.xml_file.xml_file import reformat_xml_file
+# create project
+from je_api_testka.utils.project.create_project_structure import create_project_dir
 
 __all__ = ["test_api_method",
            "make_tkinter_request_time_graph", "add_command_to_executor",
@@ -41,5 +43,5 @@ __all__ = ["test_api_method",
            "start_apitestka_socket_server",
            "test_record_instance", "dict_to_elements_tree", "elements_tree_to_dict",
            "XMLParser", "reformat_xml_file", "generate_xml", "generate_xml_report",
-           "callback_executor"
+           "callback_executor", "create_project_dir"
            ]

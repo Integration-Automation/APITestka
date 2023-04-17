@@ -98,6 +98,9 @@ jobs:
       - run:
           command: python ./test/unit_test/callback/callback_test.py
           name: callback_test
+      - run:
+          command: python ./test/unit_test/create_project/create_project.py
+          name: create_project
       # unit test end
 
   build-and-test-stable:
@@ -194,6 +197,9 @@ jobs:
       - run:
           command: python ./test/unit_test/callback/callback_test.py
           name: callback_test
+      - run:
+          command: python ./test/unit_test/create_project/create_project.py
+          name: create_project
       # unit test end
 
 workflows:

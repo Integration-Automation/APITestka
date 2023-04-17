@@ -86,3 +86,5 @@ jobs:
         # callback
       - name: callback_test
         run: python ./test/unit_test/callback/callback_test.py
+      - name: create_project
+        run: python ./test/unit_test/create_project/create_project.py
