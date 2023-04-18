@@ -34,3 +34,21 @@ Attention! Only the following HTTP methods can be used:
 ['get', 'post', 'put', 'patch', 'delete', 'head', 'options']
 
 .. code-block:: python
+
+    test_api_list = [
+    ["test_api_method",
+     {
+         "http_method": "post",
+         "test_url": "http://httpbin.org/post",
+         "params": {"task": "new task"},
+         "result_check_dict": {"status_code": 200}
+     }
+     ],
+    ["test_api_method",
+     {
+         "http_method": "get",
+         "test_url": "http://httpbin.org/post",
+         "result_check_dict": {"status_code": 405}
+     }
+     ]
+    ]

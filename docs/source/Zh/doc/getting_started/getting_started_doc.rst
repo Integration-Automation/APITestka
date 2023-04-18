@@ -33,3 +33,20 @@ keyword 資料夾裡的 keyword json 檔案定義了要執行的動作。
 
 .. code-block:: python
 
+    test_api_list = [
+    ["test_api_method",
+     {
+         "http_method": "post",
+         "test_url": "http://httpbin.org/post",
+         "params": {"task": "new task"},
+         "result_check_dict": {"status_code": 200}
+     }
+     ],
+    ["test_api_method",
+     {
+         "http_method": "get",
+         "test_url": "http://httpbin.org/post",
+         "result_check_dict": {"status_code": 405}
+     }
+     ]
+    ]
