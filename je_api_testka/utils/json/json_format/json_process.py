@@ -27,6 +27,11 @@ def __process_json(json_string: str, **kwargs):
 
 
 def reformat_json(json_string: str, **kwargs):
+    """
+    :param json_string: valid json string
+    :param kwargs: indent, sort_keys or another args
+    :return: None
+    """
     try:
         return __process_json(json_string, **kwargs)
     except APITesterJsonException:

@@ -58,10 +58,10 @@ def api_tester_method(http_method: str, test_url: str, verify: bool = False, tim
     """
     :param http_method: what http method we use to api test
     :param test_url: what url we want to test
-    :param kwargs: use to setting
-    :param verify:
-    :param timeout:
-    :param allow_redirects:
+    :param kwargs: use to setting param
+    :param verify: this connect need verify or not
+    :param timeout: timeout sec
+    :param allow_redirects: allow to redirects to another request
     :return: test response
     """
     response = get_http_method(http_method)
