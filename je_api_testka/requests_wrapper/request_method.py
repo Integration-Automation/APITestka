@@ -71,7 +71,6 @@ def test_api_method(http_method: str, test_url: str,
     :param clean_record:
     :param result_check_dict:
     :param kwargs:
-    :return:
     """
     try:
         start_time: datetime = datetime.now()
