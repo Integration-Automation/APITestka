@@ -35,6 +35,8 @@ Attention! Only the following HTTP methods can be used:
 
 .. code-block:: python
 
+    from je_api_testka import execute_files
+
     test_api_list = [
     ["test_api_method",
      {

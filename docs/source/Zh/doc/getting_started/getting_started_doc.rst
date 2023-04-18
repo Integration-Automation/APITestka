@@ -33,6 +33,8 @@ keyword 資料夾裡的 keyword json 檔案定義了要執行的動作。
 
 .. code-block:: python
 
+    from je_api_testka import execute_files
+
     test_api_list = [
     ["test_api_method",
      {
