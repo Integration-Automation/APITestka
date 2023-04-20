@@ -1,5 +1,6 @@
 requests
 wheel
+flask
 twine
 sphinx
 je_api_testka_dev
