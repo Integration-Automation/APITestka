@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka_dev"
-version = "0.0.79"
+version = "0.0.81"
 authors = [
     { name = "JE-Chen", email = "zenmailman@gmail.com" },
 ]
@@ -15,7 +15,8 @@ readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.7"
 license = { text = "MIT" }
 dependencies = [
-    "requests"
+    "requests",
+    "Flask"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.7",

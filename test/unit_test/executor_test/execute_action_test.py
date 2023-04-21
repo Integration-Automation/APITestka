@@ -36,7 +36,7 @@ try:
     ]
 except Exception as error:
     print(repr(error), file=sys.stderr)
-    
+
 try:
     for action_response in execute_action(test_action_list).values():
         response = action_response.get("response_data")

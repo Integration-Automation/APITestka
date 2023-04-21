@@ -15,6 +15,7 @@ from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.utils.generate_report.xml_report import generate_xml
 from je_api_testka.utils.generate_report.xml_report import generate_xml_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
+from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
@@ -34,6 +35,9 @@ class Executor(object):
             "execute_action": self.execute_action,
             "execute_files": self.execute_files,
             "add_package_to_executor": package_manager.add_package_to_executor,
+            # mock
+            "flask_mock_server_add_router": flask_mock_server_instance.add_router,
+            "start_flask_mock_server": flask_mock_server_instance.start_mock_server,
         }
         # get all builtin function and add to event dict
         for function in getmembers(builtins, isbuiltin):

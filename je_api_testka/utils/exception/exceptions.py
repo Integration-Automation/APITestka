@@ -152,3 +152,7 @@ class APIAddCommandException(APITesterException):
 # Execute callback
 class CallbackExecutorException(APITesterException):
     pass
+
+
+class MockServerException(APITesterException):
+    pass
