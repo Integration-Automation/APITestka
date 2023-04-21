@@ -1,6 +1,4 @@
-from flask import request
-
-from je_api_testka import flask_mock_server_instance
+from je_api_testka import flask_mock_server_instance, request
 
 
 def test_function():
