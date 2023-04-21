@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka_dev"
-version = "0.0.79"
+version = "0.0.80"
 authors = [
     { name = "JE-Chen", email = "zenmailman@gmail.com" },
 ]
@@ -16,7 +16,7 @@ requires-python = ">=3.7"
 license = { text = "MIT" }
 dependencies = [
     "requests",
-    "flask"
+    "Flask"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.7",

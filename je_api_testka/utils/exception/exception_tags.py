@@ -69,3 +69,5 @@ argparse_get_wrong_data: str = "argparse receive wrong data"
 # Callback executor
 get_bad_trigger_method: str = "get bad trigger method, only accept kwargs and args"
 get_bad_trigger_function: str = "get bad trigger function only accept function in event_dict"
+# Mock server
+get_bad_api_router_setting: str = "get bad router setting"

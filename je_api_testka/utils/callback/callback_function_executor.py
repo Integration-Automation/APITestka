@@ -1,6 +1,7 @@
 import typing
 from sys import stderr
 
+from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tags import get_bad_trigger_function, get_bad_trigger_method
 from je_api_testka.utils.exception.exceptions import CallbackExecutorException
@@ -23,6 +24,9 @@ class CallbackFunctionExecutor(object):
             "generate_json_report": generate_json_report,
             "generate_xml": generate_xml,
             "generate_xml_report": generate_xml_report,
+            # Mock
+            "flask_mock_server_add_router": flask_mock_server_instance.add_router,
+            "start_flask_mock_server": flask_mock_server_instance.start_mock_server,
         }
 
     def callback_function(
