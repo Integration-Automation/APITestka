@@ -11,13 +11,15 @@ from je_api_testka.utils.generate_report.json_report import generate_json
 from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.utils.generate_report.xml_report import generate_xml
 from je_api_testka.utils.generate_report.xml_report import generate_xml_report
+from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
 class CallbackFunctionExecutor(object):
     def __init__(self):
         self.event_dict = {
-            # test api
+            # Test api
             "test_api_method": test_api_method,
+            # Report
             "generate_html": generate_html,
             "generate_html_report": generate_html_report,
             "generate_json": generate_json,
@@ -27,6 +29,8 @@ class CallbackFunctionExecutor(object):
             # Mock
             "flask_mock_server_add_router": flask_mock_server_instance.add_router,
             "start_flask_mock_server": flask_mock_server_instance.start_mock_server,
+            # Package manager
+            "add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
         }
 
     def callback_function(
@@ -64,3 +68,4 @@ class CallbackFunctionExecutor(object):
 
 
 callback_executor = CallbackFunctionExecutor()
+package_manager.executor = callback_executor

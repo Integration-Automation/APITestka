@@ -46,3 +46,6 @@ https://apitestka.readthedocs.io/en/latest/
 
 ## Requires
 > python 3.7 or later
+
+### Architecture Diagram
+![Architecture Diagram](architecture_diagram/APITestka_Architecture.drawio.png)
