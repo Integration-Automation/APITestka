@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-04-22T14:13:25.023Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.48" etag="kLctT3heqhXvH54TUWlK" version="21.2.1" type="google">
+<mxfile host="app.diagrams.net" modified="2023-04-22T14:32:00.027Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.48" etag="4d80RGLeKcg6kCWKtw9Q" version="21.2.1" type="google">
   <diagram name="第 1 页" id="9GRlFMcYU8W17-ktjxk8">
     <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -59,7 +59,7 @@
           <mxGeometry x="1668" y="-500" width="260" height="50" as="geometry" />
         </mxCell>
         <mxCell id="An_t9UlqZCRhdy4P4HhH-21" value="Wrapper Pattern" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontFamily=Times New Roman;" vertex="1" parent="1">
-          <mxGeometry x="1809" y="-540" width="180" height="30" as="geometry" />
+          <mxGeometry x="1498.93" y="-780" width="180" height="30" as="geometry" />
         </mxCell>
         <mxCell id="An_t9UlqZCRhdy4P4HhH-22" value="assert_result" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#42E0FF;fontFamily=Times New Roman;fontSize=20;" vertex="1" parent="1">
           <mxGeometry x="1668" y="-400" width="260" height="50" as="geometry" />
@@ -420,6 +420,18 @@
         </mxCell>
         <mxCell id="An_t9UlqZCRhdy4P4HhH-192" value="exception_tags" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#42E0FF;fontFamily=Times New Roman;fontSize=20;" vertex="1" parent="1">
           <mxGeometry x="1107" y="900" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="An_t9UlqZCRhdy4P4HhH-196" value="Interpreter pattern" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="464.14" y="-80" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="An_t9UlqZCRhdy4P4HhH-197" value="Interpreter pattern" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="458.14" y="-790" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="An_t9UlqZCRhdy4P4HhH-198" value="Interpreter pattern" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="1678" y="1125" width="180" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="An_t9UlqZCRhdy4P4HhH-199" value="Singelton pattern" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="2081.79" y="1190" width="180" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
