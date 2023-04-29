@@ -6,8 +6,8 @@
 > Send HTTP/S and SOAP requests with a simple line of code or keyword. \
 > Detailed information on Requests and Responses. \
 > Solves problems such as:
->> * Detailed testing reports on Requests and Responses.
->> * Testing for SOAP protocol.
+>> * Detailed reports on Requests and Responses.
+>> * Automation for SOAP protocol.
 >> * Data comparison for each Request.
 >> * API request in pure CLI mode.
 ---
