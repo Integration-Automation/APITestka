@@ -1,7 +1,7 @@
 ### APITestka
 > Project Kanban \
-> https://github.com/orgs/Integrated-Testing-Environment/projects/4/views/1 \
-> Simple way to testing HTTP/S & Soap \
+> https://github.com/orgs/Intergration-Automation-Testing/projects/2 \
+> Simple way to automation requests HTTP/S & Soap \
 > Wrapper for Requests package, designed for those with experience using Requests. \
 > Send HTTP/S and SOAP requests with a simple line of code or keyword. \
 > Detailed information on Requests and Responses. \
@@ -9,11 +9,11 @@
 >> * Detailed testing reports on Requests and Responses.
 >> * Testing for SOAP protocol.
 >> * Data comparison for each Request.
->> * API Testing in pure CLI mode.
+>> * API request in pure CLI mode.
 ---
 ### Features
 
->* HTTP Method test
+>* HTTP Method requests
 >* Get response data body etc...
 >* Action file and executor
 >* result compare
@@ -45,7 +45,7 @@ https://apitestka.readthedocs.io/en/latest/
 
 
 ## Requires
-> python 3.7 or later
+> python 3.8 or later
 
 ### Architecture Diagram
 ![Architecture Diagram](architecture_diagram/APITestka_Architecture.drawio.png)
