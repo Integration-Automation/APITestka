@@ -1,4 +1,5 @@
 import sys
+import typing
 from threading import Lock
 
 from je_api_testka.utils.exception.exception_tags import html_generate_no_data_tag
@@ -197,7 +198,7 @@ _failure_table = \
     """.strip()
 
 
-def generate_html():
+def generate_html() -> typing.Tuple[list, list]:
     """
     :return: test success_list & test failure_list
     """
@@ -243,7 +244,7 @@ def generate_html():
     return success_list, failure_list
 
 
-def generate_html_report(html_file_name: str = "default_name"):
+def generate_html_report(html_file_name: str = "default_name") -> None:
     """
     :param html_file_name: save html file name
     :return:

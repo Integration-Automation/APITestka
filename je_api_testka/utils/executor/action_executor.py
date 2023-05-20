@@ -43,7 +43,7 @@ class Executor(object):
         for function in getmembers(builtins, isbuiltin):
             self.event_dict.update({str(function[0]): function[1]})
 
-    def _execute_event(self, action: list):
+    def _execute_event(self, action: list) -> typing.Any:
         """
         :param action: execute action
         :return: what event return
@@ -94,7 +94,7 @@ class Executor(object):
             print(value)
         return execute_record_dict
 
-    def execute_files(self, execute_files_list: list):
+    def execute_files(self, execute_files_list: list) -> typing.List[typing.Any]:
         """
         :param execute_files_list: list include execute files path
         :return: every execute detail as list
@@ -109,7 +109,7 @@ executor = Executor()
 package_manager.executor = executor
 
 
-def add_command_to_executor(command_dict: dict):
+def add_command_to_executor(command_dict: dict) -> None:
     for command_name, command in command_dict.items():
         if isinstance(command, (types.MethodType, types.FunctionType)):
             executor.event_dict.update({command_name: command})
@@ -117,9 +117,9 @@ def add_command_to_executor(command_dict: dict):
             raise APIAddCommandException(add_command_exception_tag)
 
 
-def execute_action(action_list: list):
+def execute_action(action_list: list) -> typing.Any:
     return executor.execute_action(action_list)
 
 
-def execute_files(execute_files_list: list):
+def execute_files(execute_files_list: list) -> typing.List[typing.Any]:
     return executor.execute_files(execute_files_list)

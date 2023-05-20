@@ -1,11 +1,13 @@
 import sys
+import typing
 from threading import Lock
 from xml.dom.minidom import parseString
+
 from je_api_testka.utils.generate_report.json_report import generate_json
 from je_api_testka.utils.xml.change_xml_structure.change_xml_structure import dict_to_elements_tree
 
 
-def generate_xml():
+def generate_xml() -> typing.Tuple[str, str]:
     """
     :return: success_xml_string, failure_xml_string
     """
@@ -17,7 +19,7 @@ def generate_xml():
     return success_json_to_xml, failure_json_to_xml
 
 
-def generate_xml_report(xml_file_name: str = "default_name"):
+def generate_xml_report(xml_file_name: str = "default_name") -> None:
     """
     :param xml_file_name: save xml file with xml_file_name
     """

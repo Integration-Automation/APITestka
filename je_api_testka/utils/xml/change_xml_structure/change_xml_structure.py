@@ -2,7 +2,7 @@ from collections import defaultdict
 from xml.etree import ElementTree
 
 
-def elements_tree_to_dict(elements_tree):
+def elements_tree_to_dict(elements_tree) -> dict:
     """
     :param elements_tree: full xml string
     :return: xml str to dict
@@ -28,7 +28,7 @@ def elements_tree_to_dict(elements_tree):
     return elements_dict
 
 
-def dict_to_elements_tree(json_dict: dict):
+def dict_to_elements_tree(json_dict: dict) -> str:
     """
     :param json_dict: json dict
     :return: json dict to xml string

@@ -9,7 +9,7 @@ from je_api_testka.utils.exception.exceptions import APITesterJsonException
 lock = Lock()
 
 
-def read_action_json(json_file_path: str):
+def read_action_json(json_file_path: str) -> dict:
     """
     read the action json
     :param json_file_path json file's path to read
@@ -26,7 +26,7 @@ def read_action_json(json_file_path: str):
         lock.release()
 
 
-def write_action_json(json_save_path: str, action_json: list):
+def write_action_json(json_save_path: str, action_json: list) -> None:
     """
     write action json
     :param json_save_path  json save path

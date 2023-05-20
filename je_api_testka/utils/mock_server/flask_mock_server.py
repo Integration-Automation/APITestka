@@ -18,11 +18,11 @@ class FlaskMockServer(object):
         self.host = host
         self.port = port
 
-    
-    def api_testka_index_function(self):
+    @classmethod
+    def api_testka_index_function(cls) -> str:
         return "APITestka main index"
 
-    def add_router(self, rule_and_function_dict: dict, **kwargs):
+    def add_router(self, rule_and_function_dict: dict, **kwargs) -> None:
         """
         :param rule_and_function_dict: dict include {"rule(path): function"}
         :param kwargs: use to set methods or another param
@@ -34,7 +34,7 @@ class FlaskMockServer(object):
             else:
                 raise MockServerException(get_bad_api_router_setting)
 
-    def start_mock_server(self):
+    def start_mock_server(self) -> None:
         """
         start mock server
         """

@@ -8,7 +8,7 @@ from je_api_testka.utils.exception.exception_tags import wrong_json_data_error
 from je_api_testka.utils.exception.exceptions import APITesterJsonException
 
 
-def __process_json(json_string: str, **kwargs):
+def __process_json(json_string: str, **kwargs) -> str:
     """
     :param json_string: full json str (not json type)
     :param kwargs: any another kwargs for dumps
@@ -26,7 +26,7 @@ def __process_json(json_string: str, **kwargs):
             raise APITesterJsonException(wrong_json_data_error)
 
 
-def reformat_json(json_string: str, **kwargs):
+def reformat_json(json_string: str, **kwargs) -> str:
     """
     :param json_string: valid json string
     :param kwargs: indent, sort_keys or another args

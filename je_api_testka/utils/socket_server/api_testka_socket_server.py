@@ -8,7 +8,7 @@ from je_api_testka.utils.executor.action_executor import execute_action
 
 class TCPServerHandler(socketserver.BaseRequestHandler):
 
-    def handle(self):
+    def handle(self) -> None:
         command_string = str(self.request.recv(8192).strip(), encoding="utf-8")
         socket = self.request
         print("command is: " + command_string, flush=True)
@@ -39,12 +39,12 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
 
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
-    def __init__(self, server_address, RequestHandlerClass):
-        super().__init__(server_address, RequestHandlerClass)
+    def __init__(self, server_address, request_handler_class):
+        super().__init__(server_address, request_handler_class)
         self.close_flag: bool = False
 
 
-def start_apitestka_socket_server(host: str = "localhost", port: int = 9939):
+def start_apitestka_socket_server(host: str = "localhost", port: int = 9939) -> TCPServer:
     if len(sys.argv) == 2:
         host = sys.argv[1]
     elif len(sys.argv) == 3:

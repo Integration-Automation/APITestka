@@ -1,3 +1,4 @@
+import typing
 from importlib import import_module
 from importlib.util import find_spec
 from inspect import getmembers, isfunction, isbuiltin, isclass
@@ -12,7 +13,7 @@ class PackageManager(object):
         self.executor = None
         self.callback_executor = None
 
-    def check_package(self, package: str):
+    def check_package(self, package: str) -> typing.Union[str, None]:
         """
         :param package: package to check exists or not
         :return: package if find else None
@@ -37,7 +38,7 @@ class PackageManager(object):
             target=self.executor
         )
 
-    def add_package_to_callback_executor(self, package):
+    def add_package_to_callback_executor(self, package) -> None:
         """
         :param package: package's function will add to callback_executor
         """
@@ -46,7 +47,7 @@ class PackageManager(object):
             target=self.callback_executor
         )
 
-    def get_member(self, package, predicate, target):
+    def get_member(self, package, predicate, target) -> None:
         """
         :param package: package we want to get member
         :param predicate: predicate
@@ -63,7 +64,7 @@ class PackageManager(object):
         else:
             print(f"Executor error {self.executor}", file=stderr)
 
-    def add_package_to_target(self, package, target):
+    def add_package_to_target(self, package, target) -> None:
         """
         :param package: package we want to get member
         :param target: which event_dict will be added
