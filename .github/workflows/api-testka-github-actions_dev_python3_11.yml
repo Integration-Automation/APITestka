@@ -1,28 +1,28 @@
-name: APITestka GitHub Actions Stable
+name: APITestka GitHub Actions Dev
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 permissions:
   contents: read
 
 jobs:
-  build_stable_version:
+  build_dev_version:
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.7
+      - name: Set up Python 3.11
         uses: actions/setup-python@v3
         with:
-          python-version: "3.7"
+          python-version: "3.11"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip wheel
-          pip install -r requirements.txt
+          pip install -r dev_requirements.txt
         # unit test start
         # ajax test
       - name: test_ajax_requests
