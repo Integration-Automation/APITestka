@@ -1,5 +1,6 @@
 import json
 import sys
+import typing
 from threading import Lock
 
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
@@ -7,7 +8,7 @@ from je_api_testka.utils.exception.exception_tags import cant_save_json_report_r
 from je_api_testka.utils.exception.exceptions import APIJsonReportException
 
 
-def generate_json():
+def generate_json() -> typing.Tuple[dict, dict]:
     """
     :return: test success_dict test failure_dict
     """
@@ -63,7 +64,7 @@ def generate_json():
         return success_dict, failure_dict
 
 
-def generate_json_report(json_file_name: str = "default_name"):
+def generate_json_report(json_file_name: str = "default_name") -> None:
     """
     :param json_file_name: save json file's name
     """

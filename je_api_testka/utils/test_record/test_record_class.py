@@ -7,7 +7,7 @@ class TestRecord(object):
         self.test_record_list: list = list()
         self.error_record_list: list = list()
 
-    def clean_record(self):
+    def clean_record(self) -> None:
         self.test_record_list: list = list()
         self.error_record_list: list = list()
 
