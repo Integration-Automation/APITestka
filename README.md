@@ -2,12 +2,9 @@
 [![Downloads](https://static.pepy.tech/badge/je-api-testka)](https://pepy.tech/project/je-api-testka)
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f243c4edfc1f4aa3ac87752e3e86b399)](https://www.codacy.com/gh/JE-Chen/APITestka/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JE-Chen/APITestka&amp;utm_campaign=Badge_Grade)
-
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Intergration-Automation-Testing/APITestka/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Intergration-Automation-Testing/APITestka/tree/main)
 
-[![APITestka GitHub Actions Dev](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_dev.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_dev.yml)
 
-[![AutoControl GitHub Actions Stable](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_stable.yml/badge.svg)](https://github.com/JE-Chen/APITestka/actions/workflows/api-testka-github-actions_stable.yml)
 
 ### Documentation
 
