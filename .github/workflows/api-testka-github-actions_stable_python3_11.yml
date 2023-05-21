@@ -1,4 +1,4 @@
-name: APITestka GitHub Actions Stable
+name: APITestka GitHub Actions Stable Python3.11
 
 on:
   push:
