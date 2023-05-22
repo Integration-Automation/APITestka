@@ -8,100 +8,82 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      # pip require package
       - run:
           command: pip install --user -r dev_requirements.txt
-          name: pip dev_requirements.txt
+          name: Run pip dev_requirements.txt
       # unit test start
-      # ajax test
       - run:
           command: python ./test/unit_test/ajax/test_ajax_requests.py
-          name: test_ajax_requests
-      # api delete test
+          name: Test AJAX Request
       - run:
           command: python ./test/unit_test/api_delete/test_request_delete.py
-          name: test_request_delete
-      # api get test
+          name: Test Delete Request
       - run:
           command: python ./test/unit_test/api_get/test_api_get_all_data.py
-          name: test_api_get_all_data
+          name: Test Get All Data
       - run:
           command: python ./test/unit_test/api_get/test_request_get.py
-          name: test_request_get
-      # api head test
+          name: Test GET Method
       - run:
           command: python ./test/unit_test/api_head/test_request_head.py
-          name: test_request_head
-      # api options test
+          name: Test HEAD Method
       - run:
           command: python ./test/unit_test/api_options/test_request_options.py
-          name: test_request_options
+          name: Test OPTIONS Method
       - run:
           command: python ./test/unit_test/api_patch/test_request_patch.py
-          name: test_request_patch
-      # api post test
+          name: Test PATCH Method
       - run:
           command: python ./test/unit_test/api_post/test_request_post.py
-          name: test_request_post
-      # api put test
+          name: Test POST Method
       - run:
           command: python ./test/unit_test/api_put/test_request_put.py
-          name: test_request_put
-      # api session test
+          name: Test PUT Method
       - run:
           command: python ./test/unit_test/api_session/test_request_session.py
-          name: test_request_session
-      # json test
+          name: Test Session
       - run:
           command: python ./test/unit_test/json/json_reformat_test/test_json_process.py
-          name: test_json_process
+          name: Test Process Json
       - run:
           command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
-          name: rw_and_reformat_json_test
+          name: Test Read And Write And Reformat Json
       - run:
           command: python ./test/unit_test/generate_report/json_report_test.py
-          name: json_report_test
-      # html report
+          name: Test Generate Json Report
       - run:
           command: python ./test/unit_test/generate_report/html_report_test.py
-          name: html_report_test
-      # execute test
+          name: Test Generate HTML Report
       - run:
           command: python ./test/unit_test/executor_test/execute_action_test.py
-          name: execute_action_test
+          name: Test Execute Action
       - run:
           command: python ./test/integrated_test/get_dir_file_and_execute/get_dir_file_and_execute.py
-          name: get_dir_file_and_execute
-      # xml
+          name: Test Get Dir Files And Execute
       - run:
           command: python ./test/unit_test/xml/xml_test.py
-          name: xml_test
+          name: Test XML Module
       - run:
           command: python ./test/integrated_test/soap_to_dict_test/soap_to_dict_test.py
-          name: soap_to_dict_test
+          name: Test Soap Data To Dict
       - run:
           command: python ./test/unit_test/generate_report/xml_report_test.py
-          name: xml report test
-      # soap
+          name: Test Generate XML Report
       - run:
           command: python ./test/unit_test/soap_test/soap_test.py
-          name: soap_test
-      # argparse
+          name: Test Get Soap Data
       - run:
           command: python ./test/unit_test/argparse/argparse_test.py
-          name: argparse_test
-      # compare
+          name: Test Argparse
       - run:
           command: python ./test/unit_test/compare_test/compare_test.py
-          name: compare_test
-      #callback
+          name: Test Compare
       - run:
           command: python ./test/unit_test/callback/callback_test.py
-          name: callback_test
+          name: Test Callback
       - run:
           command: python ./test/unit_test/create_project/create_project.py
-          name: create_project
-      # unit test end
+          name: Test Create Project
 
   build-and-test-stable:
     executor: python/default
@@ -112,95 +94,78 @@ jobs:
           command: pip install --user -r requirements.txt
           name: pip requirements.txt
       # unit test start
-      # ajax test
       - run:
           command: python ./test/unit_test/ajax/test_ajax_requests.py
-          name: test_ajax_requests
-      # api delete test
+          name: Test AJAX Request
       - run:
           command: python ./test/unit_test/api_delete/test_request_delete.py
-          name: test_request_delete
-      # api get test
+          name: Test Delete Request
       - run:
           command: python ./test/unit_test/api_get/test_api_get_all_data.py
-          name: test_api_get_all_data
+          name: Test Get All Data
       - run:
           command: python ./test/unit_test/api_get/test_request_get.py
-          name: test_request_get
-      # api head test
+          name: Test GET Method
       - run:
           command: python ./test/unit_test/api_head/test_request_head.py
-          name: test_request_head
-      # api options test
+          name: Test HEAD Method
       - run:
           command: python ./test/unit_test/api_options/test_request_options.py
-          name: test_request_options
+          name: Test OPTIONS Method
       - run:
           command: python ./test/unit_test/api_patch/test_request_patch.py
-          name: test_request_patch
-      # api post test
+          name: Test PATCH Method
       - run:
           command: python ./test/unit_test/api_post/test_request_post.py
-          name: test_request_post
-      # api put test
+          name: Test POST Method
       - run:
           command: python ./test/unit_test/api_put/test_request_put.py
-          name: test_request_put
-      # api session test
+          name: Test PUT Method
       - run:
           command: python ./test/unit_test/api_session/test_request_session.py
-          name: test_request_session
-      # json test
+          name: Test Session
       - run:
           command: python ./test/unit_test/json/json_reformat_test/test_json_process.py
-          name: test_json_process
+          name: Test Process Json
       - run:
           command: python ./test/unit_test/json/rw_and_reformat_json_test/rw_and_reformat_json_test.py
-          name: rw_and_reformat_json_test
+          name: Test Read And Write And Reformat Json
       - run:
           command: python ./test/unit_test/generate_report/json_report_test.py
-          name: json_report_test
-      # html report
+          name: Test Generate Json Report
       - run:
           command: python ./test/unit_test/generate_report/html_report_test.py
-          name: html_report_test
-      # execute test
+          name: Test Generate HTML Report
       - run:
           command: python ./test/unit_test/executor_test/execute_action_test.py
-          name: execute_action_test
+          name: Test Execute Action
       - run:
           command: python ./test/integrated_test/get_dir_file_and_execute/get_dir_file_and_execute.py
-          name: get_dir_file_and_execute
-      # xml
+          name: Test Get Dir Files And Execute
       - run:
           command: python ./test/unit_test/xml/xml_test.py
-          name: xml_test
+          name: Test XML Module
       - run:
           command: python ./test/integrated_test/soap_to_dict_test/soap_to_dict_test.py
-          name: soap_to_dict_test
+          name: Test Soap Data To Dict
       - run:
           command: python ./test/unit_test/generate_report/xml_report_test.py
-          name: xml report test
-      # soap
+          name: Test Generate XML Report
       - run:
           command: python ./test/unit_test/soap_test/soap_test.py
-          name: soap_test
-      # argparse
+          name: Test Get Soap Data
       - run:
           command: python ./test/unit_test/argparse/argparse_test.py
-          name: argparse_test
-      # compare
+          name: Test Argparse
       - run:
           command: python ./test/unit_test/compare_test/compare_test.py
-          name: compare_test
-      #callback
+          name: Test Compare
       - run:
           command: python ./test/unit_test/callback/callback_test.py
-          name: callback_test
+          name: Test Callback
       - run:
           command: python ./test/unit_test/create_project/create_project.py
-          name: create_project
-      # unit test end
+          name: Test Create Project
 
 workflows:
   main:
