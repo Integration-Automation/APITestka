@@ -3,13 +3,13 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f243c4edfc1f4aa3ac87752e3e86b399)](https://www.codacy.com/gh/JE-Chen/APITestka/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JE-Chen/APITestka&amp;utm_campaign=Badge_Grade)
 
-[![APITestka GitHub Actions Stable Python3.8](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_8.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_8.yml)
+[![APITestka Stable Python3.8](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_8.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_8.yml)
 
-[![APITestka GitHub Actions Stable Python3.9](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_9.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_9.yml)
+[![APITestka Stable Python3.9](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_9.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_9.yml)
 
-[![APITestka GitHub Actions Stable Python3.10](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_10.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_10.yml)
+[![APITestka Stable Python3.10](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_10.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_10.yml)
 
-[![APITestka GitHub Actions Stable Python3.11](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_11.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/api-testka-github-actions_stable_python3_11.yml)
+[![APITestka Stable Python3.11](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_11.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_11.yml)
 
 ### Documentation
 
