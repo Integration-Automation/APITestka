@@ -117,3 +117,4 @@ dmypy.json
 
 # Pycharm
 .idea/*
+.idea/misc.xml
