@@ -1,7 +1,6 @@
 import typing
 from sys import stderr
 
-from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tags import get_bad_trigger_function, get_bad_trigger_method
 from je_api_testka.utils.exception.exceptions import CallbackExecutorException
@@ -11,6 +10,7 @@ from je_api_testka.utils.generate_report.json_report import generate_json
 from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.utils.generate_report.xml_report import generate_xml
 from je_api_testka.utils.generate_report.xml_report import generate_xml_report
+from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
