@@ -17,7 +17,7 @@
 
 ---
 > Project Kanban \
-> https://github.com/orgs/Intergration-Automation-Testing/projects/2 \
+> https://github.com/orgs/Integration-Automation/projects/2/views/1 \
 > Simple way to automation requests HTTP/S & Soap \
 > Wrapper for Requests package, designed for those with experience using Requests. \
 > Send HTTP/S and SOAP requests with a simple line of code or keyword. \
