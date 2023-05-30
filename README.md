@@ -18,26 +18,21 @@
 ---
 > Project Kanban \
 > https://github.com/orgs/Integration-Automation/projects/2/views/1 \
-> Simple way to automation requests HTTP/S & Soap \
-> Wrapper for Requests package, designed for those with experience using Requests. \
-> Send HTTP/S and SOAP requests with a simple line of code or keyword. \
-> Detailed information on Requests and Responses. \
-> Solves problems such as:
->> * Detailed reports on Requests and Responses.
->> * Automation for SOAP protocol.
->> * Data comparison for each Request.
->> * API request in pure CLI mode.
----
-### Features
+> * API requests automation.
+> * Data comparison for each Request.
+> * API request in pure CLI mode.
+> * Detailed reports on Requests and Responses.
+> * HTTP/HTTPS support.
+> * SOAP/XML support.
+> * JSON support.
+> * Generate JSON/HTML/XML report.
+> * APITestka script.
+> * 1 sec / thousands requests.
+> * OS Independent.
+> * Mockserver support.
+> * Remote Automation support.
+> * Project & Template support.
 
->* HTTP Method requests
->* Get response data body etc...
->* Action file and executor
->* result compare
->* xml to json and json to xml
->* Soap test
->* Generate HTML Report
->* CLI with action file
 
 ---
 
