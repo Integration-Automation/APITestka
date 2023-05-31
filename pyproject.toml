@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka_dev"
-version = "0.0.90"
+version = "0.0.91"
 authors = [
     { name = "JE-Chen", email = "jechenmailman@gmail.com" },
 ]
@@ -15,7 +15,8 @@ requires-python = ">=3.8"
 license = { text = "MIT" }
 dependencies = [
     "requests",
-    "Flask"
+    "Flask",
+    "APScheduler"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.8",
