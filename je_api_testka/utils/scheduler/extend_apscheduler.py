@@ -48,44 +48,72 @@ class SchedulerManager(object):
         self._background_schedulers.start(*args, **kwargs)
 
     def add_interval_blocking_secondly(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, seconds: int = 1):
-        self.add_blocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, seconds=seconds)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, seconds: int = 1, **trigger_args):
+        self.add_blocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, seconds=seconds, **trigger_args)
 
     def add_interval_blocking_minutely(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, minutes: int = 1):
-        self.add_blocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, minutes=minutes)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, minutes: int = 1, **trigger_args):
+        self.add_blocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, minutes=minutes, **trigger_args)
 
     def add_interval_blocking_hourly(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, hours: int = 1):
-        self.add_blocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, hours=hours)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, hours: int = 1, **trigger_args):
+        self.add_blocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, hours=hours, **trigger_args)
 
     def add_interval_blocking_daily(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, days: int = 1):
-        self.add_blocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, days=days)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, days: int = 1, **trigger_args):
+        self.add_blocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, days=days, **trigger_args)
 
     def add_interval_blocking_weekly(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, weeks: int = 1):
-        self.add_blocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, weeks=weeks)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, weeks: int = 1, **trigger_args):
+        self.add_blocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, weeks=weeks, **trigger_args)
 
     def add_interval_nonblocking_secondly(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, seconds: int = 1):
-        self.add_nonblocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, seconds=seconds)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, seconds: int = 1, **trigger_args):
+        self.add_nonblocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, seconds=seconds, **trigger_args)
 
     def add_interval_nonblocking_minutely(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, minutes: int = 1):
-        self.add_nonblocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, minutes=minutes)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, minutes: int = 1, **trigger_args):
+        self.add_nonblocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, minutes=minutes, **trigger_args)
 
     def add_interval_nonblocking_hourly(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, hours: int = 1):
-        self.add_nonblocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, hours=hours)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, hours: int = 1, **trigger_args):
+        self.add_nonblocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, hours=hours, **trigger_args)
 
     def add_interval_nonblocking_daily(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, days: int = 1):
-        self.add_nonblocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, days=days)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, days: int = 1, **trigger_args):
+        self.add_nonblocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, days=days, **trigger_args)
 
     def add_interval_nonblocking_weekly(
-            self, function: Callable, id: str = None, args: list = None, kwargs: dict = None, weeks: int = 1):
-        self.add_nonblocking_job(func=function, trigger="interval", id=id, args=args, kwargs=kwargs, weeks=weeks)
+            self, function: Callable, id: str = None, args: list = None,
+            kwargs: dict = None, weeks: int = 1, **trigger_args):
+        self.add_nonblocking_job(
+            func=function, trigger="interval", id=id, args=args, kwargs=kwargs, weeks=weeks, **trigger_args)
+
+    def add_cron_blocking(
+            self, function: Callable, id: str = None, **trigger_args):
+        self.add_blocking_job(func=function, id=id, trigger="cron", **trigger_args)
+
+    def add_cron_nonblocking(
+            self, function: Callable, id: str = None, **trigger_args):
+        self.add_nonblocking_job(func=function, id=id, trigger="cron", **trigger_args)
 
     def remove_blocking_job(self, id: str, jobstore: str = 'default'):
         self._blocking_schedulers.remove_job(job_id=id, jobstore=jobstore)
