@@ -72,3 +72,5 @@ jobs:
         run: python ./test/unit_test/callback/callback_test.py
       - name: Test Create Project
         run: python ./test/unit_test/create_project/create_project.py
+      - name: Test Scheduler
+        run: python ./test/unit_test/scheduler_test/scheduler_test.py
