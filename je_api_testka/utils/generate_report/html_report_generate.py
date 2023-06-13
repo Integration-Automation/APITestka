@@ -4,6 +4,7 @@ from threading import Lock
 
 from je_api_testka.utils.exception.exception_tags import html_generate_no_data_tag
 from je_api_testka.utils.exception.exceptions import APIHTMLException
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 lock = Lock()
@@ -202,6 +203,7 @@ def generate_html() -> typing.Tuple[list, list]:
     """
     :return: test success_list & test failure_list
     """
+    apitestka_logger.info(f"generate_html")
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIHTMLException(html_generate_no_data_tag)
     else:
@@ -249,6 +251,7 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
     :param html_file_name: save html file name
     :return:
     """
+    apitestka_logger.info(f"generate_html_report html_file_name:{html_file_name}")
     success_list, failure_list = generate_html()
     try:
         lock.acquire()
