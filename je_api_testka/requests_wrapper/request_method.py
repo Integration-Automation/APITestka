@@ -18,6 +18,7 @@ from je_api_testka.utils.exception.exception_tags import session_error_message
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException
 from je_api_testka.utils.exception.exceptions import APITesterGetDataException
 from je_api_testka.utils.get_data_strcture.get_api_data import get_api_response_data
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 exception_message_dict = {
@@ -72,6 +73,12 @@ def test_api_method(http_method: str, test_url: str,
     :param result_check_dict:
     :param kwargs:
     """
+    apitestka_logger.info(
+        f"test_api_method, http_method: {http_method}, test_url:{test_url}, soap: {soap}, "
+        f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
+        f"result_check_dict: {result_check_dict}, verify: {verify}, timeout: {timeout}, "
+        f"allow_redirects: {allow_redirects}"
+    )
     try:
         start_time: datetime = datetime.now()
         if soap is False:
@@ -95,10 +102,13 @@ def test_api_method(http_method: str, test_url: str,
             if record_request_info:
                 test_record_instance.test_record_list.append(response_data)
             return {"response": response, "response_data": response_data}
-    except APITesterExecuteException as error:
-        raise repr(error)
     except Exception as error:
-        print(repr(error), file=sys.stderr)
+        apitestka_logger.error(
+            f"test_api_method, http_method: {http_method}, test_url:{test_url}, soap: {soap}, "
+            f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
+            f"result_check_dict: {result_check_dict}, verify: {verify}, timeout: {timeout}, "
+            f"allow_redirects: {allow_redirects}, failed: {repr(error)}"
+        )
         test_record_instance.error_record_list.append([
             {
                 "http_method": http_method,

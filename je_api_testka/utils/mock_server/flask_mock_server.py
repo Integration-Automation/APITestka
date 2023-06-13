@@ -4,6 +4,7 @@ from flask.app import Flask
 
 from je_api_testka.utils.exception.exception_tags import get_bad_api_router_setting
 from je_api_testka.utils.exception.exceptions import MockServerException
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 class FlaskMockServer(object):
@@ -28,16 +29,24 @@ class FlaskMockServer(object):
         :param kwargs: use to set methods or another param
         :return:
         """
+        apitestka_logger.info(
+            f"add_router, rule_and_function_dict: {rule_and_function_dict}, params: {kwargs}"
+        )
         for rule, function in rule_and_function_dict.items():
             if isinstance(rule, str) and isinstance(function, typing.Callable):
                 self.app.route(rule, **kwargs)(function)
             else:
+                apitestka_logger.error(
+                    f"add_router, rule_and_function_dict: {rule_and_function_dict}, params: {kwargs}, "
+                    f"failed: {MockServerException(get_bad_api_router_setting)}"
+                )
                 raise MockServerException(get_bad_api_router_setting)
 
     def start_mock_server(self) -> None:
         """
         start mock server
         """
+        apitestka_logger.info(f"start_mock_server")
         self.add_router(
             {"/": self.api_testka_index_function},
             methods=["GET"]

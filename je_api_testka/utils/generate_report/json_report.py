@@ -3,6 +3,7 @@ import sys
 import typing
 from threading import Lock
 
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 from je_api_testka.utils.exception.exception_tags import cant_save_json_report_record_us_null
 from je_api_testka.utils.exception.exceptions import APIJsonReportException
@@ -12,6 +13,7 @@ def generate_json() -> typing.Tuple[dict, dict]:
     """
     :return: test success_dict test failure_dict
     """
+    apitestka_logger.info("generate_json")
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
     else:
@@ -68,6 +70,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
     """
     :param json_file_name: save json file's name
     """
+    apitestka_logger.info(f"generate_json_report, json_file_name: {json_file_name}")
     lock = Lock()
     success_dict, failure_dict = generate_json()
     try:
@@ -75,7 +78,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
         with open(json_file_name + "_failure.json", "w+") as file_to_write:
             json.dump(dict(failure_dict), file_to_write, indent=4)
     except Exception as error:
-        print(repr(error), file=sys.stderr)
+        apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
     finally:
         lock.release()
     try:
@@ -83,6 +86,6 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
         with open(json_file_name + "_success.json", "w+") as file_to_write:
             json.dump(dict(success_dict), file_to_write, indent=4)
     except Exception as error:
-        print(repr(error), file=sys.stderr)
+        apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
     finally:
         lock.release()

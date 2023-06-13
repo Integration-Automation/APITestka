@@ -15,6 +15,7 @@ from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.utils.generate_report.xml_report import generate_xml
 from je_api_testka.utils.generate_report.xml_report import generate_xml_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
@@ -31,10 +32,12 @@ class Executor(object):
             "generate_json_report": generate_json_report,
             "generate_xml": generate_xml,
             "generate_xml_report": generate_xml_report,
-            # execute
+            # Execute
             "execute_action": self.execute_action,
             "execute_files": self.execute_files,
+            # Add package
             "add_package_to_executor": package_manager.add_package_to_executor,
+            "add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
             # mock
             "flask_mock_server_add_router": flask_mock_server_instance.add_router,
             "start_flask_mock_server": flask_mock_server_instance.start_mock_server,
@@ -67,6 +70,7 @@ class Executor(object):
         for loop and use execute_event function to execute
         :return: recode string, response as list
         """
+        apitestka_logger.info(f"execute_action, action_list: {action_list}")
         if isinstance(action_list, dict):
             action_list: list = action_list.get("api_testka", None)
             if action_list is None:
@@ -78,15 +82,17 @@ class Executor(object):
             else:
                 raise APITesterExecuteException(executor_list_error)
         except Exception as error:
-            print(repr(error), file=sys.stderr)
+            apitestka_logger.info(f"execute_action, action_list: {action_list}, "
+                                  f"failed: {repr(error)}")
         for action in action_list:
             try:
                 event_response = self._execute_event(action)
                 execute_record: str = "execute: " + str(action)
                 execute_record_dict.update({execute_record: event_response})
             except Exception as error:
-                print(repr(error), file=sys.stderr)
-                print(action, file=sys.stderr)
+                apitestka_logger.info(
+                    f"execute_action, action_list: {action_list}, "
+                    f"action: {action}, failed: {repr(error)}")
                 execute_record = "execute: " + str(action)
                 execute_record_dict.update({execute_record: repr(error)})
         for key, value in execute_record_dict.items():
@@ -99,6 +105,7 @@ class Executor(object):
         :param execute_files_list: list include execute files path
         :return: every execute detail as list
         """
+        apitestka_logger.info(f"execute_files, execute_files_list: {execute_files_list}")
         execute_detail_list: list = list()
         for file in execute_files_list:
             execute_detail_list.append(self.execute_action(read_action_json(file)))
