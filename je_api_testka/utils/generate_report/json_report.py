@@ -1,15 +1,14 @@
 import json
-import sys
-import typing
 from threading import Lock
+from typing import Tuple, Dict
 
-from je_api_testka.utils.logging.loggin_instance import apitestka_logger
-from je_api_testka.utils.test_record.test_record_class import test_record_instance
 from je_api_testka.utils.exception.exception_tags import cant_save_json_report_record_us_null
 from je_api_testka.utils.exception.exceptions import APIJsonReportException
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 
-def generate_json() -> typing.Tuple[dict, dict]:
+def generate_json() -> Tuple[Dict, Dict]:
     """
     :return: test success_dict test failure_dict
     """

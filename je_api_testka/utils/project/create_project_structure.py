@@ -11,6 +11,7 @@ from je_api_testka.utils.project.template.template_keyword import template_keywo
 
 def create_dir(dir_name: str) -> None:
     """
+    Create dir.
     :param dir_name: create dir use dir name
     :return: None
     """
@@ -21,6 +22,12 @@ def create_dir(dir_name: str) -> None:
 
 
 def create_template(parent_name: str, project_path: str = None) -> None:
+    """
+    Create template on dir {parent_name} with path {project_path}
+    :param parent_name: Project folder name.
+    :param project_path: Path use to create project dir if None set cwd as default.
+    :return:
+    """
     if project_path is None:
         project_path = getcwd()
     keyword_dir_path = Path(project_path + "/" + parent_name + "/keyword")
@@ -60,8 +67,9 @@ def create_template(parent_name: str, project_path: str = None) -> None:
 
 def create_project_dir(project_path: str = None, parent_name: str = "APITestka") -> None:
     """
-    :param project_path: path used to create project dir
-    :param parent_name: project folder name
+    Use to create project.
+    :param project_path: Path used to create project dir if None set cwd as default.
+    :param parent_name: Project folder name.
     :return: None
     """
     if project_path is None:

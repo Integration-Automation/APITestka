@@ -2,9 +2,10 @@ from os import getcwd
 from os import walk
 from os.path import abspath
 from os.path import join
+from typing import List
 
 
-def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extension: str = ".json") -> list:
+def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extension: str = ".json") -> List:
     """
     get dir file when end with default_search_file_extension
     :param dir_path: which dir we want to walk and get file list

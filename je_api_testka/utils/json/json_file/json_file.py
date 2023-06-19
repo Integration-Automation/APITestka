@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from threading import Lock
+from typing import Dict
 
 from je_api_testka.utils.exception.exception_tags import cant_find_json_error
 from je_api_testka.utils.exception.exception_tags import cant_save_json_error
@@ -9,7 +10,7 @@ from je_api_testka.utils.exception.exceptions import APITesterJsonException
 lock = Lock()
 
 
-def read_action_json(json_file_path: str) -> dict:
+def read_action_json(json_file_path: str) -> Dict:
     """
     read the action json
     :param json_file_path json file's path to read
