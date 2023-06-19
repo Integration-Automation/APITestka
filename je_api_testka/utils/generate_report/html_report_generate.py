@@ -1,6 +1,6 @@
 import sys
-import typing
 from threading import Lock
+from typing import List, Tuple
 
 from je_api_testka.utils.exception.exception_tags import html_generate_no_data_tag
 from je_api_testka.utils.exception.exceptions import APIHTMLException
@@ -199,7 +199,7 @@ _failure_table = \
     """.strip()
 
 
-def generate_html() -> typing.Tuple[list, list]:
+def generate_html() -> Tuple[List, List]:
     """
     :return: test success_list & test failure_list
     """
@@ -270,4 +270,3 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
         print(repr(error), file=sys.stderr)
     finally:
         lock.release()
-

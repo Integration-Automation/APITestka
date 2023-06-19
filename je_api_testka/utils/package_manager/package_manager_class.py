@@ -1,4 +1,4 @@
-import typing
+from typing import Union
 from importlib import import_module
 from importlib.util import find_spec
 from inspect import getmembers, isfunction, isbuiltin, isclass
@@ -15,7 +15,7 @@ class PackageManager(object):
         self.executor = None
         self.callback_executor = None
 
-    def check_package(self, package: str) -> typing.Union[str, None]:
+    def check_package(self, package: str) -> Union[str, None]:
         """
         :param package: package to check exists or not
         :return: package if find else None

@@ -1,5 +1,5 @@
-import typing
 from sys import stderr
+from typing import Any, Callable
 
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tags import get_bad_trigger_function, get_bad_trigger_method
@@ -36,11 +36,11 @@ class CallbackFunctionExecutor(object):
     def callback_function(
             self,
             trigger_function_name: str,
-            callback_function: typing.Callable,
+            callback_function: Callable,
             callback_function_param: [dict, None] = None,
             callback_param_method: [str, None] = "kwargs",
             **kwargs
-    ) -> typing.Any:
+    ) -> Any:
         """
         :param trigger_function_name: what function we want to trigger only accept function in event_dict
         :param callback_function: what function we want to callback

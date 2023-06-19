@@ -1,8 +1,7 @@
 import builtins
-import sys
 import types
-import typing
 from inspect import getmembers, isbuiltin
+from typing import Dict, Callable, Any, List
 
 from je_api_testka.requests_wrapper.request_method import test_api_method
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
@@ -46,12 +45,12 @@ class Executor(object):
         for function in getmembers(builtins, isbuiltin):
             self.event_dict.update({str(function[0]): function[1]})
 
-    def _execute_event(self, action: list) -> typing.Any:
+    def _execute_event(self, action: list) -> Any:
         """
         :param action: execute action
         :return: what event return
         """
-        event: typing.Callable = self.event_dict.get(action[0])
+        event: Callable = self.event_dict.get(action[0])
         if len(action) == 2:
             if isinstance(action[1], dict):
                 return event(**action[1])
@@ -60,7 +59,7 @@ class Executor(object):
         else:
             raise APITesterExecuteException(executor_data_error + " " + str(action))
 
-    def execute_action(self, action_list: [list, dict]) -> dict:
+    def execute_action(self, action_list: [list, dict]) -> Dict[str, str]:
         """
         :param action_list: like this structure
         [
@@ -100,7 +99,7 @@ class Executor(object):
             print(value)
         return execute_record_dict
 
-    def execute_files(self, execute_files_list: list) -> typing.List[typing.Any]:
+    def execute_files(self, execute_files_list: list) -> List[Any]:
         """
         :param execute_files_list: list include execute files path
         :return: every execute detail as list
@@ -124,9 +123,9 @@ def add_command_to_executor(command_dict: dict) -> None:
             raise APIAddCommandException(add_command_exception_tag)
 
 
-def execute_action(action_list: list) -> typing.Any:
+def execute_action(action_list: list) -> Any:
     return executor.execute_action(action_list)
 
 
-def execute_files(execute_files_list: list) -> typing.List[typing.Any]:
+def execute_files(execute_files_list: list) -> List[Any]:
     return executor.execute_files(execute_files_list)

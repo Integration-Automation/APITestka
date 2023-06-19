@@ -9,6 +9,10 @@ from je_api_testka.utils.executor.action_executor import execute_action
 class TCPServerHandler(socketserver.BaseRequestHandler):
 
     def handle(self) -> None:
+        """
+        Receive message and try to execute message
+        :return: None
+        """
         command_string = str(self.request.recv(8192).strip(), encoding="utf-8")
         socket = self.request
         print("command is: " + command_string, flush=True)
@@ -45,6 +49,12 @@ class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
 
 def start_apitestka_socket_server(host: str = "localhost", port: int = 9939) -> TCPServer:
+    """
+    Start TCP socket server on host with port
+    :param host: Server host.
+    :param port: Server port.
+    :return: TCP server instance.
+    """
     if len(sys.argv) == 2:
         host = sys.argv[1]
     elif len(sys.argv) == 3:

@@ -1,4 +1,4 @@
-import typing
+from typing import Callable
 
 from flask.app import Flask
 
@@ -33,7 +33,7 @@ class FlaskMockServer(object):
             f"add_router, rule_and_function_dict: {rule_and_function_dict}, params: {kwargs}"
         )
         for rule, function in rule_and_function_dict.items():
-            if isinstance(rule, str) and isinstance(function, typing.Callable):
+            if isinstance(rule, str) and isinstance(function, Callable):
                 self.app.route(rule, **kwargs)(function)
             else:
                 apitestka_logger.error(
