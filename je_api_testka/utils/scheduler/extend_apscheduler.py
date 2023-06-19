@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Callable, Any
+from typing import Callable, Any, Union
 
 from apscheduler.job import Job
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,7 +14,7 @@ class SchedulerManager(object):
         self._background_schedulers: BackgroundScheduler = BackgroundScheduler()
 
     def add_blocking_job(
-            self, func: Callable, trigger: str = None, args: list | tuple = None,
+            self, func: Callable, trigger: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, id: str = None, name: str = None,
             misfire_grace_time: int = undefined, coalesce: bool = undefined, max_instances: int = undefined,
             next_run_time: datetime = undefined, jobstore: str = 'default', executor: str = 'default',
@@ -48,7 +48,7 @@ class SchedulerManager(object):
         return self._blocking_schedulers.add_job(**params, **trigger_args)
 
     def add_nonblocking_job(
-            self, func: Callable, trigger: str = None, args: list | tuple = None,
+            self, func: Callable, trigger: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, id: str = None, name: str = None,
             misfire_grace_time: int = undefined, coalesce: bool = undefined, max_instances: int = undefined,
             next_run_time: datetime = undefined, jobstore: str = 'default', executor: str = 'default',
@@ -118,31 +118,31 @@ class SchedulerManager(object):
         self._background_schedulers.start(*args, **kwargs)
 
     def add_interval_blocking_secondly(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, seconds: int = 1, **trigger_args: Any) -> Job:
         return self.add_blocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, seconds=seconds, **trigger_args)
 
     def add_interval_blocking_minutely(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, minutes: int = 1, **trigger_args: Any) -> Job:
         return self.add_blocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, minutes=minutes, **trigger_args)
 
     def add_interval_blocking_hourly(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, hours: int = 1, **trigger_args: Any) -> Job:
         return self.add_blocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, hours=hours, **trigger_args)
 
     def add_interval_blocking_daily(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, days: int = 1, **trigger_args: Any) -> Job:
         return self.add_blocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, days=days, **trigger_args)
 
     def add_interval_blocking_weekly(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, weeks: int = 1, **trigger_args: Any) -> Job:
         return self.add_blocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, weeks=weeks, **trigger_args)
@@ -160,19 +160,19 @@ class SchedulerManager(object):
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, minutes=minutes, **trigger_args)
 
     def add_interval_nonblocking_hourly(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, hours: int = 1, **trigger_args: Any) -> Job:
         return self.add_nonblocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, hours=hours, **trigger_args)
 
     def add_interval_nonblocking_daily(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, days: int = 1, **trigger_args: Any) -> Job:
         return self.add_nonblocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, days=days, **trigger_args)
 
     def add_interval_nonblocking_weekly(
-            self, function: Callable, id: str = None, args: list | tuple = None,
+            self, function: Callable, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, weeks: int = 1, **trigger_args: Any) -> Job:
         return self.add_nonblocking_job(
             func=function, trigger="interval", id=id, args=args, kwargs=kwargs, weeks=weeks, **trigger_args)
