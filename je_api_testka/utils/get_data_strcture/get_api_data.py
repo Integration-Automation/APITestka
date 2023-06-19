@@ -7,21 +7,7 @@ from requests.utils import dict_from_cookiejar
 
 def get_api_response_data(response: Response,
                           start_time: [str, float, int],
-                          end_time: [str, float, int]) \
-        -> Dict[
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-        ]:
+                          end_time: [str, float, int]) -> Dict[str, str]:
     """
     use requests response to create data dict
     :param response: requests response

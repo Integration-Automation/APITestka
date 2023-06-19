@@ -41,21 +41,7 @@ exception_message_dict = {
 
 def get_response(response: requests.Response,
                  start_time: [str, float, int],
-                 end_time: [str, float, int]) \
-        -> Dict[
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str
-        ]:
+                 end_time: [str, float, int]) -> Dict[str, str]:
     """
     use requests response to create data dict
     :param response: requests response
@@ -74,20 +60,7 @@ def test_api_method(http_method: str, test_url: str,
                     soap: bool = False, record_request_info: bool = True,
                     clean_record: bool = False, result_check_dict: dict = None
                     , verify: bool = False, timeout: int = 5, allow_redirects: bool = False,
-                    **kwargs) \
-        -> (requests.Response, Dict[
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str,
-            str, str]):
+                    **kwargs) -> (requests.Response, Dict[str, str]):
     """
     set requests http_method url headers and record response and record report
     :param http_method:
