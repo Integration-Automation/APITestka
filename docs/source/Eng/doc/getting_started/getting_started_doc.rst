@@ -38,7 +38,7 @@ Attention! Only the following HTTP methods can be used:
     from je_api_testka import execute_files
 
     test_api_list = [
-    ["test_api_method",
+    ["AT_test_api_method",
      {
          "http_method": "post",
          "test_url": "http://httpbin.org/post",
@@ -46,7 +46,7 @@ Attention! Only the following HTTP methods can be used:
          "result_check_dict": {"status_code": 200}
      }
      ],
-    ["test_api_method",
+    ["AT_test_api_method",
      {
          "http_method": "get",
          "test_url": "http://httpbin.org/post",

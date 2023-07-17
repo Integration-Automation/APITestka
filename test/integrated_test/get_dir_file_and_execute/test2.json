@@ -1,6 +1,6 @@
 [
   [
-    "test_api_method",
+    "AT_test_api_method",
     {
       "http_method": "get",
       "test_url": "http://httpbin.org/get",
@@ -12,7 +12,7 @@
     }
   ],
   [
-    "test_api_method",
+    "AT_test_api_method",
     {
       "http_method": "post",
       "test_url": "http://httpbin.org/post",

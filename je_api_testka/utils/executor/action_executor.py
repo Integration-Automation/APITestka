@@ -25,31 +25,31 @@ class Executor(object):
     def __init__(self):
         self.event_dict = {
             # Automation api
-            "test_api_method": test_api_method,
-            "generate_html": generate_html,
-            "generate_html_report": generate_html_report,
-            "generate_json": generate_json,
-            "generate_json_report": generate_json_report,
-            "generate_xml": generate_xml,
-            "generate_xml_report": generate_xml_report,
+            "AT_test_api_method": test_api_method,
+            "AT_generate_html": generate_html,
+            "AT_generate_html_report": generate_html_report,
+            "AT_generate_json": generate_json,
+            "AT_generate_json_report": generate_json_report,
+            "AT_generate_xml": generate_xml,
+            "AT_generate_xml_report": generate_xml_report,
             # Execute
-            "execute_action": self.execute_action,
-            "execute_files": self.execute_files,
+            "AT_execute_action": self.execute_action,
+            "AT_execute_files": self.execute_files,
             # Add package
-            "add_package_to_executor": package_manager.add_package_to_executor,
-            "add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
+            "AT_add_package_to_executor": package_manager.add_package_to_executor,
+            "AT_add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
             # Mock server
-            "flask_mock_server_add_router": flask_mock_server_instance.add_router,
-            "start_flask_mock_server": flask_mock_server_instance.start_mock_server,
+            "AT_flask_mock_server_add_router": flask_mock_server_instance.add_router,
+            "AT_start_flask_mock_server": flask_mock_server_instance.start_mock_server,
             # Scheduler
-            "scheduler_event_trigger": self.scheduler_event_trigger,
-            "remove_blocking_scheduler_job": scheduler_manager.remove_blocking_job,
-            "remove_nonblocking_scheduler_job": scheduler_manager.remove_nonblocking_job,
-            "start_blocking_scheduler": scheduler_manager.start_block_scheduler,
-            "start_nonblocking_scheduler": scheduler_manager.start_nonblocking_scheduler,
-            "start_all_scheduler": scheduler_manager.start_all_scheduler,
-            "shutdown_blocking_scheduler": scheduler_manager.shutdown_blocking_scheduler,
-            "shutdown_nonblocking_scheduler": scheduler_manager.shutdown_nonblocking_scheduler,
+            "AT_scheduler_event_trigger": self.scheduler_event_trigger,
+            "AT_remove_blocking_scheduler_job": scheduler_manager.remove_blocking_job,
+            "AT_remove_nonblocking_scheduler_job": scheduler_manager.remove_nonblocking_job,
+            "AT_start_blocking_scheduler": scheduler_manager.start_block_scheduler,
+            "AT_start_nonblocking_scheduler": scheduler_manager.start_nonblocking_scheduler,
+            "AT_start_all_scheduler": scheduler_manager.start_all_scheduler,
+            "AT_shutdown_blocking_scheduler": scheduler_manager.shutdown_blocking_scheduler,
+            "AT_shutdown_nonblocking_scheduler": scheduler_manager.shutdown_nonblocking_scheduler,
         }
         # get all builtin function and add to event dict
         for function in getmembers(builtins, isbuiltin):

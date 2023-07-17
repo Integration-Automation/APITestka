@@ -6,7 +6,7 @@ from je_api_testka import write_action_json
 
 test_list = \
     [
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "get", "test_url": "http://httpbin.org/get",
           "headers": {
               'x-requested-with': 'XMLHttpRequest',
@@ -15,7 +15,7 @@ test_list = \
           }
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 200}
           }

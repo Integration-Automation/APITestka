@@ -20,7 +20,7 @@ def read_program_error_output_from_process():
 
 
 test_list = ["python", "-m", "je_api_testka", "--execute_str",
-             '{"api_testka":[["test_api_method",{ "http_method": "post", "test_url": "http://httpbin.org/post", "params": { "task": "new task" } }], ["test_api_method", { "http_method": "post", "test_url": "http://httpbin.org/post"}]]}'
+             '{"api_testka":[["AT_test_api_method",{ "http_method": "post", "test_url": "http://httpbin.org/post", "params": { "task": "new task" } }], ["AT_test_api_method", { "http_method": "post", "test_url": "http://httpbin.org/post"}]]}'
              ]
 
 std_out_queue = queue.Queue()

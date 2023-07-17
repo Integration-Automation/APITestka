@@ -2,7 +2,7 @@ from je_api_testka import callback_executor
 
 print(
     callback_executor.callback_function(
-        trigger_function_name="test_api_method",
+        trigger_function_name="AT_test_api_method",
         callback_function=print,
         callback_param_method=None,
         callback_function_param=None,

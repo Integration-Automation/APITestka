@@ -4,7 +4,7 @@ from je_api_testka import execute_action
 from je_api_testka import test_record_instance
 
 test_action_list = [
-    ["test_api_method",
+    ["AT_test_api_method",
      {"http_method": "get", "test_url": "http://httpbin.org/get",
       "headers": {
           "x-requested-with": "XMLHttpRequest",
@@ -13,7 +13,7 @@ test_action_list = [
       }
       }
      ],
-    ["test_api_method",
+    ["AT_test_api_method",
      {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
       "result_check_dict": {"status_code": 200}
       }
@@ -31,8 +31,8 @@ try:
             assert response.get("end_time") is not None
 
     test_action_list = [
-        ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
-        ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post"}]
+        ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
+        ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post"}]
     ]
 except Exception as error:
     print(repr(error), file=sys.stderr)
@@ -58,7 +58,7 @@ data = """<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        """
 
 test_action_list = [
-    ["test_api_method", {
+    ["AT_test_api_method", {
         "http_method": "post", "test_url": url, "soap": True, "data": data,
         "result_check_dict": {"status_code": 200}
     }
@@ -74,9 +74,9 @@ except Exception as error:
     print(repr(error), file=sys.stderr)
 
 test_action_list = [
-    ["test_api_method", {"http_method": "dwadawdwaw",
+    ["AT_test_api_method", {"http_method": "dwadawdwaw",
                          "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
-    ["test_api_method", {"http_method": "dwadwadwadaw", "test_url": "http://httpbin.org/post",
+    ["AT_test_api_method", {"http_method": "dwadwadwadaw", "test_url": "http://httpbin.org/post",
                          "record_request_info": False}]
 ]
 
@@ -87,11 +87,11 @@ except Exception as error:
     print(repr(error), file=sys.stderr)
 
 test_action_list = [
-    ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
-    ["test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post",
+    ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"}}],
+    ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post",
                          "result_check_dict": {"status_code": 300}}
      ],
-    ["generate_html", {"html_file_name": "generate_html_test"}]
+    ["AT_generate_html", {"html_file_name": "generate_html_test"}]
 ]
 
 action_response = execute_action(test_action_list)

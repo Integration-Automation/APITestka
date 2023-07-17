@@ -18,7 +18,7 @@ Generate Report 可以生成以下格式的報告
     from je_api_testka import execute_action
 
     test_action_list = [
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "get", "test_url": "http://httpbin.org/get",
           "headers": {
               "x-requested-with": "XMLHttpRequest",
@@ -27,12 +27,12 @@ Generate Report 可以生成以下格式的報告
           }
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 200}
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 300}
           }
@@ -50,7 +50,7 @@ Generate Report 可以生成以下格式的報告
     from je_api_testka import generate_json, generate_json_report
     from je_api_testka import execute_action
     test_action_list = [
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "get", "test_url": "http://httpbin.org/get",
           "headers": {
               "x-requested-with": "XMLHttpRequest",
@@ -59,12 +59,12 @@ Generate Report 可以生成以下格式的報告
           }
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 200}
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 300}
           }
@@ -81,7 +81,7 @@ Generate Report 可以生成以下格式的報告
     from je_api_testka import generate_xml, generate_xml_report
     from je_api_testka import execute_action
     test_action_list = [
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "get", "test_url": "http://httpbin.org/get",
           "headers": {
               "x-requested-with": "XMLHttpRequest",
@@ -90,12 +90,12 @@ Generate Report 可以生成以下格式的報告
           }
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 200}
           }
          ],
-        ["test_api_method",
+        ["AT_test_api_method",
          {"http_method": "post", "test_url": "http://httpbin.org/post", "params": {"task": "new task"},
           "result_check_dict": {"status_code": 300}
           }
