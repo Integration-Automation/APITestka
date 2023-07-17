@@ -27,17 +27,17 @@ Executor API
         def __init__(self):
             self.event_dict = {
                 # test api
-                "test_api_method": test_api_method,
-                "generate_html": generate_html,
-                "generate_html_report": generate_html_report,
-                "generate_json": generate_json,
-                "generate_json_report": generate_json_report,
-                "generate_xml": generate_xml,
-                "generate_xml_report": generate_xml_report,
+                "AT_test_api_method": test_api_method,
+                "AT_generate_html": generate_html,
+                "AT_generate_html_report": generate_html_report,
+                "AT_generate_json": generate_json,
+                "AT_generate_json_report": generate_json_report,
+                "AT_generate_xml": generate_xml,
+                "AT_generate_xml_report": generate_xml_report,
                 # execute
-                "execute_action": self.execute_action,
-                "execute_files": self.execute_files,
-                "add_package_to_executor": package_manager.add_package_to_executor,
+                "AT_execute_action": self.execute_action,
+                "AT_execute_files": self.execute_files,
+                "AT_add_package_to_executor": package_manager.add_package_to_executor,
             }
             # get all builtin function and add to event dict
             for function in getmembers(builtins, isbuiltin):

@@ -18,19 +18,19 @@ class CallbackFunctionExecutor(object):
     def __init__(self):
         self.event_dict = {
             # Test api
-            "test_api_method": test_api_method,
+            "AT_test_api_method": test_api_method,
             # Report
-            "generate_html": generate_html,
-            "generate_html_report": generate_html_report,
-            "generate_json": generate_json,
-            "generate_json_report": generate_json_report,
-            "generate_xml": generate_xml,
-            "generate_xml_report": generate_xml_report,
+            "AT_generate_html": generate_html,
+            "AT_generate_html_report": generate_html_report,
+            "AT_generate_json": generate_json,
+            "AT_generate_json_report": generate_json_report,
+            "AT_generate_xml": generate_xml,
+            "AT_generate_xml_report": generate_xml_report,
             # Mock
-            "flask_mock_server_add_router": flask_mock_server_instance.add_router,
-            "start_flask_mock_server": flask_mock_server_instance.start_mock_server,
+            "AT_flask_mock_server_add_router": flask_mock_server_instance.add_router,
+            "AT_start_flask_mock_server": flask_mock_server_instance.start_mock_server,
             # Package manager
-            "add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
+            "AT_add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
         }
 
     def callback_function(

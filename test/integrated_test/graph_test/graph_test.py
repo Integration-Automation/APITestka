@@ -17,7 +17,7 @@ data = """<soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        """
 
 test_action_list = [
-    ["test_api_method", {"http_method": "post", "test_url": url, "soap": True, "data": data}],
+    ["AT_test_api_method", {"http_method": "post", "test_url": url, "soap": True, "data": data}],
 ]
 
 try:

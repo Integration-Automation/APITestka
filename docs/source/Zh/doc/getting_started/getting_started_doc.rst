@@ -36,7 +36,7 @@ keyword 資料夾裡的 keyword json 檔案定義了要執行的動作。
     from je_api_testka import execute_files
 
     test_api_list = [
-    ["test_api_method",
+    ["AT_test_api_method",
      {
          "http_method": "post",
          "test_url": "http://httpbin.org/post",
@@ -44,7 +44,7 @@ keyword 資料夾裡的 keyword json 檔案定義了要執行的動作。
          "result_check_dict": {"status_code": 200}
      }
      ],
-    ["test_api_method",
+    ["AT_test_api_method",
      {
          "http_method": "get",
          "test_url": "http://httpbin.org/post",
