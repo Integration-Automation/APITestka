@@ -3,7 +3,9 @@ import types
 from inspect import getmembers, isbuiltin
 from typing import Dict, Callable, Any, List, Union
 
-from je_api_testka.requests_wrapper.request_method import test_api_method
+from je_api_testka import test_api_method_httpx
+from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
+from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
 from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
@@ -25,7 +27,10 @@ class Executor(object):
     def __init__(self):
         self.event_dict = {
             # Automation api
-            "AT_test_api_method": test_api_method,
+            "AT_test_api_method": test_api_method_requests,
+            "AT_delegate_async_httpx": delegate_async_httpx,
+            "AT_test_api_method_httpx": test_api_method_httpx,
+            # Report
             "AT_generate_html": generate_html,
             "AT_generate_html_report": generate_html_report,
             "AT_generate_json": generate_json,

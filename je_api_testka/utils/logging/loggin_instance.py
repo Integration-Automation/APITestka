@@ -13,3 +13,4 @@ apitestka_logger.addHandler(stream_handler)
 file_handler = logging.FileHandler("APITestka.log")
 file_handler.setFormatter(formatter)
 apitestka_logger.addHandler(file_handler)
+

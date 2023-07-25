@@ -1,0 +1,44 @@
+# Rename to build stable version
+# This is stable version
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "je_api_testka"
+version = "0.0.114"
+authors = [
+    { name = "JE-Chen", email = "jechenmailman@gmail.com" },
+]
+description = "Requests Automation Framework"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+dependencies = [
+    "requests",
+    "Flask",
+    "APScheduler"
+]
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+    "Environment :: X11 Applications",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+Homepage = "https://github.com/Intergration-Automation-Testing/APITestka"
+Documentation = "https://apitestka.readthedocs.io/en/latest/"
+Code = "https://github.com/Intergration-Automation-Testing/APITestka"
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+
+[tool.setuptools.packages]
+find = { namespaces = false }
