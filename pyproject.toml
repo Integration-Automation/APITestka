@@ -1,12 +1,12 @@
-# Rename to build dev version
-# This is dev version
+# Rename to build stable version
+# This is stable version
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "je_api_testka_dev"
-version = "0.0.102"
+name = "je_api_testka"
+version = "0.0.115"
 authors = [
     { name = "JE-Chen", email = "jechenmailman@gmail.com" },
 ]
@@ -14,7 +14,9 @@ description = "Requests Automation Framework"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 dependencies = [
-    "requests", "Flask", "APScheduler", "httpx"
+    "requests",
+    "Flask",
+    "APScheduler"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.8",
