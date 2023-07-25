@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka_dev"
-version = "0.0.101"
+version = "0.0.102"
 authors = [
     { name = "JE-Chen", email = "jechenmailman@gmail.com" },
 ]
@@ -14,9 +14,7 @@ description = "Requests Automation Framework"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 dependencies = [
-    "requests",
-    "Flask",
-    "APScheduler"
+    "requests", "Flask", "APScheduler", "httpx"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.8",
