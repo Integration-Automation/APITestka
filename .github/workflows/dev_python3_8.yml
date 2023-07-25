@@ -84,7 +84,7 @@ jobs:
       - name: Test httpx GET Method
         run: python ./test/httpx/sync/unit_test/api_get/test_request_get.py
       - name: Test httpx HEAD Method
-        run: python ./test/httpx/unit_test/api_head/test_request_head.py
+        run: python ./test/httpx/sync/unit_test/api_head/test_request_head.py
       - name: Test httpx OPTIONS Method
         run: python ./test/httpx/sync/unit_test/api_options/test_request_options.py
       - name: Test httpx PATCH Method
@@ -115,7 +115,7 @@ jobs:
       - name: Test httpx async GET Method
         run: python ./test/httpx/async/unit_test/api_get/test_request_get.py
       - name: Test httpx async HEAD Method
-        run: python ./test/httpx/unit_test/api_head/test_request_head.py
+        run: python ./test/httpx/async/unit_test/api_head/test_request_head.py
       - name: Test httpx OPTIONS Method
         run: python ./test/httpx/async/unit_test/api_options/test_request_options.py
       - name: Test httpx async PATCH Method
