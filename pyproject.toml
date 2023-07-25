@@ -14,9 +14,7 @@ description = "Requests Automation Framework"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 dependencies = [
-    "requests",
-    "Flask",
-    "APScheduler"
+    "requests", "Flask", "APScheduler", "httpx"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.8",
