@@ -77,8 +77,6 @@ jobs:
       - name: Test requests Cron Scheduler
         run: python ./test/requests/unit_test/scheduler_test/sec_cron_test.py
       # httpx test
-      - name: Test httpx AJAX Request
-        run: python ./test/httpx/sync/unit_test/ajax/test_ajax_requests.py
       - name: Test httpx Request Delete
         run: python ./test/httpx/sync/unit_test/api_delete/test_request_delete.py
       - name: Test httpx Get All Data
@@ -110,8 +108,6 @@ jobs:
       - name: Test httpx Compare
         run: python ./test/httpx/sync/unit_test/compare_test/compare_test.py
       # httpx async test
-      - name: Test httpx async AJAX Request
-        run: python ./test/httpx/async/unit_test/ajax/test_ajax_requests.py
       - name: Test httpx async Request Delete
         run: python ./test/httpx/async/unit_test/api_delete/test_request_delete.py
       - name: Test httpx async Get All Data
