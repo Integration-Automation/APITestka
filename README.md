@@ -32,6 +32,9 @@
 > * Mockserver support.
 > * Remote Automation support.
 > * Project & Template support.
+> * httpx Client(NEW)
+> * httpx sync/async request.
+> * http/2 request support. 
 
 
 ---

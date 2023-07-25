@@ -1,5 +1,8 @@
 # test api method
-from je_api_testka.requests_wrapper.request_method import test_api_method
+from je_api_testka.httpx_wrapper.async_httpx_method import test_api_method_httpx_async
+from je_api_testka.httpx_wrapper.httpx_method import test_api_method_httpx
+from je_api_testka.requests_wrapper.request_method import test_api_method_requests
+
 # callback
 from je_api_testka.utils.callback.callback_function_executor import callback_executor
 # graph
@@ -39,7 +42,7 @@ from flask import request, redirect
 # Scheduler
 from je_api_testka.utils.scheduler.extend_apscheduler import SchedulerManager
 
-__all__ = ["test_api_method",
+__all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method_httpx_async",
            "add_command_to_executor",
            "execute_action", "execute_files", "executor",
            "get_dir_files_as_list",
