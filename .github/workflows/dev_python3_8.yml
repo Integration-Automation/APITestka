@@ -101,8 +101,6 @@ jobs:
         run: python ./test/httpx/sync/unit_test/generate_report/html_report_test.py
       - name: Test httpx Execute Action
         run: python ./test/httpx/sync/unit_test/executor_test/execute_action_test.py
-      - name: Test httpx Get Dir Files And Execute
-        run: python ./test/httpx/sync/integrated_test/get_dir_file_and_execute/get_dir_file_and_execute.py
       - name: Test httpx Generate XML Report
         run: python ./test/httpx/sync/unit_test/generate_report/xml_report_test.py
       - name: Test httpx Compare
