@@ -10,7 +10,7 @@ stream_handler.setFormatter(formatter)
 stream_handler.setLevel(logging.WARNING)
 apitestka_logger.addHandler(stream_handler)
 # File handler
-file_handler = logging.FileHandler("APITestka.log")
+file_handler = logging.FileHandler(filename="APITestka.log", mode="w")
 file_handler.setFormatter(formatter)
 apitestka_logger.addHandler(file_handler)
 
