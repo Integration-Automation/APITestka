@@ -17,8 +17,8 @@ sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'je_api_testka'
-copyright = '2022, JE-Chen'
+project = 'API Testka'
+copyright = '2020 ~ Now, JE-Chen'
 author = 'JE-Chen'
 
 # -- General configuration ---------------------------------------------------

@@ -1,4 +1,4 @@
-Welcome to APITestka's documentation!
+Welcome to APITestka documentation!
 ----
 
 .. toctree::
