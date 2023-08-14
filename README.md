@@ -15,6 +15,8 @@
 
 [![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
 
+[APITestka Doc Click Here!](https://apitestka.readthedocs.io/en/latest/)
+
 ---
 > Project Kanban \
 > https://github.com/orgs/Integration-Automation/projects/2/views/1 \
