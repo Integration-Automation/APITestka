@@ -45,7 +45,7 @@
 
 
 ## Requires
-> python 3.8 or later
+> python 3.9 or later
 
 ### Architecture Diagram
 ![Architecture Diagram](architecture_diagram/APITestka_Architecture.drawio.png)
