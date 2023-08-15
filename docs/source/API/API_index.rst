@@ -7,6 +7,7 @@ APITestka's API Documentation
     utils/assert_result.rst
     utils/callback_function.rst
     utils/executor.rst
+    utils/scheduler.rst
     utils/mock_server.rst
     utils/file_process.rst
     utils/generate_report.rst

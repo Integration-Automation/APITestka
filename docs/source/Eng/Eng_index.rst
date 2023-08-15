@@ -9,3 +9,4 @@ APITestka's Documentation
     doc/mock_server/mock_server_doc.rst
     doc/generate_report/generate_report_doc.rst
     doc/cli/cli_doc.rst
+    doc/scheduler/scheduler_doc.rst
