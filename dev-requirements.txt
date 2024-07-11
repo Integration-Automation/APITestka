@@ -1,6 +1,0 @@
-Flask
-requests
-APScheduler
-httpx
-build
-twine
