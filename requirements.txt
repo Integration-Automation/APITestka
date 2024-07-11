@@ -1,4 +1,5 @@
 Flask
 requests
 APScheduler
-je_api_testka
+httpx
+je-api-testka
