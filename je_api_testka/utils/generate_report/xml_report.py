@@ -44,7 +44,6 @@ def generate_xml_report(xml_file_name: str = "default_name") -> None:
         lock.acquire()
         with open(xml_file_name + "_success.xml", "w+") as file_to_write:
             file_to_write.write(success_xml)
-            pass
     except Exception as error:
         apitestka_logger.error(f"generate_xml_report, xml_file_name: {xml_file_name}, "
                                f"failed: {repr(error)}")

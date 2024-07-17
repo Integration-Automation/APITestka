@@ -8,7 +8,6 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 class FlaskMockServer(object):
-    pass
 
     def __init__(self, host, port):
         """
@@ -46,7 +45,7 @@ class FlaskMockServer(object):
         """
         start mock server
         """
-        apitestka_logger.info(f"start_mock_server")
+        apitestka_logger.info("start_mock_server")
         self.add_router(
             {"/": self.api_testka_index_function},
             methods=["GET"]

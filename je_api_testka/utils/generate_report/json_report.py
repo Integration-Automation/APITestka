@@ -42,9 +42,7 @@ def generate_json() -> Tuple[Dict, Dict]:
             )
             success_count = success_count + 1
         failure_dict = dict()
-        if len(test_record_instance.error_record_list) == 0:
-            pass
-        else:
+        if len(test_record_instance.error_record_list) != 0:
             failure_count: int = 1
             failure_test_str: str = "Failure_Test"
             for record_data in test_record_instance.error_record_list:
