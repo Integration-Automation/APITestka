@@ -1,12 +1,12 @@
-# Rename to build dev version
-# This is dev version
+# Rename to build stable version
+# This is stable version
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "je_api_testka_dev"
-version = "0.0.109"
+name = "je_api_testka"
+version = "0.0.124"
 authors = [
     { name = "JE-Chen", email = "jechenmailman@gmail.com" },
 ]

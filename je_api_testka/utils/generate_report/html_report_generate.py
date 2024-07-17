@@ -203,7 +203,7 @@ def generate_html() -> Tuple[List, List]:
     """
     :return: test success_list & test failure_list
     """
-    apitestka_logger.info(f"generate_html")
+    apitestka_logger.info("generate_html")
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIHTMLException(html_generate_no_data_tag)
     else:
@@ -228,9 +228,7 @@ def generate_html() -> Tuple[List, List]:
                 )
             )
         failure_list: list = list()
-        if len(test_record_instance.error_record_list) == 0:
-            pass
-        else:
+        if len(test_record_instance.error_record_list) != 0:
             for record_data in test_record_instance.error_record_list:
                 failure_list.append(
                     _failure_table.format(
