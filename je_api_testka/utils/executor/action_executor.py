@@ -93,9 +93,7 @@ class Executor(object):
                 raise APITesterExecuteException(executor_list_error)
         execute_record_dict = dict()
         try:
-            if len(action_list) > 0 or isinstance(action_list, list) is False:
-                pass
-            else:
+            if len(action_list) < 0 or isinstance(action_list, list) is False:
                 raise APITesterExecuteException(executor_list_error)
         except Exception as error:
             apitestka_logger.info(f"execute_action, action_list: {action_list}, "
