@@ -10,12 +10,14 @@ from je_api_testka.utils.generate_report.json_report import generate_json
 from je_api_testka.utils.generate_report.json_report import generate_json_report
 from je_api_testka.utils.generate_report.xml_report import generate_xml
 from je_api_testka.utils.generate_report.xml_report import generate_xml_report
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
 class CallbackFunctionExecutor(object):
     def __init__(self):
+        apitestka_logger.info("Init CallbackFunctionExecutor")
         self.event_dict = {
             # Test api
             "AT_test_api_method": test_api_method_requests,
@@ -49,6 +51,11 @@ class CallbackFunctionExecutor(object):
         :param kwargs: trigger_function's param
         :return:
         """
+        apitestka_logger.info("CallbackFunctionExecutor callback_function"
+                              f"trigger_function_name: {trigger_function_name} "
+                              f"callback_function_param: {callback_function_param} "
+                              f"callback_param_method: {callback_param_method} "
+                              f"kwargs: {kwargs}")
         try:
             if trigger_function_name not in self.event_dict.keys():
                 raise CallbackExecutorException(get_bad_trigger_function)

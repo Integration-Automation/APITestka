@@ -4,6 +4,8 @@ from typing import Dict
 from httpx import Response
 from requests.utils import dict_from_cookiejar
 
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+
 
 def get_httpx_data(response: Response,
                    start_time: [str, float, int],
@@ -16,6 +18,12 @@ def get_httpx_data(response: Response,
     :return: data dict include [status_code, text, content, headers, history, encoding, cookies,
     elapsed, request_time_sec, request_method, request_url, request_body, start_time, end_time]
     """
+    apitestka_logger.info(
+        "httpx_data.py get_httpx_data "
+        f"response: {response} "
+        f"start_time:{start_time} "
+        f"end_time: {end_time}"
+    )
     response_data = {
         "status_code": response.status_code,
         "text": response.text,

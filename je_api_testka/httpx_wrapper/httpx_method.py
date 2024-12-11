@@ -30,6 +30,10 @@ def get_http_method_httpx(http_method: str) -> [
     :param http_method: what http method we use to api test
     :return: one of method in http_method_dict if not exists will raise exception
     """
+    apitestka_logger.info(
+        "httpx_method.py get_http_method_httpx "
+        f"http_method: {http_method}"
+    )
     try:
         if not isinstance(http_method, str):
             apitestka_logger.error(
@@ -57,6 +61,12 @@ def get_httpx_response(response: Response,
     :return: data dict include [status_code, text, content, headers, history, encoding, cookies,
     elapsed, request_time_sec, request_method, request_url, request_body, start_time, end_time]
     """
+    apitestka_logger.info(
+        "httpx_method.py get_httpx_response "
+        f"response: {response} "
+        f"start_time: {start_time} "
+        f"end_time: {end_time} "
+    )
     try:
         return get_httpx_data(response, start_time, end_time)
     except APITesterGetDataException:
@@ -72,6 +82,14 @@ def send_httpx_requests(http_method: str, test_url: str, verify: bool = False, t
     :param timeout: timeout sec
     :return: test method
     """
+    apitestka_logger.info(
+        "httpx_method.py get_httpx_response "
+        f"http_method: {http_method} "
+        f"test_url: {test_url} "
+        f"verify: {verify} "
+        f"timeout: {timeout} "
+        f"kwargs: {kwargs}"
+    )
     method = get_http_method_httpx(http_method)
     if method is None:
         apitestka_logger.error(
@@ -96,9 +114,15 @@ def test_api_method_httpx(http_method: str, test_url: str, record_request_info: 
     :param kwargs:
     """
     apitestka_logger.info(
-        f"httpx test_api_method_httpx, http_method: {http_method}, test_url:{test_url}, "
-        f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
-        f"result_check_dict: {result_check_dict}, verify: {verify}, timeout: {timeout}"
+        "httpx_method.py test_api_method_httpx "
+        f"http_method: {http_method} "
+        f"test_url: {test_url} "
+        f"record_request_info: {record_request_info} "
+        f"clean_record: {clean_record} "
+        f"result_check_dict: {result_check_dict} "
+        f"verify: {verify} "
+        f"timeout: {timeout} "
+        f"kwargs: {kwargs}"
     )
     try:
         start_time: datetime = datetime.now()

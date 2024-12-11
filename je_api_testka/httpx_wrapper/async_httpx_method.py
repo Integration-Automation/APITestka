@@ -28,15 +28,12 @@ async def get_http_method_httpx_async(http_method: str) -> [get, put, patch, pos
     :param http_method: what http method we use to api test
     :return: one of method in http_method_dict if not exists will raise exception
     """
+    apitestka_logger.info(f"async_httpx_method.py get_http_method_httpx_async http_method: {http_method}")
     try:
         if not isinstance(http_method, str):
-            apitestka_logger.error(
-                f"httpx get_http_method_httpx_async failed. {APITesterException(wrong_http_method_error_message)}")
             raise APITesterException(wrong_http_method_error_message)
         http_method = str(http_method).lower()
         if http_method not in http_method_dict:
-            apitestka_logger.error(
-                f"httpx get_http_method_httpx_async failed. {APITesterException(http_method_have_wrong_type)}")
             raise APITesterException(http_method_have_wrong_type)
         return http_method_dict.get(http_method)
     except APITesterException as error:
@@ -54,9 +51,15 @@ async def get_httpx_response_async(
     :return: data dict include [status_code, text, content, headers, history, encoding, cookies,
     elapsed, request_time_sec, request_method, request_url, request_body, start_time, end_time]
     """
+    apitestka_logger.info("async_httpx_method.py get_httpx_response_async "
+                          f"response: {response} "
+                          f"start_time: {start_time} "
+                          f"end_time: {end_time}")
     try:
         return get_httpx_data(response, start_time, end_time)
     except APITesterGetDataException:
+        apitestka_logger.error(f"get_httpx_response_async failed. "
+                               f"{APITesterGetDataException(get_data_error_message)}")
         raise APITesterGetDataException(get_data_error_message)
 
 
@@ -71,6 +74,12 @@ async def send_httpx_requests_async(
         :param http2:
     :return: test method
     """
+    apitestka_logger.info("async_httpx_method.py send_httpx_requests_async "
+                          f"http_method: {http_method} "
+                          f"test_url: {test_url} "
+                          f"timeout: {timeout} "
+                          f"http2: {http2} "
+                          f"kwargs: {kwargs}")
     method = await get_http_method_httpx_async(http_method)
     if method is None:
         apitestka_logger.error(
@@ -107,9 +116,14 @@ async def test_api_method_httpx_async(
     :param kwargs:
     """
     apitestka_logger.info(
-        f"httpx test_api_method_httpx_async, http_method: {http_method}, test_url:{test_url}, "
-        f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
-        f"result_check_dict: {result_check_dict}, timeout: {timeout}"
+        "async_httpx_method.py test_api_method_httpx_async "
+        f"http_method: {http_method} "
+        f"test_url:{test_url} "
+        f"record_request_info: {record_request_info} "
+        f"clean_record: {clean_record} "
+        f"result_check_dict: {result_check_dict} "
+        f"timeout: {timeout} "
+        f"kwargs: {kwargs}"
     )
     try:
         start_time: datetime = datetime.now()
@@ -131,9 +145,14 @@ async def test_api_method_httpx_async(
             return {"response": response, "response_data": response_data}
     except Exception as error:
         apitestka_logger.error(
-            f"httpx test_api_method_httpx_async, http_method: {http_method}, test_url:{test_url}, "
-            f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
-            f"result_check_dict: {result_check_dict}, timeout: {timeout}, "
+            "async_httpx_method.py test_api_method_httpx_async "
+            f"http_method: {http_method} "
+            f"test_url:{test_url} "
+            f"record_request_info: {record_request_info}"
+            f"clean_record: {clean_record} "
+            f"result_check_dict: {result_check_dict}"
+            f"timeout: {timeout} "
+            f"kwargs: {kwargs}"
             f"failed: {repr(error)}"
         )
         test_record_instance.error_record_list.append([
@@ -153,5 +172,15 @@ def delegate_async_httpx(
         clean_record: bool = False, result_check_dict: dict = None
         , timeout: int = 5,
         **kwargs) -> (Response, Dict[str, str]):
+    apitestka_logger.info(
+        "async_httpx_method.py delegate_async_httpx "
+        f"http_method: {http_method} "
+        f"test_url:{test_url} "
+        f"record_request_info: {record_request_info} "
+        f"clean_record: {clean_record} "
+        f"result_check_dict: {result_check_dict} "
+        f"timeout: {timeout} "
+        f"kwargs: {kwargs}"
+    )
     return asyncio.run(test_api_method_httpx_async(
         http_method, test_url, record_request_info, clean_record, result_check_dict, timeout, **kwargs))

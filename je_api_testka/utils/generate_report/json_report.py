@@ -12,7 +12,7 @@ def generate_json() -> Tuple[Dict, Dict]:
     """
     :return: test success_dict test failure_dict
     """
-    apitestka_logger.info("generate_json")
+    apitestka_logger.info("json_report.py generate_json")
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
     else:
@@ -67,7 +67,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
     """
     :param json_file_name: save json file's name
     """
-    apitestka_logger.info(f"generate_json_report, json_file_name: {json_file_name}")
+    apitestka_logger.info(f"json_report.py generate_json_report json_file_name: {json_file_name}")
     lock = Lock()
     success_dict, failure_dict = generate_json()
     try:

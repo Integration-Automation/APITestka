@@ -11,7 +11,7 @@ def generate_xml() -> Tuple[str, str]:
     """
     :return: success_xml_string, failure_xml_string
     """
-    apitestka_logger.info("generate_xml")
+    apitestka_logger.info("xml_report.py generate_xml")
     success_dict, failure_dict = generate_json()
     success_dict = dict({"xml_data": success_dict})
     failure_dict = dict({"xml_data": failure_dict})
@@ -24,7 +24,7 @@ def generate_xml_report(xml_file_name: str = "default_name") -> None:
     """
     :param xml_file_name: save xml file with xml_file_name
     """
-    apitestka_logger.info(f"generate_xml_report, xml_file_name: {xml_file_name}")
+    apitestka_logger.info(f"xml_report.py generate_xml_report xml_file_name: {xml_file_name}")
     success_xml, failure_xml = generate_xml()
     success_xml = parseString(success_xml)
     failure_xml = parseString(failure_xml)
