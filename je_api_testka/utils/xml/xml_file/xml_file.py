@@ -5,6 +5,7 @@ from je_api_testka.utils.exception.exception_tags import cant_read_xml_error
 from je_api_testka.utils.exception.exception_tags import xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException
 from je_api_testka.utils.exception.exceptions import APITesterXMLTypeException
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 def reformat_xml_file(xml_string: str):
@@ -19,6 +20,7 @@ class XMLParser(object):
         :param xml_string: full xml string
         :param xml_type: file or string
         """
+        apitestka_logger.info(f"Init XMLParser xml_string: {xml_string} xml_type: {xml_type}")
         self.element_tree = ElementTree
         self.tree = None
         self.xml_root = None
@@ -37,6 +39,7 @@ class XMLParser(object):
         :param kwargs: any another param
         :return: xml root element tree
         """
+        apitestka_logger.info(f"XMLParser xml_parser_from_string kwargs: {kwargs}")
         try:
             self.xml_root = ElementTree.fromstring(self.xml_string, **kwargs)
         except APITesterXMLException:
@@ -48,6 +51,7 @@ class XMLParser(object):
         :param kwargs: any another param
         :return: xml root element tree
         """
+        apitestka_logger.info(f"XMLParser xml_parser_from_file kwargs: {kwargs}")
         try:
             self.tree = ElementTree.parse(self.xml_string, **kwargs)
         except APITesterXMLException:

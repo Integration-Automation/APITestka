@@ -1,12 +1,15 @@
 from collections import defaultdict
 from xml.etree import ElementTree
 
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+
 
 def elements_tree_to_dict(elements_tree) -> dict:
     """
     :param elements_tree: full xml string
     :return: xml str to dict
     """
+    apitestka_logger.info(f"change_xml_structure.py elements_tree_to_dict elements_tree: {elements_tree}")
     elements_dict: dict = {elements_tree.tag: {} if elements_tree.attrib else None}
     children: list = list(elements_tree)
     if children:
@@ -33,7 +36,7 @@ def dict_to_elements_tree(json_dict: dict) -> str:
     :param json_dict: json dict
     :return: json dict to xml string
     """
-
+    apitestka_logger.info(f"change_xml_structure.py dict_to_elements_tree json_dict: {json_dict}")
     def _to_elements_tree(json_dict: dict, root):
         if isinstance(json_dict, str):
             root.text = json_dict

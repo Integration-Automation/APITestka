@@ -50,6 +50,7 @@ def get_http_method(http_method: str) -> [
     :param http_method: what http method we use to api test
     :return: one of method in http_method_dict if not exists will raise exception
     """
+    apitestka_logger.info("request_method.py get_http_method")
     try:
         if not isinstance(http_method, str):
             apitestka_logger.error(
@@ -77,6 +78,13 @@ def send_requests(http_method: str, test_url: str, verify: bool = False, timeout
     :param allow_redirects: allow to redirects to another request
     :return: test method
     """
+    apitestka_logger.info("request_method.py get_http_method "
+                          f"http_method: {http_method} "
+                          f"test_url: {test_url} "
+                          f"verify: {verify} "
+                          f"timeout: {timeout} "
+                          f"allow_redirects: {allow_redirects} "
+                          f"kwargs: {kwargs}")
     method = get_http_method(http_method)
     if method is None:
         apitestka_logger.error(
@@ -98,6 +106,11 @@ def get_response(response: requests.Response,
     :return: data dict include [status_code, text, content, headers, history, encoding, cookies,
     elapsed, request_time_sec, request_method, request_url, request_body, start_time, end_time]
     """
+    apitestka_logger.info("request_method.py get_response "
+                          f"response: {response} "
+                          f"start_time: {start_time} "
+                          f"end_time: {end_time}"
+                          )
     try:
         return get_requests_data(response, start_time, end_time)
     except APITesterGetDataException:
@@ -119,12 +132,18 @@ def test_api_method_requests(http_method: str, test_url: str,
     :param result_check_dict:
     :param kwargs:
     """
-    apitestka_logger.info(
-        f"requests test_api_method, http_method: {http_method}, test_url:{test_url}, soap: {soap}, "
-        f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
-        f"result_check_dict: {result_check_dict}, verify: {verify}, timeout: {timeout}, "
-        f"allow_redirects: {allow_redirects}"
-    )
+    apitestka_logger.info("request_method.py test_api_method_requests "
+                          f"http_method: {http_method} "
+                          f"test_url: {test_url} "
+                          f"soap: {soap} "
+                          f"record_request_info: {record_request_info} "
+                          f"clean_record: {clean_record} "
+                          f"result_check_dict: {result_check_dict} "
+                          f"verify: {verify} "
+                          f"timeout: {timeout} "
+                          f"allow_redirects: {allow_redirects} "
+                          f"kwargs: {kwargs}"
+                          )
     try:
         start_time: datetime = datetime.now()
         if soap is False:

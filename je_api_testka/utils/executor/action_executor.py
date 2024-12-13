@@ -25,6 +25,7 @@ from je_api_testka.utils.scheduler.extend_apscheduler import scheduler_manager
 class Executor(object):
 
     def __init__(self):
+        apitestka_logger.info("Init Executor")
         self.event_dict = {
             # Automation api
             "AT_test_api_method": test_api_method_requests,
@@ -65,6 +66,7 @@ class Executor(object):
         :param action: execute action
         :return: what event return
         """
+        apitestka_logger.info(f"Executor _execute_event action: {action}")
         event: Callable = self.event_dict.get(action[0])
         if len(action) == 2:
             if isinstance(action[1], dict):
@@ -86,6 +88,7 @@ class Executor(object):
         for loop and use execute_event function to execute
         :return: recode string, response as list
         """
+        apitestka_logger.info(f"Executor execute_action action_list: {action_list}")
         apitestka_logger.info(f"execute_action, action_list: {action_list}")
         if isinstance(action_list, dict):
             action_list: list = action_list.get("api_testka", None)
@@ -93,9 +96,7 @@ class Executor(object):
                 raise APITesterExecuteException(executor_list_error)
         execute_record_dict = dict()
         try:
-            if len(action_list) > 0 or isinstance(action_list, list) is False:
-                pass
-            else:
+            if len(action_list) < 0 or isinstance(action_list, list) is False:
                 raise APITesterExecuteException(executor_list_error)
         except Exception as error:
             apitestka_logger.info(f"execute_action, action_list: {action_list}, "
@@ -121,6 +122,7 @@ class Executor(object):
         :param execute_files_list: list include execute files path
         :return: every execute detail as list
         """
+        apitestka_logger.info(f"Executor execute_files execute_files_list: {execute_files_list}")
         apitestka_logger.info(f"execute_files, execute_files_list: {execute_files_list}")
         execute_detail_list: list = list()
         for file in execute_files_list:
@@ -131,6 +133,15 @@ class Executor(object):
             self, function: str, id: str = None, args: Union[list, tuple] = None,
             kwargs: dict = None, scheduler_type: str = "nonblocking", wait_type: str = "secondly",
             wait_value: int = 1, **trigger_args: Any) -> None:
+        apitestka_logger.info(f"Executor scheduler_event_trigger "
+                              f"function: {function}"
+                              f"id: {id} "
+                              f"args: {args} "
+                              f"kwargs: {kwargs} "
+                              f"scheduler_type: {scheduler_type} "
+                              f"wait_type: {wait_type} "
+                              f"wait_value: {wait_value} "
+                              f"trigger_args: {trigger_args}")
         if scheduler_type == "nonblocking":
             scheduler_event = scheduler_manager.nonblocking_scheduler_event_dict.get(wait_type)
         else:
@@ -143,6 +154,7 @@ package_manager.executor = executor
 
 
 def add_command_to_executor(command_dict: dict) -> None:
+    apitestka_logger.info(f"action_executor.py add_command_to_executor command_dict: {command_dict}")
     for command_name, command in command_dict.items():
         if isinstance(command, (types.MethodType, types.FunctionType)):
             executor.event_dict.update({command_name: command})
@@ -151,8 +163,10 @@ def add_command_to_executor(command_dict: dict) -> None:
 
 
 def execute_action(action_list: list) -> Any:
+    apitestka_logger.info(f"action_executor.py execute_action action_list: {action_list}")
     return executor.execute_action(action_list)
 
 
 def execute_files(execute_files_list: list) -> List[Any]:
+    apitestka_logger.info(f"action_executor.py execute_files execute_files_list: {execute_files_list}")
     return executor.execute_files(execute_files_list)

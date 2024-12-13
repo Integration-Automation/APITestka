@@ -203,7 +203,7 @@ def generate_html() -> Tuple[List, List]:
     """
     :return: test success_list & test failure_list
     """
-    apitestka_logger.info("generate_html")
+    apitestka_logger.info("html_report_generate.py generate_html")
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIHTMLException(html_generate_no_data_tag)
     else:
@@ -249,7 +249,7 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
     :param html_file_name: save html file name
     :return:
     """
-    apitestka_logger.info(f"generate_html_report html_file_name:{html_file_name}")
+    apitestka_logger.info(f"html_report_generate.py generate_html_report html_file_name: {html_file_name}")
     success_list, failure_list = generate_html()
     try:
         lock.acquire()

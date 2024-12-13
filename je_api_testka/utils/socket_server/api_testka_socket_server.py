@@ -4,6 +4,7 @@ import sys
 import threading
 
 from je_api_testka.utils.executor.action_executor import execute_action
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 class TCPServerHandler(socketserver.BaseRequestHandler):
@@ -13,6 +14,7 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
         Receive message and try to execute message
         :return: None
         """
+        apitestka_logger.info("TCPServerHandler handle")
         command_string = str(self.request.recv(8192).strip(), encoding="utf-8")
         socket = self.request
         print("command is: " + command_string, flush=True)
@@ -44,6 +46,7 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 
     def __init__(self, server_address, request_handler_class):
+        apitestka_logger.info("Init TCPServer")
         super().__init__(server_address, request_handler_class)
         self.close_flag: bool = False
 
@@ -55,6 +58,9 @@ def start_apitestka_socket_server(host: str = "localhost", port: int = 9939) -> 
     :param port: Server port.
     :return: TCP server instance.
     """
+    apitestka_logger.info("api_testka_socket_server.py start_apitestka_socket_server "
+                          f"host: {host} "
+                          f"port: {port}")
     if len(sys.argv) == 2:
         host = sys.argv[1]
     elif len(sys.argv) == 3:

@@ -3,6 +3,7 @@ from pathlib import Path
 from threading import Lock
 
 from je_api_testka.utils.json.json_file.json_file import write_action_json
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.project.template.template_executor import executor_template_1, \
     executor_template_2, bad_executor_template_1
 from je_api_testka.utils.project.template.template_keyword import template_keyword_1, \
@@ -15,6 +16,7 @@ def create_dir(dir_name: str) -> None:
     :param dir_name: create dir use dir name
     :return: None
     """
+    apitestka_logger.info(f"create_project_structure.py create_dir dir_name: {dir_name}")
     Path(dir_name).mkdir(
         parents=True,
         exist_ok=True
@@ -28,6 +30,9 @@ def create_template(parent_name: str, project_path: str = None) -> None:
     :param project_path: Path use to create project dir if None set cwd as default.
     :return:
     """
+    apitestka_logger.info("create_project_structure.py create_template "
+                          f"parent_name: {parent_name} "
+                          f"project_path: {project_path}")
     if project_path is None:
         project_path = getcwd()
     keyword_dir_path = Path(project_path + "/" + parent_name + "/keyword")
@@ -72,6 +77,9 @@ def create_project_dir(project_path: str = None, parent_name: str = "APITestka")
     :param parent_name: Project folder name.
     :return: None
     """
+    apitestka_logger.info("create_project_structure.py create_project_dir "
+                          f"project_path: {project_path} "
+                          f"parent_name: {parent_name}")
     if project_path is None:
         project_path = getcwd()
     create_dir(project_path + "/" + parent_name + "/keyword")
