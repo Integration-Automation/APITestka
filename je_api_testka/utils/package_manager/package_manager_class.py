@@ -10,6 +10,7 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 class PackageManager(object):
 
     def __init__(self):
+        apitestka_logger.info("Init PackageManager")
         self.installed_package_dict = {
         }
         self.executor = None
@@ -20,6 +21,7 @@ class PackageManager(object):
         :param package: package to check exists or not
         :return: package if find else None
         """
+        apitestka_logger.info(f"PackageManager check_package package: {package}")
         if self.installed_package_dict.get(package, None) is None:
             found_spec = find_spec(package)
             if found_spec is not None:
@@ -35,7 +37,7 @@ class PackageManager(object):
         """
         :param package: package's function will add to executor
         """
-        apitestka_logger.info(f"add_package_to_executor, package: {package}")
+        apitestka_logger.info(f"PackageManager add_package_to_executor package: {package}")
         self.add_package_to_target(
             package=package,
             target=self.executor
@@ -45,7 +47,7 @@ class PackageManager(object):
         """
         :param package: package's function will add to callback_executor
         """
-        apitestka_logger.info(f"add_package_to_callback_executor, package: {package}")
+        apitestka_logger.info(f"PackageManager add_package_to_callback_executor package: {package}")
         self.add_package_to_target(
             package=package,
             target=self.callback_executor
@@ -57,6 +59,10 @@ class PackageManager(object):
         :param predicate: predicate
         :param target: which event_dict will be added
         """
+        apitestka_logger.info(f"PackageManager add_package_to_callback_executor"
+                              f"package: {package} "
+                              f"predicate: {predicate} "
+                              f"target: {target}")
         installed_package = self.check_package(package)
         if installed_package is not None and target is not None:
             for member in getmembers(installed_package, predicate):
