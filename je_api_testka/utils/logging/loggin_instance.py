@@ -16,7 +16,7 @@ class APITestkaLoggingHandler(RotatingFileHandler):
         self.setLevel(logging.DEBUG)
 
     def emit(self, record: logging.LogRecord) -> None:
-        print(self.format(record))
+        super().emit(record)
 
 # File handler
 file_handler = APITestkaLoggingHandler()
