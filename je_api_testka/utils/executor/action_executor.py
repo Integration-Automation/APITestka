@@ -1,7 +1,7 @@
 import builtins
 import types
 from inspect import getmembers, isbuiltin
-from typing import Dict, Callable, Any, List, Union
+from typing import Dict, Callable, Any, List
 
 from je_api_testka import test_api_method_httpx
 from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
@@ -19,7 +19,6 @@ from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
-from je_api_testka.utils.scheduler.extend_apscheduler import scheduler_manager
 
 
 class Executor(object):
@@ -47,15 +46,6 @@ class Executor(object):
             # Mock server
             "AT_flask_mock_server_add_router": flask_mock_server_instance.add_router,
             "AT_start_flask_mock_server": flask_mock_server_instance.start_mock_server,
-            # Scheduler
-            "AT_scheduler_event_trigger": self.scheduler_event_trigger,
-            "AT_remove_blocking_scheduler_job": scheduler_manager.remove_blocking_job,
-            "AT_remove_nonblocking_scheduler_job": scheduler_manager.remove_nonblocking_job,
-            "AT_start_blocking_scheduler": scheduler_manager.start_block_scheduler,
-            "AT_start_nonblocking_scheduler": scheduler_manager.start_nonblocking_scheduler,
-            "AT_start_all_scheduler": scheduler_manager.start_all_scheduler,
-            "AT_shutdown_blocking_scheduler": scheduler_manager.shutdown_blocking_scheduler,
-            "AT_shutdown_nonblocking_scheduler": scheduler_manager.shutdown_nonblocking_scheduler,
         }
         # get all builtin function and add to event dict
         for function in getmembers(builtins, isbuiltin):
@@ -128,25 +118,6 @@ class Executor(object):
         for file in execute_files_list:
             execute_detail_list.append(self.execute_action(read_action_json(file)))
         return execute_detail_list
-
-    def scheduler_event_trigger(
-            self, function: str, id: str = None, args: Union[list, tuple] = None,
-            kwargs: dict = None, scheduler_type: str = "nonblocking", wait_type: str = "secondly",
-            wait_value: int = 1, **trigger_args: Any) -> None:
-        apitestka_logger.info(f"Executor scheduler_event_trigger "
-                              f"function: {function}"
-                              f"id: {id} "
-                              f"args: {args} "
-                              f"kwargs: {kwargs} "
-                              f"scheduler_type: {scheduler_type} "
-                              f"wait_type: {wait_type} "
-                              f"wait_value: {wait_value} "
-                              f"trigger_args: {trigger_args}")
-        if scheduler_type == "nonblocking":
-            scheduler_event = scheduler_manager.nonblocking_scheduler_event_dict.get(wait_type)
-        else:
-            scheduler_event = scheduler_manager.blocking_scheduler_event_dict.get(wait_type)
-        scheduler_event(self.event_dict.get(function), id, args, kwargs, wait_value, **trigger_args)
 
 
 executor = Executor()

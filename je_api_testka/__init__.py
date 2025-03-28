@@ -39,8 +39,6 @@ from je_api_testka.utils.xml.xml_file.xml_file import reformat_xml_file
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 # Flask
 from flask import request, redirect
-# Scheduler
-from je_api_testka.utils.scheduler.extend_apscheduler import SchedulerManager
 
 __all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method_httpx_async",
            "add_command_to_executor",
@@ -52,5 +50,5 @@ __all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method
            "test_record_instance", "dict_to_elements_tree", "elements_tree_to_dict",
            "XMLParser", "reformat_xml_file", "generate_xml", "generate_xml_report",
            "callback_executor", "create_project_dir", "flask_mock_server_instance",
-           "request", "redirect", "SchedulerManager"
+           "request", "redirect"
            ]

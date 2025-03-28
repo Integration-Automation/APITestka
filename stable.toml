@@ -12,9 +12,9 @@ authors = [
 ]
 description = "Requests Automation Framework"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license-files = ["LICENSE"]
 dependencies = [
-    "requests", "Flask", "APScheduler", "httpx"
+    "requests", "Flask", "httpx"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.9",
@@ -22,7 +22,6 @@ classifiers = [
     "Environment :: Win32 (MS Windows)",
     "Environment :: MacOS X",
     "Environment :: X11 Applications",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
 
@@ -34,9 +33,6 @@ Code = "https://github.com/Intergration-Automation-Testing/APITestka"
 [project.readme]
 file = "README.md"
 content-type = "text/markdown"
-
-[tool.setuptools]
-license-files = ["LICENSE"]
 
 [tool.setuptools.packages]
 find = { namespaces = false }
