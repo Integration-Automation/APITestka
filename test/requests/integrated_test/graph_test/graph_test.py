@@ -1,7 +1,6 @@
 import sys
 
 from je_api_testka import execute_action
-from je_api_testka import make_tkinter_request_time_graph
 
 # soap test
 url = "https://www.w3schools.com/xml/tempconvert.asmx"
@@ -27,8 +26,3 @@ try:
 except Exception as error:
     print(repr(error), file=sys.stderr)
 
-try:
-    make_tkinter_request_time_graph()
-except Exception as error:
-    print(repr(error))
-    print("yep this should be raise an exception", file=sys.stderr)

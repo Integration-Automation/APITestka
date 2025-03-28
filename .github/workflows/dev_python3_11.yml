@@ -74,10 +74,6 @@ jobs:
         run: python ./test/requests/unit_test/callback/callback_test.py
       - name: Test requests Create Project
         run: python ./test/requests/unit_test/create_project/create_project.py
-      - name: Test requests Interval Scheduler
-        run: python ./test/requests/unit_test/scheduler_test/sec_interval_test.py
-      - name: Test requests Cron Scheduler
-        run: python ./test/requests/unit_test/scheduler_test/sec_cron_test.py
       # httpx test
       - name: Test httpx Request Delete
         run: python ./test/httpx/sync/unit_test/api_delete/test_request_delete.py
