@@ -4,6 +4,9 @@ from je_api_testka import test_api_method_requests
 
 if __name__ == "__main__":
     import requests
+    import sys
+
+    sys.stdout.encoding = 'utf-8'
 
     test_response = test_api_method_requests("get", "http://httpbin.org")
     if test_response is not None:
