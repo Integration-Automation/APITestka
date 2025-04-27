@@ -1,13 +1,14 @@
 import asyncio
-import sys
-
-import httpx
 
 from je_api_testka import test_api_method_httpx_async
 
 
 async def main():
+    import sys
+
+    sys.stdout.reconfigure(encoding='utf-8')
     test_response = await test_api_method_httpx_async("get", "http://httpbin.org")
+
     if test_response is not None:
         print(test_response)
         print(test_response.get("response_data"))
