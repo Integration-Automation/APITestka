@@ -22,11 +22,3 @@ class APITestkaUI(QMainWindow, QtStyleTools):
         self.apply_stylesheet(self, "dark_amber.xml")
         self.api_testka_widget = APITestkaWidget()
         self.setCentralWidget(self.api_testka_widget)
-
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = APITestkaUI()
-    window.show()
-    sys.exit(app.exec())
