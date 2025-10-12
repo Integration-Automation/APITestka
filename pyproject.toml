@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka_dev"
-version = "0.0.125"
+version = "0.0.126"
 authors = [
     { name = "JE-Chen", email = "jechenmailman@gmail.com" },
 ]
@@ -38,4 +38,4 @@ content-type = "text/markdown"
 find = { namespaces = false }
 
 [project.optional-dependencies]
-gui = ["PySide6==6.9.2", "qt-material"]
+gui = ["PySide6==6.10.0", "qt-material"]
