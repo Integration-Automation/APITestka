@@ -7,201 +7,139 @@ from je_api_testka.utils.exception.exceptions import APIHTMLException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
+# 使用 Lock 確保多執行緒寫檔安全
+# Use Lock to ensure thread-safe file writing
 lock = Lock()
 
-_html_string_head = \
-    """
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8"/>
-        <title>Load Density Report</title>
+# HTML 頁面標頭字串
+# HTML page header string
+_html_string_head = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Load Density Report</title>
 
-        <style>
+    <style>
+        body{
+            font-size: 100%;
+        }
+        h1{
+            font-size: 2em;
+        }
+        .main_table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 75%;
+            font-size: 1.5em;
+        }
+        .success_table_head {
+            border: 3px solid #262626;
+            background-color: aqua;
+            font-family: "Times New Roman", sans-serif;
+            text-align: center;
+        }
+        .failure_table_head {
+            border: 3px solid #262626;
+            background-color: #f84c5f;
+            font-family: "Times New Roman", sans-serif;
+            text-align: center;
+        }
+        .table_data_field_title {
+            border: 3px solid #262626;
+            padding: 0;
+            margin: 0;
+            background-color: #dedede;
+            font-family: "Times New Roman", sans-serif;
+            text-align: center;
+            width: 25%;
+        }
+        .table_data_field_text {
+            border: 3px solid #262626;
+            padding: 0;
+            margin: 0;
+            background-color: #dedede;
+            font-family: "Times New Roman", sans-serif;
+            text-align: left;
+            width: 75%;
+        }
+        .text {
+            text-align: center;
+            font-family: "Times New Roman", sans-serif;
+        }
+    </style>
+</head>
+<body>
+<h1 class="text">
+    Test Report
+</h1>
+""".strip()
 
-            body{
-                font-size: 100%;
-            }
+# HTML 頁面底部字串
+# HTML page footer string
+_html_string_bottom = """
+</body>
+</html>
+""".strip()
 
-            h1{
-                font-size: 2em;
-            }
-
-            .main_table {
-                margin: 0 auto;
-                border-collapse: collapse;
-                width: 75%;
-                font-size: 1.5em;
-            }
-
-            .success_table_head {
-                border: 3px solid #262626;
-                background-color: aqua;
-                font-family: "Times New Roman", sans-serif;
-                text-align: center;
-            }
-
-            .failure_table_head {
-                border: 3px solid #262626;
-                background-color: #f84c5f;
-                font-family: "Times New Roman", sans-serif;
-                text-align: center;
-            }
-
-            .table_data_field_title {
-                border: 3px solid #262626;
-                padding: 0;
-                margin: 0;
-                background-color: #dedede;
-                font-family: "Times New Roman", sans-serif;
-                text-align: center;
-                width: 25%;
-            }
-
-            .table_data_field_text {
-                border: 3px solid #262626;
-                padding: 0;
-                margin: 0;
-                background-color: #dedede;
-                font-family: "Times New Roman", sans-serif;
-                text-align: left;
-                width: 75%;
-            }
-
-            .text {
-                text-align: center;
-                font-family: "Times New Roman", sans-serif;
-            }
-        </style>
-    </head>
-    <body>
-    <h1 class="text">
-        Test Report
-    </h1>
-    """.strip()
-
-_html_string_bottom = \
-    """
-    </body>
-    </html>
-    """.strip()
-
-_success_table = \
-    r"""
-    <table class="main_table">
-        <thead>
-        <tr>
-            <th colspan="2" class="success_table_head">Test Report</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td class="table_data_field_title">status_code</td>
-            <td class="table_data_field_text">{status_code}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">text</td>
-            <td class="table_data_field_text">{text}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">content</td>
-            <td class="table_data_field_text">{content}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">headers</td>
-            <td class="table_data_field_text">{headers}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">history</td>
-            <td class="table_data_field_text">{history}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">encoding</td>
-            <td class="table_data_field_text">{encoding}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">cookies</td>
-            <td class="table_data_field_text">{cookies}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">elapsed</td>
-            <td class="table_data_field_text">{elapsed}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">request_time_sec</td>
-            <td class="table_data_field_text">{request_time_sec}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">request_method</td>
-            <td class="table_data_field_text">{request_method}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">request_url</td>
-            <td class="table_data_field_text">{request_url}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">request_body</td>
-            <td class="table_data_field_text">{request_body}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">start_time</td>
-            <td class="table_data_field_text">{start_time}</td>
-        </tr>
-        <tr>
-            <td class="table_data_field_title">end_time</td>
-            <td class="table_data_field_text">{end_time}</td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-    """.strip()
-
-_failure_table = \
-    r"""
-    <table class="main_table">
+# 成功測試的表格模板
+# Template for success test table
+_success_table = r"""
+<table class="main_table">
     <thead>
     <tr>
-        <th colspan="2" class="failure_table_head">Test Report</th>
+        <th colspan="2" class="success_table_head">Test Report</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td class="table_data_field_title">http_method</td>
-        <td class="table_data_field_text">{http_method}</td>
-    </tr>
-    <tr>
-        <td class="table_data_field_title">test_url</td>
-        <td class="table_data_field_text">{test_url}</td>
-    </tr>
-    <tr>
-        <td class="table_data_field_title">soap</td>
-        <td class="table_data_field_text">{soap}</td>
-    </tr>
-    <tr>
-        <td class="table_data_field_title">record_request_info</td>
-        <td class="table_data_field_text">{record_request_info}</td>
-    </tr>
-    <tr>
-        <td class="table_data_field_title">clean_record</td>
-        <td class="table_data_field_text">{clean_record}</td>
-    </tr>
-    <tr>
-        <td class="table_data_field_title">result_check_dict</td>
-        <td class="table_data_field_text">{result_check_dict}</td>
-    </tr>
-    <tr>
-        <td class="table_data_field_title">error</td>
-        <td class="table_data_field_text">{error}</td>
-    </tr>
+    <tr><td class="table_data_field_title">status_code</td><td class="table_data_field_text">{status_code}</td></tr>
+    <tr><td class="table_data_field_title">text</td><td class="table_data_field_text">{text}</td></tr>
+    <tr><td class="table_data_field_title">content</td><td class="table_data_field_text">{content}</td></tr>
+    <tr><td class="table_data_field_title">headers</td><td class="table_data_field_text">{headers}</td></tr>
+    <tr><td class="table_data_field_title">history</td><td class="table_data_field_text">{history}</td></tr>
+    <tr><td class="table_data_field_title">encoding</td><td class="table_data_field_text">{encoding}</td></tr>
+    <tr><td class="table_data_field_title">cookies</td><td class="table_data_field_text">{cookies}</td></tr>
+    <tr><td class="table_data_field_title">elapsed</td><td class="table_data_field_text">{elapsed}</td></tr>
+    <tr><td class="table_data_field_title">request_time_sec</td><td class="table_data_field_text">{request_time_sec}</td></tr>
+    <tr><td class="table_data_field_title">request_method</td><td class="table_data_field_text">{request_method}</td></tr>
+    <tr><td class="table_data_field_title">request_url</td><td class="table_data_field_text">{request_url}</td></tr>
+    <tr><td class="table_data_field_title">request_body</td><td class="table_data_field_text">{request_body}</td></tr>
+    <tr><td class="table_data_field_title">start_time</td><td class="table_data_field_text">{start_time}</td></tr>
+    <tr><td class="table_data_field_title">end_time</td><td class="table_data_field_text">{end_time}</td></tr>
     </tbody>
 </table>
 <br>
-    """.strip()
+""".strip()
+
+# 失敗測試的表格模板
+# Template for failure test table
+_failure_table = r"""
+<table class="main_table">
+<thead>
+<tr>
+    <th colspan="2" class="failure_table_head">Test Report</th>
+</tr>
+</thead>
+<tbody>
+<tr><td class="table_data_field_title">http_method</td><td class="table_data_field_text">{http_method}</td></tr>
+<tr><td class="table_data_field_title">test_url</td><td class="table_data_field_text">{test_url}</td></tr>
+<tr><td class="table_data_field_title">soap</td><td class="table_data_field_text">{soap}</td></tr>
+<tr><td class="table_data_field_title">record_request_info</td><td class="table_data_field_text">{record_request_info}</td></tr>
+<tr><td class="table_data_field_title">clean_record</td><td class="table_data_field_text">{clean_record}</td></tr>
+<tr><td class="table_data_field_title">result_check_dict</td><td class="table_data_field_text">{result_check_dict}</td></tr>
+<tr><td class="table_data_field_title">error</td><td class="table_data_field_text">{error}</td></tr>
+</tbody>
+</table>
+<br>
+""".strip()
 
 
 def generate_html() -> Tuple[List, List]:
     """
-    :return: test success_list & test failure_list
+    生成 HTML 片段，包含成功與失敗的測試紀錄
+    Generate HTML fragments including success and failure test records
+
+    :return: (success_list, failure_list)
     """
     apitestka_logger.info("html_report_generate.py generate_html")
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
@@ -246,25 +184,23 @@ def generate_html() -> Tuple[List, List]:
 
 def generate_html_report(html_file_name: str = "default_name") -> None:
     """
-    :param html_file_name: save html file name
-    :return:
+    生成完整 HTML 報告並寫入檔案
+    Generate full HTML report and write to file
+
+    :param html_file_name: 儲存的檔案名稱 (不含副檔名)
+                           File name to save (without extension)
     """
     apitestka_logger.info(f"html_report_generate.py generate_html_report html_file_name: {html_file_name}")
     success_list, failure_list = generate_html()
     try:
-        lock.acquire()
+        lock.acquire()  # 確保多執行緒安全 / Ensure thread safety
         with open(html_file_name + ".html", "w+") as file_to_write:
-            file_to_write.writelines(
-                _html_string_head
-            )
+            file_to_write.writelines(_html_string_head)
             for success in success_list:
                 file_to_write.write(success)
             for failure in failure_list:
                 file_to_write.write(failure)
-            file_to_write.writelines(
-                _html_string_bottom
-            )
+            file_to_write.writelines(_html_string_bottom)
     except Exception as error:
+        # 錯誤輸出到 stderr / Print error to stderr
         print(repr(error), file=sys.stderr)
-    finally:
-        lock.release()

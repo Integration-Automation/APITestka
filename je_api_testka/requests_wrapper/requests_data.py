@@ -1,5 +1,6 @@
+from datetime import datetime
 from json import JSONDecodeError
-from typing import Dict
+from typing import Dict, Union
 
 from requests import Response
 from requests.utils import dict_from_cookiejar
@@ -8,8 +9,8 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 def get_requests_data(response: Response,
-                      start_time: [str, float, int],
-                      end_time: [str, float, int]) -> Dict[str, str]:
+                      start_time: Union[str, float, int, datetime],
+                      end_time: Union[str, float, int, datetime]) -> Dict[str, str]:
     """
     use requests response to create data dict
     :param response: requests response
