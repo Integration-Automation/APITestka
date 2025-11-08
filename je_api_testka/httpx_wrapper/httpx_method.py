@@ -1,12 +1,10 @@
 from datetime import datetime
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
 from httpx import get, put, patch, post, head, delete, options, Response
 
 from je_api_testka.httpx_wrapper.httpx_data import get_httpx_data
 from je_api_testka.utils.assert_result.result_check import check_result
-from je_api_testka.utils.test_record.test_record_class import test_record_instance
-
 from je_api_testka.utils.exception.exception_tags import (
     get_data_error_message,
     wrong_http_method_error_message,
@@ -14,6 +12,7 @@ from je_api_testka.utils.exception.exception_tags import (
 )
 from je_api_testka.utils.exception.exceptions import APITesterGetDataException, APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 # 定義 HTTP 方法字典，對應到 httpx 的方法
 # Define HTTP method dictionary mapping to httpx methods
@@ -28,7 +27,7 @@ http_method_dict = {
 }
 
 
-def get_http_method_httpx(http_method: str) -> Optional[get, put, patch, post, head, delete]:
+def get_http_method_httpx(http_method: str) -> Union[get, put, patch, post, head, delete]:
     """
     根據字串取得對應的 HTTP 方法，若不存在則拋出例外
     Get corresponding HTTP method from string, raise exception if not exists
@@ -104,7 +103,7 @@ def send_httpx_requests(http_method: str, test_url: str, verify: bool = False, t
 def test_api_method_httpx(http_method: str, test_url: str, record_request_info: bool = True,
                           clean_record: bool = False, result_check_dict: dict = None,
                           verify: bool = False, timeout: int = 5,
-                          **kwargs) -> Optional[Response, Dict[str, str]]:
+                          **kwargs) -> dict[str, Response | dict[str, str]] | None:
     """
     測試 API 方法，記錄請求與回應，並可進行結果檢查
     Test API method, record request/response, and optionally check result

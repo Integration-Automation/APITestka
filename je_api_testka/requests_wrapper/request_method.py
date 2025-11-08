@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import Dict, Union, Optional
+from typing import Dict, Union
 
 import requests
-from requests import Session
+from requests import Session, Response
 from requests import delete, get, head, options, patch, post, put
 from requests.structures import CaseInsensitiveDict
 
+from je_api_testka.requests_wrapper.requests_data import get_requests_data
 from je_api_testka.utils.assert_result.result_check import check_result
 from je_api_testka.utils.exception.exception_tags import (
     get_data_error_message,
@@ -13,7 +14,6 @@ from je_api_testka.utils.exception.exception_tags import (
     wrong_http_method_error_message,
 )
 from je_api_testka.utils.exception.exceptions import APITesterException, APITesterGetDataException
-from je_api_testka.requests_wrapper.requests_data import get_requests_data
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -114,7 +114,7 @@ def test_api_method_requests(http_method: str, test_url: str,
                              soap: bool = False, record_request_info: bool = True,
                              clean_record: bool = False, result_check_dict: dict = None,
                              verify: bool = False, timeout: int = 5, allow_redirects: bool = False,
-                             **kwargs) -> Optional[requests.Response, Dict[str, str]]:
+                             **kwargs) -> None | Response | dict[str, str] | dict[str, Response | dict[str, str]]:
     """
     測試 API 方法，記錄請求與回應，並可進行結果檢查
     Test API method, record request/response, and optionally check result

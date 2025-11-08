@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime
-from typing import Dict, Union, Optional
+from typing import Dict, Union
 
 from httpx import get, put, patch, post, head, delete, Response, AsyncClient
 
@@ -28,7 +28,7 @@ http_method_dict = {
 }
 
 
-async def get_http_method_httpx_async(http_method: str) -> Optional[get, put, patch, post, head, delete]:
+async def get_http_method_httpx_async(http_method: str) -> Union[get, put, patch, post, head, delete]:
     """
     根據字串取得對應的 HTTP 方法，若不存在則拋出例外
     Get corresponding HTTP method from string, raise exception if not exists
@@ -109,7 +109,7 @@ async def test_api_method_httpx_async(
     timeout: int = 5,
     http2: bool = False,
     **kwargs,
-) -> Optional[Response, Dict[str, str]]:
+) -> dict[str, Response | dict[str, str]] | None:
     """
     測試 API 方法，記錄請求與回應，並可進行結果檢查
     Test API method, record request/response, and optionally check result
@@ -167,7 +167,7 @@ def delegate_async_httpx(
     result_check_dict: dict = None,
     timeout: int = 5,
     **kwargs,
-) -> Optional[Response, Dict[str, str]]:
+) -> dict[str, Response | dict[str, str]] | None:
     """
     同步呼叫非同步 API 測試方法，方便在非 async 環境使用
     Run async API test method synchronously, useful in non-async environments
