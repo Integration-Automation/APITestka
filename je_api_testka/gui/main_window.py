@@ -8,17 +8,40 @@ from je_api_testka.gui.main_widget import APITestkaWidget
 
 
 class APITestkaUI(QMainWindow, QtStyleTools):
+    """
+    API Testka 主視窗
+    Main window for API Testka application
+    """
 
     def __init__(self):
         super().__init__()
-        self.id = language_wrapper.language_word_dict.get("application_name")
+
+        # 設定應用程式 ID (Windows 平台需要，讓工作列顯示正確圖示與名稱)
+        # Set application ID (required on Windows for correct taskbar icon and name)
+        self.id: str = language_wrapper.language_word_dict.get("application_name")
+
         if sys.platform in ["win32", "cygwin", "msys"]:
             from ctypes import windll
             windll.shell32.SetCurrentProcessExplicitAppUserModelID(self.id)
+
+        # 設定字體樣式
+        # Set font style
         self.setStyleSheet(
-            f"font-size: 12pt;"
-            f"font-family: 'Lato';"
+            "font-size: 12pt;"
+            "font-family: 'Lato';"
         )
+
+        # 套用 Material Design 主題
+        # Apply Material Design theme
         self.apply_stylesheet(self, "dark_amber.xml")
-        self.api_testka_widget = APITestkaWidget()
+
+        # 建立並設定主控件
+        # Create and set main widget
+        self.api_testka_widget: APITestkaWidget = APITestkaWidget()
         self.setCentralWidget(self.api_testka_widget)
+
+if "__main__" == __name__:
+    app = QApplication(sys.argv)
+    window = APITestkaUI()
+    window.show()
+    sys.exit(app.exec())

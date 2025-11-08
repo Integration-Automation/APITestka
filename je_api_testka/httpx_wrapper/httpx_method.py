@@ -1,17 +1,21 @@
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Union
 
 from httpx import get, put, patch, post, head, delete, options, Response
 
 from je_api_testka.httpx_wrapper.httpx_data import get_httpx_data
 from je_api_testka.utils.assert_result.result_check import check_result
-from je_api_testka.utils.test_record.test_record_class import test_record_instance
-
-from je_api_testka.utils.exception.exception_tags import get_data_error_message, wrong_http_method_error_message, \
-    http_method_have_wrong_type
+from je_api_testka.utils.exception.exception_tags import (
+    get_data_error_message,
+    wrong_http_method_error_message,
+    http_method_have_wrong_type,
+)
 from je_api_testka.utils.exception.exceptions import APITesterGetDataException, APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
+# 定義 HTTP 方法字典，對應到 httpx 的方法
+# Define HTTP method dictionary mapping to httpx methods
 http_method_dict = {
     "get": get,
     "put": put,
@@ -23,12 +27,10 @@ http_method_dict = {
 }
 
 
-def get_http_method_httpx(http_method: str) -> [
-    get, put, patch, post, head, delete,
-]:
+def get_http_method_httpx(http_method: str) -> Union[get, put, patch, post, head, delete]:
     """
-    :param http_method: what http method we use to api test
-    :return: one of method in http_method_dict if not exists will raise exception
+    根據字串取得對應的 HTTP 方法，若不存在則拋出例外
+    Get corresponding HTTP method from string, raise exception if not exists
     """
     apitestka_logger.info(
         "httpx_method.py get_http_method_httpx "
@@ -51,15 +53,11 @@ def get_http_method_httpx(http_method: str) -> [
 
 
 def get_httpx_response(response: Response,
-                       start_time: [str, float, int],
-                       end_time: [str, float, int]) -> Dict[str, str]:
+                       start_time: Union[str, float, int],
+                       end_time: Union[str, float, int]) -> Dict[str, str]:
     """
-    use requests response to create data dict
-    :param response: requests response
-    :param start_time: test start time
-    :param end_time: test end time
-    :return: data dict include [status_code, text, content, headers, history, encoding, cookies,
-    elapsed, request_time_sec, request_method, request_url, request_body, start_time, end_time]
+    將 HTTPX Response 轉換成字典，包含狀態碼、內容、標頭、cookies 等資訊
+    Convert HTTPX Response into dictionary including status code, content, headers, cookies, etc.
     """
     apitestka_logger.info(
         "httpx_method.py get_httpx_response "
@@ -75,12 +73,14 @@ def get_httpx_response(response: Response,
 
 def send_httpx_requests(http_method: str, test_url: str, verify: bool = False, timeout: int = 5, **kwargs) -> Response:
     """
-    :param http_method: what http method we use to api test
-    :param test_url: what url we want to test
-    :param kwargs: use to setting param
-    :param verify: this connect need verify or not
-    :param timeout: timeout sec
-    :return: test method
+    發送 HTTP 請求，支援多種方法 (GET, POST, PUT...)
+    Send HTTP request with multiple methods (GET, POST, PUT...)
+    :param http_method: 使用的 HTTP 方法 / HTTP method used
+    :param test_url: 測試的 URL / URL to test
+    :param verify: 是否驗證 SSL / Whether to verify SSL
+    :param timeout: 請求逾時秒數 / Request timeout in seconds
+    :param kwargs: 其他參數 / Additional parameters
+    :return: Response 物件 / Response object
     """
     apitestka_logger.info(
         "httpx_method.py get_httpx_response "
@@ -101,17 +101,12 @@ def send_httpx_requests(http_method: str, test_url: str, verify: bool = False, t
 
 
 def test_api_method_httpx(http_method: str, test_url: str, record_request_info: bool = True,
-                          clean_record: bool = False, result_check_dict: dict = None
-                          , verify: bool = False, timeout: int = 5,
-                          **kwargs) -> (Response, Dict[str, str]):
+                          clean_record: bool = False, result_check_dict: dict = None,
+                          verify: bool = False, timeout: int = 5,
+                          **kwargs) -> dict[str, Response | dict[str, str]] | None:
     """
-    set requests http_method url headers and record response and record report
-    :param http_method:
-    :param test_url:
-    :param record_request_info:
-    :param clean_record:
-    :param result_check_dict:
-    :param kwargs:
+    測試 API 方法，記錄請求與回應，並可進行結果檢查
+    Test API method, record request/response, and optionally check result
     """
     apitestka_logger.info(
         "httpx_method.py test_api_method_httpx "
@@ -156,5 +151,5 @@ def test_api_method_httpx(http_method: str, test_url: str, record_request_info: 
                 "clean_record": clean_record,
                 "result_check_dict": result_check_dict
             },
-            repr(error)]
-        )
+            repr(error)
+        ])

@@ -10,12 +10,19 @@ from je_api_testka.utils.test_record.test_record_class import test_record_instan
 
 def generate_json() -> Tuple[Dict, Dict]:
     """
-    :return: test success_dict test failure_dict
+    生成 JSON 格式的測試紀錄，分為成功與失敗
+    Generate JSON formatted test records, separated into success and failure
+
+    :return: (success_dict, failure_dict)
     """
     apitestka_logger.info("json_report.py generate_json")
+
+    # 若成功與失敗紀錄皆為空，拋出例外
+    # Raise exception if both success and failure records are empty
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
     else:
+        # 建立成功紀錄字典 / Build success record dictionary
         success_dict = dict()
         success_count: int = 1
         success_test_str: str = "Success_Test"
@@ -41,6 +48,8 @@ def generate_json() -> Tuple[Dict, Dict]:
                 }
             )
             success_count = success_count + 1
+
+        # 建立失敗紀錄字典 / Build failure record dictionary
         failure_dict = dict()
         if len(test_record_instance.error_record_list) != 0:
             failure_count: int = 1
@@ -60,16 +69,23 @@ def generate_json() -> Tuple[Dict, Dict]:
                     }
                 )
                 failure_count = failure_count + 1
+
         return success_dict, failure_dict
 
 
 def generate_json_report(json_file_name: str = "default_name") -> None:
     """
-    :param json_file_name: save json file's name
+    生成 JSON 報告檔案，分別輸出成功與失敗紀錄
+    Generate JSON report files, outputting success and failure records separately
+
+    :param json_file_name: 儲存的檔案名稱 (不含副檔名)
+                           File name to save (without extension)
     """
     apitestka_logger.info(f"json_report.py generate_json_report json_file_name: {json_file_name}")
     lock = Lock()
     success_dict, failure_dict = generate_json()
+
+    # 儲存失敗紀錄 / Save failure records
     try:
         lock.acquire()
         with open(json_file_name + "_failure.json", "w+") as file_to_write:
@@ -78,6 +94,8 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
         apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
     finally:
         lock.release()
+
+    # 儲存成功紀錄 / Save success records
     try:
         lock.acquire()
         with open(json_file_name + "_success.json", "w+") as file_to_write:
