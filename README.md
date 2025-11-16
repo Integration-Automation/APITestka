@@ -1,53 +1,34 @@
-### APITestka
-[![Downloads](https://static.pepy.tech/badge/je-api-testka)](https://pepy.tech/project/je-api-testka)
+# APITestka
+APITestka is a lightweight, cross‑platform framework for automated API testing. 
+It supports HTTP/HTTPS, SOAP/XML, and JSON, with high‑performance request execution, 
+detailed reporting, and flexible CLI scripting. 
+Designed for speed and scalability, APITestka enables thousands of requests per second, 
+integrates with mock servers and remote automation, 
+and generates reports in multiple formats for easy analysis.
 
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f243c4edfc1f4aa3ac87752e3e86b399)](https://www.codacy.com/gh/JE-Chen/APITestka/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=JE-Chen/APITestka&amp;utm_campaign=Badge_Grade)
-
-[![APITestka Stable Python3.8](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_8.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_8.yml)
-
-[![APITestka Stable Python3.9](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_9.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_9.yml)
-
-[![APITestka Stable Python3.10](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_10.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_10.yml)
-
-[![APITestka Stable Python3.11](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_11.yml/badge.svg)](https://github.com/Intergration-Automation-Testing/APITestka/actions/workflows/stable_python3_11.yml)
-
-### Documentation
-
-[![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
-
-[APITestka Doc Click Here!](https://apitestka.readthedocs.io/en/latest/)
-
----
-> Project Kanban \
-> https://github.com/orgs/Integration-Automation/projects/2/views/1 \
-> * API requests automation.
-> * Data comparison for each Request.
-> * API request in pure CLI mode.
-> * Detailed reports on Requests and Responses.
-> * HTTP/HTTPS support.
-> * SOAP/XML support.
-> * JSON support.
-> * Generate JSON/HTML/XML report.
-> * APITestka script.
-> * 1 sec / thousands requests.
-> * OS Independent.
-> * Mockserver support.
-> * Remote Automation support.
-> * Project & Template support.
-> * httpx Client(NEW)
-> * httpx sync/async request.
-> * http/2 request support. 
+# Features
+- Automated API request execution
+- Data comparison for each request
+- Pure CLI mode support for API testing
+- Detailed request/response reporting
+- HTTP/HTTPS support
+- SOAP/XML support
+- JSON support
+- Report generation in JSON, HTML, and XML formats
+- APITestka scripting capability
+- High performance: thousands of requests per second
+- Cross-platform (OS independent)
+- Mock server integration
+- Remote automation support
+- Project and template management
+- New: httpx client support
+- Synchronous and asynchronous requests with httpx
+- HTTP/2 request support
 
 
----
-
-
-## install
+## Installation
 > pip install je_api_testka
 
 
 ## Requires
-> python 3.9 or later
-
-### Architecture Diagram
-![Architecture Diagram](architecture_diagram/APITestka_Architecture.drawio.png)
+- python 3.9 or later
