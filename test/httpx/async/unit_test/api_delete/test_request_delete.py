@@ -5,7 +5,6 @@ import requests.exceptions
 
 from je_api_testka import generate_html
 from je_api_testka import test_api_method_httpx_async
-from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 
 
 async def main():

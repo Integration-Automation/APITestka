@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime
-from typing import Dict, Union
+from typing import Dict, Union, Callable
 
 from httpx import get, put, patch, post, head, delete, Response, AsyncClient
 
@@ -109,7 +109,7 @@ async def test_api_method_httpx_async(
     timeout: int = 5,
     http2: bool = False,
     **kwargs,
-) -> dict[str, Response | dict[str, str]] | None:
+) -> dict[str, Response | dict[str, Callable]] | None:
     """
     測試 API 方法，記錄請求與回應，並可進行結果檢查
     Test API method, record request/response, and optionally check result
