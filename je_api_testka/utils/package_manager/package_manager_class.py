@@ -7,7 +7,7 @@ from sys import stderr
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
-class PackageManager(object):
+class PackageManager:
 
     def __init__(self):
         """
@@ -97,7 +97,6 @@ class PackageManager(object):
         try:
             self.get_member(package=package, predicate=isfunction, target=target)
             self.get_member(package=package, predicate=isbuiltin, target=target)
-            self.get_member(package=package, predicate=isfunction, target=target)
             self.get_member(package=package, predicate=isclass, target=target)
         except Exception as error:
             print(repr(error), file=stderr)

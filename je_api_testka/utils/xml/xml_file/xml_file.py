@@ -18,7 +18,7 @@ def reformat_xml_file(xml_string: str):
     return dom.toprettyxml()
 
 
-class XMLParser(object):
+class XMLParser:
     """
     XML 解析器類別，用來處理字串或檔案形式的 XML
     XML parser class to handle XML from string or file

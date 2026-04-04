@@ -145,7 +145,7 @@ def generate_html() -> Tuple[List, List]:
     if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
         raise APIHTMLException(html_generate_no_data_tag)
     else:
-        success_list: list = list()
+        success_list: list = []
         for record_data in test_record_instance.test_record_list:
             success_list.append(
                 _success_table.format(
@@ -165,7 +165,7 @@ def generate_html() -> Tuple[List, List]:
                     end_time=record_data.get("end_time"),
                 )
             )
-        failure_list: list = list()
+        failure_list: list = []
         if len(test_record_instance.error_record_list) != 0:
             for record_data in test_record_instance.error_record_list:
                 failure_list.append(
@@ -204,3 +204,5 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
     except Exception as error:
         # 錯誤輸出到 stderr / Print error to stderr
         print(repr(error), file=sys.stderr)
+    finally:
+        lock.release()

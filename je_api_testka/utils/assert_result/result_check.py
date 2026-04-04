@@ -26,16 +26,6 @@ def check_result(result_dict: dict, result_check_dict: dict) -> None:
         if result_dict.get(key) != value:
             # 若不符合，輸出錯誤訊息到 stderr
             # If mismatch, print error message to stderr
-            print(
-                "value should be {right_value} but value was {wrong_value}".format(
-                    right_value=value, wrong_value=result_dict.get(key)
-                ),
-                file=sys.stderr
-            )
-            # 並拋出自訂例外 APIAssertException
-            # Raise custom exception APIAssertException
-            raise APIAssertException(
-                "value should be {right_value} but value was {wrong_value}".format(
-                    right_value=value, wrong_value=result_dict.get(key)
-                )
-            )
+            message = f"value should be {value} but value was {result_dict.get(key)}"
+            print(message, file=sys.stderr)
+            raise APIAssertException(message)

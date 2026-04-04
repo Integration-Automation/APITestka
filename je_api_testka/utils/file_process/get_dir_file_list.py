@@ -26,7 +26,7 @@ def get_dir_files_as_list(dir_path: str = getcwd(), default_search_file_extensio
     # 使用 os.walk 遍歷目錄，取得所有符合副檔名的檔案
     # Use os.walk to traverse directory and collect files with matching extension
     return [
-        abspath(join(dir_path, file))  # 轉換為絕對路徑 / Convert to absolute path
+        abspath(join(root, file))  # 轉換為絕對路徑 / Convert to absolute path
         for root, dirs, files in walk(dir_path)  # 遍歷目錄 / Traverse directory
         for file in files
         if file.endswith(default_search_file_extension.lower())  # 檢查副檔名 / Check file extension

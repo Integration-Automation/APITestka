@@ -2,7 +2,7 @@ import asyncio
 from datetime import datetime
 from typing import Dict, Union
 
-from httpx import get, put, patch, post, head, delete, Response, AsyncClient
+from httpx import Response, AsyncClient
 
 from je_api_testka.httpx_wrapper.httpx_data import get_httpx_data
 from je_api_testka.utils.assert_result.result_check import check_result
@@ -28,21 +28,22 @@ http_method_dict = {
 }
 
 
-async def get_http_method_httpx_async(http_method: str) -> Union[get, put, patch, post, head, delete]:
+async def get_http_method_httpx_async(http_method: str):
     """
     根據字串取得對應的 HTTP 方法，若不存在則拋出例外
     Get corresponding HTTP method from string, raise exception if not exists
     """
     apitestka_logger.info(f"async_httpx_method.py get_http_method_httpx_async http_method: {http_method}")
-    try:
-        if not isinstance(http_method, str):
-            raise APITesterException(wrong_http_method_error_message)
-        http_method = str(http_method).lower()
-        if http_method not in http_method_dict:
-            raise APITesterException(http_method_have_wrong_type)
-        return http_method_dict.get(http_method)
-    except APITesterException as error:
-        apitestka_logger.error(f"httpx get_http_method_httpx_async failed. {repr(error)}")
+    if not isinstance(http_method, str):
+        apitestka_logger.error(
+            f"httpx get_http_method_httpx_async failed. {wrong_http_method_error_message}")
+        raise APITesterException(wrong_http_method_error_message)
+    http_method = http_method.lower()
+    if http_method not in http_method_dict:
+        apitestka_logger.error(
+            f"httpx get_http_method_httpx_async failed. {http_method_have_wrong_type}")
+        raise APITesterException(http_method_have_wrong_type)
+    return http_method_dict[http_method]
 
 
 async def get_httpx_response_async(
@@ -76,27 +77,19 @@ async def send_httpx_requests_async(
         "async_httpx_method.py send_httpx_requests_async "
         f"http_method: {http_method} test_url: {test_url} timeout: {timeout} http2: {http2} kwargs: {kwargs}"
     )
-    method = await get_http_method_httpx_async(http_method)
-    if method is None:
-        apitestka_logger.error(
-            f"httpx send_httpx_requests_async failed. {APITesterException(wrong_http_method_error_message)}"
-        )
-        raise APITesterException(wrong_http_method_error_message)
-    else:
-        async with AsyncClient(http2=http2) as client:
-            # 建立 client 方法字典，確保正確呼叫
-            # Create client method dictionary to ensure correct call
-            client_method_dict = {
-                "get": client.get,
-                "put": client.put,
-                "patch": client.patch,
-                "post": client.post,
-                "head": client.head,
-                "delete": client.delete,
-                "options": client.options,
-            }
-            method = client_method_dict.get(http_method)
-            response = await method(url=test_url, timeout=timeout, **kwargs)
+    await get_http_method_httpx_async(http_method)
+    async with AsyncClient(http2=http2) as client:
+        client_method_dict = {
+            "get": client.get,
+            "put": client.put,
+            "patch": client.patch,
+            "post": client.post,
+            "head": client.head,
+            "delete": client.delete,
+            "options": client.options,
+        }
+        method = client_method_dict[http_method.lower()]
+        response = await method(url=test_url, timeout=timeout, **kwargs)
     return response
 
 
@@ -121,10 +114,10 @@ async def test_api_method_httpx_async(
     )
     try:
         start_time: datetime = datetime.now()
-        end_time = datetime.now()
         response = await send_httpx_requests_async(
             http_method, test_url=test_url, timeout=timeout, http2=http2, **kwargs
         )
+        end_time = datetime.now()
         response_data = await get_httpx_response_async(response, start_time, end_time)
         response.raise_for_status()
         if clean_record:

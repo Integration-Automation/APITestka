@@ -1,7 +1,7 @@
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
-class TestRecord(object):
+class TestRecord:
     """
     測試紀錄資料類別，用來保存成功與失敗的測試結果
     Data class to record success and failure test results
@@ -14,9 +14,9 @@ class TestRecord(object):
         """
         apitestka_logger.info("Init TestRecord")
         # 成功測試紀錄清單 / List to store successful test records
-        self.test_record_list: list = list()
+        self.test_record_list: list = []
         # 失敗測試紀錄清單 / List to store failed test records
-        self.error_record_list: list = list()
+        self.error_record_list: list = []
 
     def clean_record(self) -> None:
         """
@@ -24,8 +24,8 @@ class TestRecord(object):
         Clean all test records
         """
         apitestka_logger.info("TestRecord clean_record")
-        self.test_record_list: list = list()
-        self.error_record_list: list = list()
+        self.test_record_list: list = []
+        self.error_record_list: list = []
 
 
 # 建立全域測試紀錄實例，供其他模組使用

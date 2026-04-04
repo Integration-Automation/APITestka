@@ -4,7 +4,7 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 
-class LanguageWrapper(object):
+class LanguageWrapper:
 
     def __init__(
             self

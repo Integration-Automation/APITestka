@@ -2,7 +2,6 @@ from json import JSONDecodeError
 from typing import Dict, Union
 
 from httpx import Response
-from requests.utils import dict_from_cookiejar
 
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
@@ -30,7 +29,7 @@ def get_httpx_data(response: Response,
         "headers": response.headers,           # 回應標頭 / Response headers
         "history": response.history,           # 請求歷史紀錄 / Request history
         "encoding": response.encoding,         # 編碼方式 / Response encoding
-        "cookies": dict_from_cookiejar(response.cookies),  # Cookies 轉換成 dict / Convert cookies to dict
+        "cookies": dict(response.cookies),  # Cookies 轉換成 dict / Convert cookies to dict
         "elapsed": response.elapsed,           # 請求耗時 / Request elapsed time
         "request_time_sec": response.elapsed.total_seconds(),  # 耗時秒數 / Elapsed time in seconds
         "request_method": response.request.method,  # 請求方法 / Request method

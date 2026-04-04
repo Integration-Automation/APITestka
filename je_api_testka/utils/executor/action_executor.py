@@ -18,7 +18,7 @@ from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
-class Executor(object):
+class Executor:
 
     def __init__(self):
         # 初始化 Executor，建立事件字典
@@ -82,18 +82,14 @@ class Executor(object):
         :return: 執行紀錄字典 / Execution record dictionary
         """
         apitestka_logger.info(f"Executor execute_action action_list: {action_list}")
-        apitestka_logger.info(f"execute_action, action_list: {action_list}")
         if isinstance(action_list, dict):
             action_list: list = action_list.get("api_testka", [])
             if action_list is None:
                 raise APITesterExecuteException(executor_list_error)
 
-        execute_record_dict = dict()
-        try:
-            if len(action_list) < 0 or isinstance(action_list, list) is False:
-                raise APITesterExecuteException(executor_list_error)
-        except Exception as error:
-            apitestka_logger.info(f"execute_action, action_list: {action_list}, failed: {repr(error)}")
+        execute_record_dict = {}
+        if not isinstance(action_list, list) or len(action_list) == 0:
+            raise APITesterExecuteException(executor_list_error)
 
         for action in action_list:
             try:
@@ -123,8 +119,7 @@ class Executor(object):
         :return: 每個檔案的執行結果列表 / List of execution details
         """
         apitestka_logger.info(f"Executor execute_files execute_files_list: {execute_files_list}")
-        apitestka_logger.info(f"execute_files, execute_files_list: {execute_files_list}")
-        execute_detail_list: list = list()
+        execute_detail_list: list = []
         for file in execute_files_list:
             execute_detail_list.append(self.execute_action(read_action_json(file)))
         return execute_detail_list

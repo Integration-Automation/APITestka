@@ -12,7 +12,7 @@ from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
-class CallbackFunctionExecutor(object):
+class CallbackFunctionExecutor:
     def __init__(self):
         # 初始化 CallbackFunctionExecutor，建立事件字典
         # Initialize CallbackFunctionExecutor and build event dictionary
@@ -65,7 +65,7 @@ class CallbackFunctionExecutor(object):
         )
         try:
             # 確認觸發函式存在於事件字典 / Ensure trigger function exists in event_dict
-            if trigger_function_name not in self.event_dict.keys():
+            if trigger_function_name not in self.event_dict:
                 raise CallbackExecutorException(get_bad_trigger_function)
 
             # 執行觸發函式 / Execute trigger function
@@ -91,4 +91,4 @@ class CallbackFunctionExecutor(object):
 # 建立全域的 callback_executor 並綁定到 package_manager
 # Create global callback_executor and bind to package_manager
 callback_executor = CallbackFunctionExecutor()
-package_manager.executor = callback_executor
+package_manager.callback_executor = callback_executor
