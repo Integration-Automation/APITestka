@@ -1,17 +1,50 @@
+=============
 命令列介面
+=============
+
+APITestka 提供完整的 CLI 介面，支援 CI/CD 整合。
+
+命令
 ----
 
-我們可以使用 CLI 模式去執行 keyword.json 檔案或執行包含 Keyword.json files 的資料夾，
-以下這個範例是去執行指定路徑的關鍵字 json 檔
+執行單一 JSON 動作檔案：
 
-.. code-block::
+.. code-block:: bash
 
-    python je_api_testka --execute_file "your_file_path"
+   python -m je_api_testka -e test_actions.json
 
+執行目錄中所有 JSON 檔案：
 
+.. code-block:: bash
 
-以下這個範例是去執行指定路徑資料夾下所有的 keyword json 檔
+   python -m je_api_testka -d path/to/json_dir
 
-.. code-block::
+直接執行 JSON 字串：
 
-    python je_api_testka --execute_dir "your_dir_path"
+.. code-block:: bash
+
+   python -m je_api_testka --execute_str '[["AT_test_api_method", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]'
+
+建立新專案（含範本）：
+
+.. code-block:: bash
+
+   python -m je_api_testka -c MyProject
+
+CLI 參數
+--------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - 參數
+     - 說明
+   * - ``-e``, ``--execute_file``
+     - 執行單一 JSON 動作檔案
+   * - ``-d``, ``--execute_dir``
+     - 執行目錄中所有 JSON 檔案
+   * - ``--execute_str``
+     - 直接執行 JSON 字串
+   * - ``-c``, ``--create_project``
+     - 建立專案目錄及範本檔案

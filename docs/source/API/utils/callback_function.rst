@@ -1,21 +1,22 @@
-Callback Function API
-----
+=================
+Callback Function
+=================
 
 .. code-block:: python
 
-    def callback_function(
-        self,
-        trigger_function_name: str,
-        callback_function: typing.Callable,
-        callback_function_param: [dict, None] = None,
-        callback_param_method: [str, None] = "kwargs",
-        **kwargs
-    ):
-        """
-        :param trigger_function_name: what function we want to trigger only accept function in event_dict
-        :param callback_function: what function we want to callback
-        :param callback_function_param: callback function's param only accept dict
-        :param callback_param_method: what type param will use on callback function only accept kwargs and args
-        :param kwargs: trigger_function's param
-        :return:
-        """
+   def callback_function(
+       self,
+       trigger_function_name: str,
+       callback_function: typing.Callable,
+       callback_function_param: [dict, None] = None,
+       callback_param_method: [str, None] = "kwargs",
+       **kwargs
+   ):
+
+Execute a trigger function then call a callback function with results.
+
+:param trigger_function_name: function to trigger (must be in ``event_dict``)
+:param callback_function: function to call after trigger completes
+:param callback_function_param: callback function parameters (dict)
+:param callback_param_method: ``"kwargs"`` or ``"args"``
+:param kwargs: parameters for the trigger function
