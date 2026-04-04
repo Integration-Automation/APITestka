@@ -1,15 +1,39 @@
+======
 安裝
-----
+======
 
-.. code-block:: python
+從 PyPI 安裝
+-------------
 
-    pip install je_api_testka
+.. code-block:: bash
 
-* Python & pip require version
-    * Python 3.7 & up
-    * pip 19.3 & up
+   pip install je_api_testka
 
-* Dev env
-    * windows 11
-    * osx 11 big sur
-    * ubuntu 20.0.4
+安裝 GUI 支援
+--------------
+
+.. code-block:: bash
+
+   pip install je_api_testka[gui]
+
+系統需求
+--------
+
+- **Python** 3.10 或更高版本
+- **依賴套件：** ``requests``、``Flask``、``httpx``
+- **選用（GUI）：** ``PySide6==6.11.0``、``qt-material``
+
+開發環境設定
+------------
+
+.. code-block:: bash
+
+   # 複製儲存庫
+   git clone https://github.com/Intergration-Automation-Testing/APITestka.git
+   cd APITestka
+
+   # 安裝開發依賴
+   pip install -r dev_requirements.txt
+
+   # 執行測試
+   pytest

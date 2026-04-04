@@ -1,5 +1,7 @@
 # IDEA
 .idea/
+# Sphinx build output
+docs/build/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

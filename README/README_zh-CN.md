@@ -3,6 +3,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](../licenses/APITestka_LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/je_api_testka.svg)](https://pypi.org/project/je_api_testka/)
+[![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
 
 **APITestka** 是一个轻量级、跨平台的自动化 API 测试框架。
 支持 HTTP/HTTPS、SOAP/XML 和 JSON，具备高性能的请求执行、
