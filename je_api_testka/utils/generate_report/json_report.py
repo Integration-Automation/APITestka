@@ -23,7 +23,7 @@ def generate_json() -> Tuple[Dict, Dict]:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
     else:
         # 建立成功紀錄字典 / Build success record dictionary
-        success_dict = dict()
+        success_dict = {}
         success_count: int = 1
         success_test_str: str = "Success_Test"
         for record_data in test_record_instance.test_record_list:
@@ -47,17 +47,17 @@ def generate_json() -> Tuple[Dict, Dict]:
                     }
                 }
             )
-            success_count = success_count + 1
+            success_count += 1
 
         # 建立失敗紀錄字典 / Build failure record dictionary
-        failure_dict = dict()
+        failure_dict = {}
         if len(test_record_instance.error_record_list) != 0:
             failure_count: int = 1
             failure_test_str: str = "Failure_Test"
             for record_data in test_record_instance.error_record_list:
                 failure_dict.update(
                     {
-                        failure_test_str: {
+                        failure_test_str + str(failure_count): {
                             "http_method": str(record_data[0].get("http_method")),
                             "test_url": str(record_data[0].get("test_url")),
                             "soap": str(record_data[0].get("soap")),
@@ -68,7 +68,7 @@ def generate_json() -> Tuple[Dict, Dict]:
                         }
                     }
                 )
-                failure_count = failure_count + 1
+                failure_count += 1
 
         return success_dict, failure_dict
 

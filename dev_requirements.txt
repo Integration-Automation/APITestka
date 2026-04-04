@@ -2,7 +2,12 @@ requests
 build
 wheel
 Flask
+httpx
 twine
 sphinx
 je_api_testka_dev
 sphinx-rtd-theme
+pytest
+pytest-asyncio
+Pyside6 == 6.11.0
+qt_material

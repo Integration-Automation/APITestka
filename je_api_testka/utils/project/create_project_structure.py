@@ -58,7 +58,7 @@ def create_template(parent_name: str, project_path: str = None) -> None:
         write_action_json(project_path + "/" + parent_name + "/keyword/bad_keyword_1.json", bad_template_1)
 
     # 建立 executor 範本 Python 檔案 / Create executor template Python files
-    if executor_dir_path.exists() and keyword_dir_path.is_dir():
+    if executor_dir_path.exists() and executor_dir_path.is_dir():
         lock.acquire()
         try:
             with open(project_path + "/" + parent_name + "/executor/executor_one_file.py", "w+") as file:
@@ -107,4 +107,4 @@ def create_project_dir(project_path: str = None, parent_name: str = "APITestka")
     create_dir(project_path + "/" + parent_name + "/executor")
 
     # 建立範本檔案 / Generate template files
-    create_template(parent_name)
+    create_template(parent_name, project_path)

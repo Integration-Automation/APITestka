@@ -1,4 +1,3 @@
-from typing import Callable
 from flask.app import Flask
 
 from je_api_testka.utils.exception.exception_tags import get_bad_api_router_setting
@@ -6,7 +5,7 @@ from je_api_testka.utils.exception.exceptions import MockServerException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
-class FlaskMockServer(object):
+class FlaskMockServer:
 
     def __init__(self, host, port):
         """
@@ -45,7 +44,7 @@ class FlaskMockServer(object):
             f"rule_and_function_dict: {rule_and_function_dict} kwargs: {kwargs}"
         )
         for rule, function in rule_and_function_dict.items():
-            if isinstance(rule, str) and isinstance(function, Callable):
+            if isinstance(rule, str) and callable(function):
                 # 將路由與函式綁定到 Flask 應用程式
                 # Bind route and function to Flask application
                 self.app.route(rule, **kwargs)(function)

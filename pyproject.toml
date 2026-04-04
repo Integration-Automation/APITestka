@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "je_api_testka"
-version = "0.0.135"
+version = "0.0.137"
 authors = [
     { name = "JE-Chen", email = "jechenmailman@gmail.com" },
 ]
@@ -39,3 +39,7 @@ find = { namespaces = false }
 
 [project.optional-dependencies]
 gui = ["PySide6==6.10.0", "qt-material"]
+
+[tool.pytest.ini_options]
+testpaths = ["test"]
+asyncio_mode = "auto"

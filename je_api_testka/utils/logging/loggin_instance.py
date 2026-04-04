@@ -13,7 +13,7 @@ class APITestkaLoggingHandler(RotatingFileHandler):
     # redirect logging stderr output to queue
 
     def __init__(self, filename: str = "APITestka.log", mode="w",
-                 max_bytes:int=1073741824, backup_count:int=0):
+                 max_bytes: int = 1073741824, backup_count: int = 0):
         super().__init__(filename=filename, mode=mode, maxBytes=max_bytes, backupCount=backup_count)
         self.formatter = formatter
         self.setLevel(logging.DEBUG)

@@ -27,7 +27,7 @@ http_method_dict = {
 }
 
 
-def get_http_method_httpx(http_method: str) -> Union[get, put, patch, post, head, delete]:
+def get_http_method_httpx(http_method: str):
     """
     根據字串取得對應的 HTTP 方法，若不存在則拋出例外
     Get corresponding HTTP method from string, raise exception if not exists
@@ -36,20 +36,16 @@ def get_http_method_httpx(http_method: str) -> Union[get, put, patch, post, head
         "httpx_method.py get_http_method_httpx "
         f"http_method: {http_method}"
     )
-    try:
-        if not isinstance(http_method, str):
-            apitestka_logger.error(
-                f"httpx get_http_method_httpx failed. {APITesterException(wrong_http_method_error_message)}")
-            raise APITesterException(wrong_http_method_error_message)
-        http_method = str(http_method).lower()
-        if http_method not in http_method_dict:
-            apitestka_logger.error(
-                f"httpx get_http_method_httpx failed. {APITesterException(http_method_have_wrong_type)}")
-            raise APITesterException(http_method_have_wrong_type)
-        return http_method_dict.get(http_method)
-    except APITesterException as error:
+    if not isinstance(http_method, str):
         apitestka_logger.error(
-            f"httpx get_http_method_httpx failed. {repr(error)}")
+            f"httpx get_http_method_httpx failed. {wrong_http_method_error_message}")
+        raise APITesterException(wrong_http_method_error_message)
+    http_method = http_method.lower()
+    if http_method not in http_method_dict:
+        apitestka_logger.error(
+            f"httpx get_http_method_httpx failed. {http_method_have_wrong_type}")
+        raise APITesterException(http_method_have_wrong_type)
+    return http_method_dict[http_method]
 
 
 def get_httpx_response(response: Response,
@@ -91,12 +87,7 @@ def send_httpx_requests(http_method: str, test_url: str, verify: bool = False, t
         f"kwargs: {kwargs}"
     )
     method = get_http_method_httpx(http_method)
-    if method is None:
-        apitestka_logger.error(
-            f"httpx send_httpx_requests failed. {APITesterException(wrong_http_method_error_message)}")
-        raise APITesterException(wrong_http_method_error_message)
-    else:
-        response = method(test_url, verify=verify, timeout=timeout, **kwargs)
+    response = method(test_url, verify=verify, timeout=timeout, **kwargs)
     return response
 
 
@@ -121,8 +112,8 @@ def test_api_method_httpx(http_method: str, test_url: str, record_request_info: 
     )
     try:
         start_time: datetime = datetime.now()
-        end_time = datetime.now()
         response = send_httpx_requests(http_method, test_url=test_url, verify=verify, timeout=timeout, **kwargs)
+        end_time = datetime.now()
         response_data = get_httpx_response(response, start_time, end_time)
         response.raise_for_status()
         if clean_record:

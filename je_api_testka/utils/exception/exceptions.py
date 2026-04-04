@@ -28,7 +28,7 @@ class APITesterDeleteException(APITesterException):
     pass
 
 
-# put method
+# post method
 class APITesterPostException(APITesterException):
     pass
 

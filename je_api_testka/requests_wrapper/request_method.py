@@ -47,21 +47,18 @@ def get_http_method(http_method: str):
     Get corresponding HTTP method from string, raise exception if not exists
     """
     apitestka_logger.info("request_method.py get_http_method")
-    try:
-        if not isinstance(http_method, str):
-            apitestka_logger.error(
-                f"requests get_http_method failed. {APITesterException(wrong_http_method_error_message)}"
-            )
-            raise APITesterException(wrong_http_method_error_message)
-        http_method = str(http_method).lower()
-        if http_method not in http_method_dict:
-            apitestka_logger.error(
-                f"requests get_http_method failed. {APITesterException(http_method_have_wrong_type)}"
-            )
-            raise APITesterException(http_method_have_wrong_type)
-        return http_method_dict.get(http_method)
-    except APITesterException as error:
-        apitestka_logger.error(f"requests get_http_method failed. {repr(error)}")
+    if not isinstance(http_method, str):
+        apitestka_logger.error(
+            f"requests get_http_method failed. {wrong_http_method_error_message}"
+        )
+        raise APITesterException(wrong_http_method_error_message)
+    http_method = http_method.lower()
+    if http_method not in http_method_dict:
+        apitestka_logger.error(
+            f"requests get_http_method failed. {http_method_have_wrong_type}"
+        )
+        raise APITesterException(http_method_have_wrong_type)
+    return http_method_dict[http_method]
 
 
 def send_requests(http_method: str, test_url: str, verify: bool = False, timeout: int = 5,
@@ -83,13 +80,7 @@ def send_requests(http_method: str, test_url: str, verify: bool = False, timeout
         f"timeout: {timeout} allow_redirects: {allow_redirects} kwargs: {kwargs}"
     )
     method = get_http_method(http_method)
-    if method is None:
-        apitestka_logger.error(
-            f"requests api_tester_method failed. {APITesterException(wrong_http_method_error_message)}"
-        )
-        raise APITesterException(wrong_http_method_error_message)
-    else:
-        response = method(test_url, verify=verify, timeout=timeout, allow_redirects=allow_redirects, **kwargs)
+    response = method(test_url, verify=verify, timeout=timeout, allow_redirects=allow_redirects, **kwargs)
     return response
 
 
@@ -128,7 +119,7 @@ def test_api_method_requests(http_method: str, test_url: str,
     )
     try:
         start_time: datetime = datetime.now()
-        if soap is False:
+        if not soap:
             # 一般 HTTP 請求 / Normal HTTP request
             response = send_requests(http_method, test_url=test_url, verify=verify, timeout=timeout,
                                      allow_redirects=allow_redirects, **kwargs)
