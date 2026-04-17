@@ -1,6 +1,4 @@
-import builtins
 import types
-from inspect import getmembers, isbuiltin
 from typing import Dict, Callable, Any, List, Union
 
 from je_api_testka import test_api_method_httpx
@@ -46,10 +44,6 @@ class Executor:
             "AT_flask_mock_server_add_router": flask_mock_server_instance.add_router,
             "AT_start_flask_mock_server": flask_mock_server_instance.start_mock_server,
         }
-        # 取得所有 Python 內建函式並加入事件字典
-        # Get all builtin functions and add to event dictionary
-        for function in getmembers(builtins, isbuiltin):
-            self.event_dict.update({str(function[0]): function[1]})
 
     def _execute_event(self, action: list) -> Any:
         """

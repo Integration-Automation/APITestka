@@ -14,7 +14,7 @@ description = "Requests Automation Framework"
 requires-python = ">=3.10"
 license-files = ["LICENSE"]
 dependencies = [
-    "requests", "Flask", "httpx"
+    "requests", "Flask", "httpx", "defusedxml"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.10",
