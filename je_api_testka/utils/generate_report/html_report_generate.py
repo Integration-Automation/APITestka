@@ -1,4 +1,3 @@
-import sys
 from threading import Lock
 from typing import List, Tuple
 
@@ -142,7 +141,7 @@ def generate_html() -> Tuple[List, List]:
     :return: (success_list, failure_list)
     """
     apitestka_logger.info("html_report_generate.py generate_html")
-    if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
+    if not test_record_instance.test_record_list and not test_record_instance.error_record_list:
         raise APIHTMLException(html_generate_no_data_tag)
     else:
         success_list: list = []
@@ -166,7 +165,7 @@ def generate_html() -> Tuple[List, List]:
                 )
             )
         failure_list: list = []
-        if len(test_record_instance.error_record_list) != 0:
+        if test_record_instance.error_record_list:
             for record_data in test_record_instance.error_record_list:
                 failure_list.append(
                     _failure_table.format(
@@ -202,7 +201,7 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
                 file_to_write.write(failure)
             file_to_write.writelines(_html_string_bottom)
     except Exception as error:
-        # 錯誤輸出到 stderr / Print error to stderr
-        print(repr(error), file=sys.stderr)
+        # 錯誤輸出到 logger / Log error
+        apitestka_logger.error(repr(error))
     finally:
         lock.release()

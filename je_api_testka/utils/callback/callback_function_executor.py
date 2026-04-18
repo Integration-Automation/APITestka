@@ -1,4 +1,3 @@
-from sys import stderr
 from typing import Any, Callable, Union
 
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
@@ -84,8 +83,8 @@ class CallbackFunctionExecutor:
 
             return execute_return_value
         except Exception as error:
-            # 錯誤輸出到 stderr / Print error to stderr
-            print(repr(error), file=stderr)
+            # 錯誤輸出到 logger / Log error
+            apitestka_logger.error(repr(error))
 
 
 # 建立全域的 callback_executor 並綁定到 package_manager

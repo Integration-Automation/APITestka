@@ -6,7 +6,7 @@ def test_execute_single_action_async():
     """Execute a single GET action via async httpx (delegate) and validate response."""
     test_action_list = [
         ["AT_delegate_async_httpx",
-         {"http_method": "get", "test_url": "http://httpbin.org/get"}]
+         {"http_method": "get", "test_url": "http://127.0.0.1:8091/get", "timeout": 30}]
     ]
     result = execute_action(test_action_list)
     assert isinstance(result, dict)
@@ -21,10 +21,10 @@ def test_execute_multiple_actions_async():
     """Execute multiple POST actions via async httpx (delegate)."""
     test_action_list = [
         ["AT_delegate_async_httpx",
-         {"http_method": "post", "test_url": "http://httpbin.org/post",
-          "params": {"task": "new task"}}],
+         {"http_method": "post", "test_url": "http://127.0.0.1:8091/post",
+          "params": {"task": "new task"}, "timeout": 30}],
         ["AT_delegate_async_httpx",
-         {"http_method": "post", "test_url": "http://httpbin.org/post"}],
+         {"http_method": "post", "test_url": "http://127.0.0.1:8091/post", "timeout": 30}],
     ]
     result = execute_action(test_action_list)
     assert isinstance(result, dict)
@@ -35,7 +35,7 @@ def test_execute_invalid_method_async():
     """Invalid HTTP methods should be recorded as errors, not crash."""
     test_action_list = [
         ["AT_delegate_async_httpx",
-         {"http_method": "invalid_method", "test_url": "http://httpbin.org/post"}],
+         {"http_method": "invalid_method", "test_url": "http://127.0.0.1:8091/post", "timeout": 30}],
     ]
     result = execute_action(test_action_list)
     assert isinstance(result, dict)
@@ -45,8 +45,8 @@ def test_execute_records_tracking_async():
     """Test that async executed actions are tracked in test_record_instance."""
     test_action_list = [
         ["AT_delegate_async_httpx",
-         {"http_method": "post", "test_url": "http://httpbin.org/post",
-          "params": {"task": "new task"}}],
+         {"http_method": "post", "test_url": "http://127.0.0.1:8091/post",
+          "params": {"task": "new task"}, "timeout": 30}],
     ]
     execute_action(test_action_list)
     assert len(test_record_instance.test_record_list) > 0

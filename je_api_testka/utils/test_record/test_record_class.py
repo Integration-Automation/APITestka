@@ -1,3 +1,5 @@
+from threading import RLock
+
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
@@ -13,6 +15,9 @@ class TestRecord:
         Initialize test record
         """
         apitestka_logger.info("Init TestRecord")
+        # Lock protects list reassignment in clean_record against concurrent readers;
+        # append is GIL-atomic but clean_record swaps the list reference.
+        self._lock = RLock()
         # 成功測試紀錄清單 / List to store successful test records
         self.test_record_list: list = []
         # 失敗測試紀錄清單 / List to store failed test records
@@ -24,8 +29,9 @@ class TestRecord:
         Clean all test records
         """
         apitestka_logger.info("TestRecord clean_record")
-        self.test_record_list: list = []
-        self.error_record_list: list = []
+        with self._lock:
+            self.test_record_list = []
+            self.error_record_list = []
 
 
 # 建立全域測試紀錄實例，供其他模組使用

@@ -1,6 +1,7 @@
 from threading import Lock
 from typing import Tuple
-from xml.dom.minidom import parseString
+
+from defusedxml.minidom import parseString
 
 from je_api_testka.utils.generate_report.json_report import generate_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger

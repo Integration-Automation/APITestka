@@ -6,6 +6,9 @@ import threading
 from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
+_END_MARKER = b"Return_Data_Over_JE"
+_NEWLINE = b"\n"
+
 
 class TCPServerHandler(socketserver.BaseRequestHandler):
 
@@ -20,13 +23,13 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
         # 接收客戶端傳來的資料 / Receive data from client
         command_string = str(self.request.recv(8192).strip(), encoding="utf-8")
         socket = self.request
-        print("command is: " + command_string, flush=True)
+        apitestka_logger.info(f"command is: {command_string}")
 
         # 若收到 quit_server 指令，則關閉伺服器 / Shutdown server if quit_server command received
         if command_string == "quit_server":
             self.server.shutdown()
             self.server.close_flag = True
-            print("Now quit server", flush=True)
+            apitestka_logger.info("Now quit server")
         else:
             try:
                 # 嘗試解析 JSON 並執行對應動作 / Try to parse JSON and execute action
@@ -36,23 +39,23 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
                 # 將執行結果回傳給客戶端 / Send execution result back to client
                 for execute_function, execute_return in execute_dict:
                     socket.sendto(str(execute_return).encode("utf-8"), self.client_address)
-                    socket.sendto("\n".encode("utf-8"), self.client_address)
+                    socket.sendto(_NEWLINE, self.client_address)
 
                 # 傳送結束標記 / Send end marker
-                socket.sendto("Return_Data_Over_JE".encode("utf-8"), self.client_address)
-                socket.sendto("\n".encode("utf-8"), self.client_address)
+                socket.sendto(_END_MARKER, self.client_address)
+                socket.sendto(_NEWLINE, self.client_address)
             except Exception as error:
                 # 若執行失敗，回傳錯誤訊息 / Send error message if execution fails
                 try:
                     socket.sendto(str(error).encode("utf-8"), self.client_address)
-                    socket.sendto("\n".encode("utf-8"), self.client_address)
-                    socket.sendto("Return_Data_Over_JE".encode("utf-8"), self.client_address)
-                    socket.sendto("\n".encode("utf-8"), self.client_address)
-                except Exception as error:
+                    socket.sendto(_NEWLINE, self.client_address)
+                    socket.sendto(_END_MARKER, self.client_address)
+                    socket.sendto(_NEWLINE, self.client_address)
+                except Exception as inner_error:
                     # 若錯誤處理也失敗，至少回傳結束標記 / If error handling fails, still send end marker
-                    print(repr(error))
-                    socket.sendto("Return_Data_Over_JE".encode("utf-8"), self.client_address)
-                    socket.sendto("\n".encode("utf-8"), self.client_address)
+                    apitestka_logger.error(repr(inner_error))
+                    socket.sendto(_END_MARKER, self.client_address)
+                    socket.sendto(_NEWLINE, self.client_address)
 
 
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):

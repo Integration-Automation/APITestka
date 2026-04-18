@@ -1,5 +1,3 @@
-import sys
-
 from je_api_testka.utils.exception.exceptions import APIAssertException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
@@ -24,8 +22,8 @@ def check_result(result_dict: dict, result_check_dict: dict) -> None:
     # Iterate through result_check_dict and validate against result_dict
     for key, value in result_check_dict.items():
         if result_dict.get(key) != value:
-            # 若不符合，輸出錯誤訊息到 stderr
-            # If mismatch, print error message to stderr
+            # 若不符合，輸出錯誤訊息到 logger
+            # If mismatch, log error message
             message = f"value should be {value} but value was {result_dict.get(key)}"
-            print(message, file=sys.stderr)
+            apitestka_logger.error(message)
             raise APIAssertException(message)

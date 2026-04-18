@@ -9,13 +9,15 @@ def _run_test_actions():
     """Run async httpx actions (via delegate) that produce both success and failure records."""
     test_action_list = [
         ["AT_delegate_async_httpx", {
-            "http_method": "get", "test_url": "http://httpbin.org/get",
+            "http_method": "get", "test_url": "http://127.0.0.1:8091/get",
             "result_check_dict": {"status_code": 200},
+            "timeout": 30,
         }],
         ["AT_delegate_async_httpx", {
-            "http_method": "post", "test_url": "http://httpbin.org/post",
+            "http_method": "post", "test_url": "http://127.0.0.1:8091/post",
             "params": {"task": "new task"},
             "result_check_dict": {"status_code": 300},
+            "timeout": 30,
         }],
     ]
     execute_action(test_action_list)

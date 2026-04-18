@@ -1,5 +1,5 @@
-import xml.dom.minidom
-from xml.etree import ElementTree
+from defusedxml import ElementTree, minidom
+from xml.etree import ElementTree as _WriterElementTree
 
 from je_api_testka.utils.exception.exception_tags import cant_read_xml_error, xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException, APITesterXMLTypeException
@@ -14,7 +14,7 @@ def reformat_xml_file(xml_string: str):
     :param xml_string: 原始 XML 字串 / Raw XML string
     :return: 格式化後的 XML 字串 / Pretty-printed XML string
     """
-    dom = xml.dom.minidom.parseString(xml_string)
+    dom = minidom.parseString(xml_string)
     return dom.toprettyxml()
 
 
@@ -33,7 +33,7 @@ class XMLParser:
         :param xml_type: "file" 或 "string"，決定解析來源 / "file" or "string" to specify source type
         """
         apitestka_logger.info(f"Init XMLParser xml_string: {xml_string} xml_type: {xml_type}")
-        self.element_tree = ElementTree
+        self.element_tree = _WriterElementTree
         self.tree = None
         self.xml_root = None
         self.xml_from_type = "string"
@@ -91,6 +91,6 @@ class XMLParser:
         :param write_content: 要寫入的 XML 內容 / XML content to write
         """
         write_content = write_content.strip()
-        content = self.element_tree.fromstring(write_content)
+        content = ElementTree.fromstring(write_content)
         tree = self.element_tree.ElementTree(content)
         tree.write(write_xml_filename, encoding="utf-8")

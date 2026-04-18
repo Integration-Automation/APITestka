@@ -1,5 +1,4 @@
 import json.decoder
-import sys
 from json import dumps, loads
 
 from je_api_testka.utils.exception.exception_tags import cant_reformat_json_error, wrong_json_data_error
@@ -24,9 +23,9 @@ def __process_json(json_string: str, **kwargs) -> str:
         # Try to parse string into JSON, then reformat
         return dumps(loads(json_string), indent=4, sort_keys=True, **kwargs)
     except json.JSONDecodeError as error:
-        # 若解析失敗，輸出錯誤訊息並拋出例外
-        # If parsing fails, print error message and raise exception
-        print(wrong_json_data_error, file=sys.stderr)
+        # 若解析失敗，記錄錯誤訊息並拋出例外
+        # If parsing fails, log error message and raise exception
+        apitestka_logger.error(wrong_json_data_error)
         raise error
     except TypeError:
         # 若傳入的不是字串，直接嘗試格式化

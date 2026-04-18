@@ -15,9 +15,10 @@ def test_callback_with_trigger():
         callback_function_param=None,
         **{
             "http_method": "post",
-            "test_url": "http://httpbin.org/post",
+            "test_url": "http://127.0.0.1:8091/post",
             "params": {"task": "new task"},
             "result_check_dict": {"status_code": 200},
+            "timeout": 30,
         }
     )
     assert result is not None
