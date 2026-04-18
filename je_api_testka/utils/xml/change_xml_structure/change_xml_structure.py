@@ -67,14 +67,17 @@ def dict_to_elements_tree(json_dict: dict) -> str:
             root.text = json_dict
         elif isinstance(json_dict, dict):
             for key, value in json_dict.items():
-                assert isinstance(key, str)
+                if not isinstance(key, str):
+                    raise TypeError(f"XML dict key must be str, got {type(key).__name__}")
                 if key.startswith('#'):
                     # 特殊標記 '#text' 表示文字內容 / Special key '#text' means text content
-                    assert key == '#text' and isinstance(value, str)
+                    if key != '#text' or not isinstance(value, str):
+                        raise ValueError(f"Only '#text' key with str value is allowed, got key={key!r}")
                     root.text = value
                 elif key.startswith('@'):
                     # 特殊標記 '@' 表示屬性 / Special key '@' means attribute
-                    assert isinstance(value, str)
+                    if not isinstance(value, str):
+                        raise TypeError(f"XML attribute value must be str, got {type(value).__name__}")
                     root.set(key[1:], value)
                 elif isinstance(value, list):
                     # 若值為 list，建立多個子節點 / If value is list, create multiple sub-elements
@@ -87,7 +90,8 @@ def dict_to_elements_tree(json_dict: dict) -> str:
             raise TypeError('invalid type: ' + str(type(json_dict)))
 
     # 確保字典只有一個根節點 / Ensure dict has only one root element
-    assert isinstance(json_dict, dict) and len(json_dict) == 1
+    if not isinstance(json_dict, dict) or len(json_dict) != 1:
+        raise ValueError("json_dict must be a dict with exactly one root element")
     tag, body = next(iter(json_dict.items()))
     node = ElementTree.Element(tag)
     _to_elements_tree(body, node)

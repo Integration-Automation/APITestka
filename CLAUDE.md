@@ -97,6 +97,76 @@ je_api_testka/
 - Keep functions focused and short; extract logic into helpers when a function exceeds ~50 lines
 - No unused imports, variables, or dead code blocks - remove them immediately
 
+### Static Analysis Compliance (SonarQube / Codacy / Pylint / Bandit)
+
+All code must pass static analysis without warnings from SonarQube, Codacy, Pylint, Flake8, and Bandit. Adhere to the following rules:
+
+#### Reliability & Bug Risk
+- **No bare `except:` clauses** — always catch specific exception types (`except ValueError:`), never `except:` or `except Exception:` without re-raise/log (S5754, E722)
+- **No mutable default arguments** — use `None` as default and assign inside the function (e.g., `def f(x=None): x = x or []`) (W0102)
+- **Always close resources** — use `with` context managers for files, sockets, sessions; never rely on garbage collection (S2095, R1732)
+- **No unreachable code** — remove statements after `return`, `raise`, `break`, `continue` (S1763, W0101)
+- **No identical branches in `if/elif/else`** — collapse duplicates (S1871)
+- **No assignment in conditions** — `if x = func():` is forbidden; assign first (S1656)
+- **Comparisons must not always be true/false** — avoid `if x is None and x == 5:` patterns (S2589)
+- **Use `is`/`is not` for `None`, `True`, `False`** — never `== None` (E711)
+- **No self-comparison** — `if x == x:` is a bug (S1764)
+- **Loop variables must be used** — if unused, name them `_` (W0612)
+
+#### Security (Bandit / SonarQube Security Hotspots)
+- **No `pickle.loads()` on untrusted input** — use JSON instead (B301)
+- **No `subprocess` with `shell=True`** — pass arg list (B602, S4721)
+- **No `random` module for security** — use `secrets` module for tokens/keys (B311, S2245)
+- **No hardcoded `0.0.0.0` bindings** without explicit comment justifying it (B104)
+- **No `assert` for runtime validation** — assertions are stripped with `-O`; raise exceptions instead (B101)
+- **No `tempfile.mktemp()`** — use `NamedTemporaryFile` or `mkstemp()` (B306)
+- **No `requests` calls without timeout** — always pass `timeout=` (S4502)
+- **No `verify=False` on TLS connections** without explicit justification comment (B501)
+- **SQL/XPath/LDAP must be parameterized** — never f-string user input into queries (S3649)
+
+#### Maintainability & Complexity
+- **Cognitive complexity ≤ 15 per function** — refactor nested loops/conditions into helpers (S3776)
+- **Cyclomatic complexity ≤ 10** (C901)
+- **Function parameters ≤ 7** — group related params into a dataclass/dict (S107, R0913)
+- **Function length ≤ 50 lines** of code excluding docstrings (R0915)
+- **File length ≤ 500 lines** — split large modules (C0302)
+- **Class methods ≤ 20** — split large classes (R0904)
+- **Nesting depth ≤ 4 levels** (S134)
+- **No duplicate string literals** appearing 3+ times — extract to a module-level constant (S1192)
+- **No duplicate code blocks** ≥ 6 lines — extract to a function (common-duplicate)
+- **Boolean parameters discouraged** — prefer enums or two named functions (S2301)
+
+#### Naming & Style (Pylint / Flake8)
+- **Module names**: `lower_snake_case`, no hyphens (C0103)
+- **Constants**: `UPPER_SNAKE_CASE` (C0103)
+- **Class names**: `PascalCase` with no underscores (C0103)
+- **Avoid single-letter variable names** outside short loops/comprehensions (`i`, `j`, `k` ok; `x`, `y` not for business logic)
+- **Line length ≤ 120 characters** (E501)
+- **Two blank lines between top-level functions/classes**, one between methods (E302, E305)
+- **No trailing whitespace, no tabs** (W291, W191) — use 4 spaces
+- **Imports order**: stdlib → third-party → local, separated by blank lines, alphabetized (I100, I201)
+- **No wildcard imports** (`from x import *`) outside `__init__.py` (F403, W0401)
+
+#### Code Smells
+- **No `TODO`/`FIXME` without an issue link** — `# TODO(#123): description` (S1135)
+- **No commented-out code** — delete it; git preserves history (S125)
+- **No `print()` in library code** — use the `logging` module (T201)
+- **No magic numbers** — extract to named constants (e.g., `DEFAULT_TIMEOUT_SECONDS = 30`) (R2004)
+- **Functions returning `None` should not have explicit `return None`** (R1711)
+- **Use f-strings, not `%` or `.format()`** for new code (UP032)
+- **Use `pathlib.Path` instead of `os.path`** for new code where possible (PTH)
+- **Avoid `len(x) == 0`** — use `not x` for empty containers (C1801)
+
+#### Type Safety
+- **All public functions need type hints** on parameters and return types (mypy strict)
+- **No `Any` in public APIs** — use `TypeVar`, `Protocol`, or concrete types
+- **Use `Optional[T]` (or `T | None`)** explicitly; never imply nullability
+
+#### Test Code Exemptions
+- Test functions may exceed cognitive complexity for table-driven assertions
+- `assert` is allowed and expected in test files
+- Magic numbers are acceptable in test fixtures
+
 ## Commit Guidelines
 
 - Write commit messages in English

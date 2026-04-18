@@ -82,7 +82,7 @@ class Executor:
                 raise APITesterExecuteException(executor_list_error)
 
         execute_record_dict = {}
-        if not isinstance(action_list, list) or len(action_list) == 0:
+        if not isinstance(action_list, list) or not action_list:
             raise APITesterExecuteException(executor_list_error)
 
         for action in action_list:
@@ -97,10 +97,9 @@ class Executor:
                 execute_record = "execute: " + str(action)
                 execute_record_dict.update({execute_record: repr(error)})
 
-        # 輸出執行結果到 console / Print execution results to console
+        # 輸出執行結果到 logger / Log execution results
         for key, value in execute_record_dict.items():
-            print(key)
-            print(value)
+            apitestka_logger.info(f"{key} -> {value}")
 
         return execute_record_dict
 

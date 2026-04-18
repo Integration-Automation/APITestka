@@ -19,7 +19,7 @@ def generate_json() -> Tuple[Dict, Dict]:
 
     # 若成功與失敗紀錄皆為空，拋出例外
     # Raise exception if both success and failure records are empty
-    if len(test_record_instance.test_record_list) == 0 and len(test_record_instance.error_record_list) == 0:
+    if not test_record_instance.test_record_list and not test_record_instance.error_record_list:
         raise APIJsonReportException(cant_save_json_report_record_us_null)
     else:
         # 建立成功紀錄字典 / Build success record dictionary
@@ -51,7 +51,7 @@ def generate_json() -> Tuple[Dict, Dict]:
 
         # 建立失敗紀錄字典 / Build failure record dictionary
         failure_dict = {}
-        if len(test_record_instance.error_record_list) != 0:
+        if test_record_instance.error_record_list:
             failure_count: int = 1
             failure_test_str: str = "Failure_Test"
             for record_data in test_record_instance.error_record_list:
