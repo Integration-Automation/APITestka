@@ -3,6 +3,7 @@ build
 wheel
 Flask
 httpx
+defusedxml
 twine
 sphinx
 je_api_testka_dev
