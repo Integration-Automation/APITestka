@@ -36,7 +36,15 @@ def _build_mock_app() -> Flask:
 class _MockServerThread(threading.Thread):
     def __init__(self, app: Flask, host: str, port: int) -> None:
         super().__init__(daemon=True)
-        self._server = make_server(host, port, app, threaded=True)
+        # werkzeug's server_bind calls socket.getfqdn(host), which on some
+        # CI runners (notably macOS) hangs on reverse DNS for 127.0.0.1.
+        # Temporarily bypass the lookup.
+        original_getfqdn = socket.getfqdn
+        socket.getfqdn = lambda name="": name or host
+        try:
+            self._server = make_server(host, port, app, threaded=True)
+        finally:
+            socket.getfqdn = original_getfqdn
 
     def run(self) -> None:
         self._server.serve_forever()
