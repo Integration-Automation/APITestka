@@ -9,12 +9,12 @@ def _run_test_actions():
     """Run httpx actions that produce both success and failure records."""
     test_action_list = [
         ["AT_test_api_method_httpx", {
-            "http_method": "get", "test_url": "http://httpbin.org/get",
+            "http_method": "get", "test_url": "http://127.0.0.1:8091/get",
             "result_check_dict": {"status_code": 200},
             "timeout": 30,
         }],
         ["AT_test_api_method_httpx", {
-            "http_method": "post", "test_url": "http://httpbin.org/post",
+            "http_method": "post", "test_url": "http://127.0.0.1:8091/post",
             "params": {"task": "new task"},
             "result_check_dict": {"status_code": 300},
             "timeout": 30,

@@ -5,7 +5,7 @@ from je_api_testka import test_record_instance
 def test_execute_single_action():
     """Execute a single GET action and validate response."""
     test_action_list = [
-        ["AT_test_api_method", {"http_method": "get", "test_url": "http://httpbin.org/get",
+        ["AT_test_api_method", {"http_method": "get", "test_url": "http://127.0.0.1:8091/get",
                                 "timeout": 30}]
     ]
     result = execute_action(test_action_list)
@@ -20,9 +20,9 @@ def test_execute_single_action():
 def test_execute_multiple_actions():
     """Execute multiple POST actions."""
     test_action_list = [
-        ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post",
+        ["AT_test_api_method", {"http_method": "post", "test_url": "http://127.0.0.1:8091/post",
                                 "params": {"task": "new task"}, "timeout": 30}],
-        ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post",
+        ["AT_test_api_method", {"http_method": "post", "test_url": "http://127.0.0.1:8091/post",
                                 "timeout": 30}],
     ]
     result = execute_action(test_action_list)
@@ -33,7 +33,7 @@ def test_execute_multiple_actions():
 def test_execute_invalid_method():
     """Invalid HTTP methods should be recorded as errors, not crash the executor."""
     test_action_list = [
-        ["AT_test_api_method", {"http_method": "invalid_method", "test_url": "http://httpbin.org/post",
+        ["AT_test_api_method", {"http_method": "invalid_method", "test_url": "http://127.0.0.1:8091/post",
                                 "timeout": 30}],
     ]
     result = execute_action(test_action_list)
@@ -43,7 +43,7 @@ def test_execute_invalid_method():
 def test_execute_records_tracking():
     """Test that executed actions are tracked in test_record_instance."""
     test_action_list = [
-        ["AT_test_api_method", {"http_method": "post", "test_url": "http://httpbin.org/post",
+        ["AT_test_api_method", {"http_method": "post", "test_url": "http://127.0.0.1:8091/post",
                                 "params": {"task": "new task"}, "timeout": 30}],
     ]
     execute_action(test_action_list)

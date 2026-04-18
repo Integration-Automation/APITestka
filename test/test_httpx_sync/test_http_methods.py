@@ -17,7 +17,7 @@ def _assert_valid_response(response, expected_method=None):
 
 
 def test_get():
-    response = api_httpx("get", "http://httpbin.org/get", timeout=30)
+    response = api_httpx("get", "http://127.0.0.1:8091/get", timeout=30)
     _assert_valid_response(response, "GET")
     data = response["response_data"]
     assert data.get("content") is not None
@@ -27,27 +27,27 @@ def test_get():
 
 
 def test_post():
-    response = api_httpx("post", "http://httpbin.org/post", params={"task": "new task"}, timeout=30)
+    response = api_httpx("post", "http://127.0.0.1:8091/post", params={"task": "new task"}, timeout=30)
     _assert_valid_response(response, "POST")
 
 
 def test_put():
-    response = api_httpx("put", "http://httpbin.org/put", params={"task": "new task"}, timeout=30)
+    response = api_httpx("put", "http://127.0.0.1:8091/put", params={"task": "new task"}, timeout=30)
     _assert_valid_response(response, "PUT")
 
 
 def test_patch():
-    response = api_httpx("patch", "http://httpbin.org/patch", params={"task": "new task"}, timeout=30)
+    response = api_httpx("patch", "http://127.0.0.1:8091/patch", params={"task": "new task"}, timeout=30)
     _assert_valid_response(response, "PATCH")
 
 
 def test_delete():
-    response = api_httpx("delete", "http://httpbin.org/delete", timeout=30)
+    response = api_httpx("delete", "http://127.0.0.1:8091/delete", timeout=30)
     _assert_valid_response(response, "DELETE")
 
 
 def test_head():
-    response = api_httpx("head", "http://httpbin.org/get", headers={
+    response = api_httpx("head", "http://127.0.0.1:8091/get", headers={
         "x-requested-with": "XMLHttpRequest",
         "Content-Type": "application/x-www-form-urlencoded",
     }, timeout=30)
@@ -55,7 +55,7 @@ def test_head():
 
 
 def test_options():
-    response = api_httpx("options", "http://httpbin.org/get", timeout=30)
+    response = api_httpx("options", "http://127.0.0.1:8091/get", timeout=30)
     _assert_valid_response(response, "OPTIONS")
 
 
@@ -67,5 +67,5 @@ def test_invalid_url():
 
 def test_invalid_method():
     """Invalid HTTP method should be caught and recorded as error."""
-    result = api_httpx("invalid_method", "http://httpbin.org/get", timeout=30)
+    result = api_httpx("invalid_method", "http://127.0.0.1:8091/get", timeout=30)
     assert result is None
