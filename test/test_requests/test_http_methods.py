@@ -59,7 +59,7 @@ def test_head():
 
 
 def test_options():
-    response = api_requests("options", "http://httpbin.org/get")
+    response = api_requests("options", "http://httpbin.org/get", timeout=30)
     _assert_valid_response(response, "OPTIONS")
 
 

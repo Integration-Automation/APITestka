@@ -58,7 +58,7 @@ async def test_head():
 
 
 async def test_options():
-    response = await api_httpx_async("options", "http://httpbin.org/get")
+    response = await api_httpx_async("options", "http://httpbin.org/get", timeout=30)
     _assert_valid_response(response, "OPTIONS")
 
 
