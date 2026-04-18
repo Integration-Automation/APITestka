@@ -43,3 +43,4 @@ gui = ["PySide6==6.11.0", "qt-material"]
 [tool.pytest.ini_options]
 testpaths = ["test"]
 asyncio_mode = "auto"
+timeout = 30

@@ -6,7 +6,7 @@ def test_execute_single_action():
     """Execute a single GET action via httpx and validate response."""
     test_action_list = [
         ["AT_test_api_method_httpx",
-         {"http_method": "get", "test_url": "http://httpbin.org/get"}]
+         {"http_method": "get", "test_url": "http://httpbin.org/get", "timeout": 30}]
     ]
     result = execute_action(test_action_list)
     assert isinstance(result, dict)
@@ -22,9 +22,9 @@ def test_execute_multiple_actions():
     test_action_list = [
         ["AT_test_api_method_httpx",
          {"http_method": "post", "test_url": "http://httpbin.org/post",
-          "params": {"task": "new task"}}],
+          "params": {"task": "new task"}, "timeout": 30}],
         ["AT_test_api_method_httpx",
-         {"http_method": "post", "test_url": "http://httpbin.org/post"}],
+         {"http_method": "post", "test_url": "http://httpbin.org/post", "timeout": 30}],
     ]
     result = execute_action(test_action_list)
     assert isinstance(result, dict)
@@ -35,7 +35,7 @@ def test_execute_invalid_method():
     """Invalid HTTP methods should be recorded as errors, not crash."""
     test_action_list = [
         ["AT_test_api_method_httpx",
-         {"http_method": "invalid_method", "test_url": "http://httpbin.org/post"}],
+         {"http_method": "invalid_method", "test_url": "http://httpbin.org/post", "timeout": 30}],
     ]
     result = execute_action(test_action_list)
     assert isinstance(result, dict)
@@ -46,7 +46,7 @@ def test_execute_records_tracking():
     test_action_list = [
         ["AT_test_api_method_httpx",
          {"http_method": "post", "test_url": "http://httpbin.org/post",
-          "params": {"task": "new task"}}],
+          "params": {"task": "new task"}, "timeout": 30}],
     ]
     execute_action(test_action_list)
     assert len(test_record_instance.test_record_list) > 0

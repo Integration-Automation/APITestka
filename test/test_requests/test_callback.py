@@ -18,6 +18,7 @@ def test_callback_with_trigger():
             "test_url": "http://httpbin.org/post",
             "params": {"task": "new task"},
             "result_check_dict": {"status_code": 200},
+            "timeout": 30,
         }
     )
     assert result is not None

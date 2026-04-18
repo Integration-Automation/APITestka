@@ -17,7 +17,7 @@ def _assert_valid_response(response, expected_method=None):
 
 
 def test_get():
-    response = api_httpx("get", "http://httpbin.org/get")
+    response = api_httpx("get", "http://httpbin.org/get", timeout=30)
     _assert_valid_response(response, "GET")
     data = response["response_data"]
     assert data.get("content") is not None
@@ -27,22 +27,22 @@ def test_get():
 
 
 def test_post():
-    response = api_httpx("post", "http://httpbin.org/post", params={"task": "new task"})
+    response = api_httpx("post", "http://httpbin.org/post", params={"task": "new task"}, timeout=30)
     _assert_valid_response(response, "POST")
 
 
 def test_put():
-    response = api_httpx("put", "http://httpbin.org/put", params={"task": "new task"})
+    response = api_httpx("put", "http://httpbin.org/put", params={"task": "new task"}, timeout=30)
     _assert_valid_response(response, "PUT")
 
 
 def test_patch():
-    response = api_httpx("patch", "http://httpbin.org/patch", params={"task": "new task"})
+    response = api_httpx("patch", "http://httpbin.org/patch", params={"task": "new task"}, timeout=30)
     _assert_valid_response(response, "PATCH")
 
 
 def test_delete():
-    response = api_httpx("delete", "http://httpbin.org/delete")
+    response = api_httpx("delete", "http://httpbin.org/delete", timeout=30)
     _assert_valid_response(response, "DELETE")
 
 
@@ -50,7 +50,7 @@ def test_head():
     response = api_httpx("head", "http://httpbin.org/get", headers={
         "x-requested-with": "XMLHttpRequest",
         "Content-Type": "application/x-www-form-urlencoded",
-    })
+    }, timeout=30)
     _assert_valid_response(response, "HEAD")
 
 
@@ -61,11 +61,11 @@ def test_options():
 
 def test_invalid_url():
     """Invalid URL should be caught and recorded as error (not raise)."""
-    result = api_httpx("get", "not_a_valid_url")
+    result = api_httpx("get", "not_a_valid_url", timeout=30)
     assert result is None
 
 
 def test_invalid_method():
     """Invalid HTTP method should be caught and recorded as error."""
-    result = api_httpx("invalid_method", "http://httpbin.org/get")
+    result = api_httpx("invalid_method", "http://httpbin.org/get", timeout=30)
     assert result is None

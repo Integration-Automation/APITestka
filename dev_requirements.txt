@@ -10,5 +10,6 @@ je_api_testka_dev
 sphinx-rtd-theme
 pytest
 pytest-asyncio
+pytest-timeout
 Pyside6 == 6.11.0
 qt_material
