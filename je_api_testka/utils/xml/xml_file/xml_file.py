@@ -1,5 +1,7 @@
 from defusedxml import ElementTree, minidom
-from xml.etree import ElementTree as _WriterElementTree
+# _WriterElementTree is used only for write_xml serialization (ElementTree(...).write).
+# Parsing is delegated to defusedxml above.
+from xml.etree import ElementTree as _WriterElementTree  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
 
 from je_api_testka.utils.exception.exception_tags import cant_read_xml_error, xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException, APITesterXMLTypeException

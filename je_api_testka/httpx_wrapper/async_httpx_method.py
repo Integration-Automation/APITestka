@@ -28,7 +28,7 @@ http_method_dict = {
 }
 
 
-async def get_http_method_httpx_async(http_method: str):
+def get_http_method_httpx_async(http_method: str):
     """
     根據字串取得對應的 HTTP 方法，若不存在則拋出例外
     Get corresponding HTTP method from string, raise exception if not exists
@@ -46,7 +46,7 @@ async def get_http_method_httpx_async(http_method: str):
     return http_method_dict[http_method]
 
 
-async def get_httpx_response_async(
+def get_httpx_response_async(
     response: Response, start_time: Union[str, float, int, datetime], end_time: Union[str, float, int, datetime]
 ) -> Dict[str, str]:
     """
@@ -77,7 +77,7 @@ async def send_httpx_requests_async(
         "async_httpx_method.py send_httpx_requests_async "
         f"http_method: {http_method} test_url: {test_url} timeout: {timeout} http2: {http2} kwargs: {kwargs}"
     )
-    await get_http_method_httpx_async(http_method)
+    get_http_method_httpx_async(http_method)
     async with AsyncClient(http2=http2) as client:
         client_method_dict = {
             "get": client.get,
@@ -89,7 +89,8 @@ async def send_httpx_requests_async(
             "options": client.options,
         }
         method = client_method_dict[http_method.lower()]
-        response = await method(url=test_url, timeout=timeout, **kwargs)
+        # Enforce timeout via asyncio.wait_for context (asyncio.timeout requires 3.11+).
+        response = await asyncio.wait_for(method(url=test_url, **kwargs), timeout=timeout)
     return response
 
 
@@ -118,7 +119,7 @@ async def test_api_method_httpx_async(
             http_method, test_url=test_url, timeout=timeout, http2=http2, **kwargs
         )
         end_time = datetime.now()
-        response_data = await get_httpx_response_async(response, start_time, end_time)
+        response_data = get_httpx_response_async(response, start_time, end_time)
         response.raise_for_status()
         if clean_record:
             test_record_instance.clean_record()

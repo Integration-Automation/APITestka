@@ -15,6 +15,10 @@ from je_api_testka.utils.project.template.template_keyword import (
     bad_template_1,
 )
 
+_KEYWORD_DIR = "/keyword"
+_EXECUTOR_DIR = "/executor"
+_TEMP_PLACEHOLDER = "{temp}"
+
 
 def create_dir(dir_name: str) -> None:
     """
@@ -47,39 +51,41 @@ def create_template(parent_name: str, project_path: str = None) -> None:
     if project_path is None:
         project_path = getcwd()
 
-    keyword_dir_path = Path(project_path + "/" + parent_name + "/keyword")
-    executor_dir_path = Path(project_path + "/" + parent_name + "/executor")
+    keyword_base = project_path + "/" + parent_name + _KEYWORD_DIR
+    executor_base = project_path + "/" + parent_name + _EXECUTOR_DIR
+    keyword_dir_path = Path(keyword_base)
+    executor_dir_path = Path(executor_base)
     lock = Lock()
 
     # 建立 keyword 範本 JSON 檔案 / Create keyword template JSON files
     if keyword_dir_path.exists() and keyword_dir_path.is_dir():
-        write_action_json(project_path + "/" + parent_name + "/keyword/keyword1.json", template_keyword_1)
-        write_action_json(project_path + "/" + parent_name + "/keyword/keyword2.json", template_keyword_2)
-        write_action_json(project_path + "/" + parent_name + "/keyword/bad_keyword_1.json", bad_template_1)
+        write_action_json(keyword_base + "/keyword1.json", template_keyword_1)
+        write_action_json(keyword_base + "/keyword2.json", template_keyword_2)
+        write_action_json(keyword_base + "/bad_keyword_1.json", bad_template_1)
 
     # 建立 executor 範本 Python 檔案 / Create executor template Python files
     if executor_dir_path.exists() and executor_dir_path.is_dir():
         lock.acquire()
         try:
-            with open(project_path + "/" + parent_name + "/executor/executor_one_file.py", "w+") as file:
+            with open(executor_base + "/executor_one_file.py", "w+") as file:
                 file.write(
                     executor_template_1.replace(
-                        "{temp}",
-                        project_path + "/" + parent_name + "/keyword/keyword1.json"
+                        _TEMP_PLACEHOLDER,
+                        keyword_base + "/keyword1.json"
                     )
                 )
-            with open(project_path + "/" + parent_name + "/executor/executor_bad_file.py", "w+") as file:
+            with open(executor_base + "/executor_bad_file.py", "w+") as file:
                 file.write(
                     bad_executor_template_1.replace(
-                        "{temp}",
-                        project_path + "/" + parent_name + "/keyword/bad_keyword_1.json"
+                        _TEMP_PLACEHOLDER,
+                        keyword_base + "/bad_keyword_1.json"
                     )
                 )
-            with open(project_path + "/" + parent_name + "/executor/executor_folder.py", "w+") as file:
+            with open(executor_base + "/executor_folder.py", "w+") as file:
                 file.write(
                     executor_template_2.replace(
-                        "{temp}",
-                        project_path + "/" + parent_name + "/keyword"
+                        _TEMP_PLACEHOLDER,
+                        keyword_base
                     )
                 )
         finally:
@@ -103,8 +109,8 @@ def create_project_dir(project_path: str = None, parent_name: str = "APITestka")
         project_path = getcwd()
 
     # 建立 keyword 與 executor 資料夾 / Create keyword and executor directories
-    create_dir(project_path + "/" + parent_name + "/keyword")
-    create_dir(project_path + "/" + parent_name + "/executor")
+    create_dir(project_path + "/" + parent_name + _KEYWORD_DIR)
+    create_dir(project_path + "/" + parent_name + _EXECUTOR_DIR)
 
     # 建立範本檔案 / Generate template files
     create_template(parent_name, project_path)

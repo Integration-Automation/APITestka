@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtGui import QAction
-from PySide6.QtWidgets import QMainWindow, QApplication, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QApplication
 from qt_material import QtStyleTools
 
 from je_api_testka.gui.language_wrapper.multi_language_wrapper import language_wrapper

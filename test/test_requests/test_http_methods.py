@@ -1,5 +1,3 @@
-import pytest
-
 from je_api_testka import test_api_method_requests as api_requests
 
 

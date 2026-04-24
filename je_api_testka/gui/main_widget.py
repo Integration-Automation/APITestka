@@ -20,6 +20,9 @@ from je_api_testka.utils.test_record.test_record_class import test_record_instan
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
 
 
+_JSON_FILE_FILTER = "JSON Files (*.json)"
+
+
 def _t(key):
     """Shorthand to get translated string."""
     return language_wrapper.language_word_dict.get(key, key)
@@ -282,7 +285,7 @@ class APITestkaWidget(QWidget):
         self._start_thread(thread)
 
     def _on_executor_browse_file(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Select JSON File", "", "JSON Files (*.json)")
+        path, _ = QFileDialog.getOpenFileName(self, "Select JSON File", "", _JSON_FILE_FILTER)
         if path:
             self.executor_file_input.setText(path)
 
@@ -531,7 +534,7 @@ class APITestkaWidget(QWidget):
             self.tools_json_output.setPlainText(f"Error: {e}")
 
     def _on_json_read(self):
-        path, _ = QFileDialog.getOpenFileName(self, "Read JSON", "", "JSON Files (*.json)")
+        path, _ = QFileDialog.getOpenFileName(self, "Read JSON", "", _JSON_FILE_FILTER)
         if not path:
             return
         try:
@@ -544,7 +547,7 @@ class APITestkaWidget(QWidget):
         text = self.tools_json_input.toPlainText().strip()
         if not text:
             return
-        path, _ = QFileDialog.getSaveFileName(self, "Write JSON", "", "JSON Files (*.json)")
+        path, _ = QFileDialog.getSaveFileName(self, "Write JSON", "", _JSON_FILE_FILTER)
         if not path:
             return
         try:

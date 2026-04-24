@@ -1,7 +1,7 @@
 # Rename to build stable version
 # This is stable version
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=82.0.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -44,3 +44,7 @@ gui = ["PySide6==6.11.0", "qt-material"]
 testpaths = ["test"]
 asyncio_mode = "auto"
 timeout = 30
+
+[tool.bandit]
+# Test code uses assert by design (pytest); see CLAUDE.md "Test Code Exemptions".
+exclude_dirs = ["test", "tests", "build", "dist", ".venv", "venv"]
