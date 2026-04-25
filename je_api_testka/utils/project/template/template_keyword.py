@@ -2,7 +2,7 @@ template_keyword_1: list = [
     ["AT_test_api_method",
      {
          "http_method": "post",
-         "test_url": "http://httpbin.org/post",
+         "test_url": "https://httpbin.org/post",
          "params": {"task": "new task"},
          "result_check_dict": {"status_code": 200}
      }
@@ -13,7 +13,7 @@ template_keyword_2: list = [
     ["AT_test_api_method",
      {
          "http_method": "get",
-         "test_url": "http://httpbin.org/post",
+         "test_url": "https://httpbin.org/post",
          "result_check_dict": {"status_code": 405}
      }
      ]
