@@ -23,8 +23,8 @@ def generate_xml() -> Tuple[str, str]:
 
     # 包裝成 xml_data 根節點
     # Wrap into xml_data root node
-    success_dict = dict({"xml_data": success_dict})
-    failure_dict = dict({"xml_data": failure_dict})
+    success_dict = {"xml_data": success_dict}
+    failure_dict = {"xml_data": failure_dict}
 
     # 將 dict 轉換為 XML 結構字串
     # Convert dict to XML structure string

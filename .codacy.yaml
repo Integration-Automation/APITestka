@@ -1,0 +1,16 @@
+---
+engines:
+  bandit:
+    enabled: true
+    exclude_paths:
+      - "test/**"
+      - "tests/**"
+      - "build/**"
+      - "dist/**"
+exclude_paths:
+  - "test/**"
+  - "tests/**"
+  - "docs/**"
+  - "build/**"
+  - "dist/**"
+  - "**/__pycache__/**"

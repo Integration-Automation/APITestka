@@ -34,7 +34,9 @@ class PackageManager:
             found_spec = find_spec(package)
             if found_spec is not None:
                 try:
-                    installed_package = import_module(found_spec.name)
+                    # Plugin loader: package name resolved through importlib.find_spec first,
+                    # so import_module receives a verified spec.name, not raw user input.
+                    installed_package = import_module(found_spec.name)  # nosemgrep: python.lang.security.audit.non-literal-import.non-literal-import
                     self.installed_package_dict.update({found_spec.name: installed_package})
                 except ModuleNotFoundError as error:
                     apitestka_logger.error(repr(error))

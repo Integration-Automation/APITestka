@@ -1,5 +1,4 @@
 import asyncio
-import json
 import traceback
 
 from PySide6.QtCore import QThread
@@ -116,21 +115,29 @@ class ExecutorThread(QThread):
         self.action_list = None
         self.file_list = None
 
+    @staticmethod
+    def _emit_result_dict(result: dict) -> None:
+        for key, value in result.items():
+            api_testka_ui_queue.put(f"{key}")
+            api_testka_ui_queue.put(f"  => {value}")
+
+    def _run_action_mode(self) -> None:
+        result = execute_action(self.action_list)
+        self._emit_result_dict(result)
+
+    def _run_files_mode(self) -> None:
+        results = execute_files(self.file_list)
+        for i, result in enumerate(results):
+            api_testka_ui_queue.put(f"--- File {i + 1} ---")
+            if isinstance(result, dict):
+                self._emit_result_dict(result)
+
     def run(self):
         try:
             if self.mode == "action" and self.action_list:
-                result = execute_action(self.action_list)
-                for key, value in result.items():
-                    api_testka_ui_queue.put(f"{key}")
-                    api_testka_ui_queue.put(f"  => {value}")
+                self._run_action_mode()
             elif self.mode == "files" and self.file_list:
-                results = execute_files(self.file_list)
-                for i, result in enumerate(results):
-                    api_testka_ui_queue.put(f"--- File {i + 1} ---")
-                    if isinstance(result, dict):
-                        for key, value in result.items():
-                            api_testka_ui_queue.put(f"{key}")
-                            api_testka_ui_queue.put(f"  => {value}")
+                self._run_files_mode()
         except Exception as error:
             api_testka_ui_queue.put(f"Executor Error: {repr(error)}")
             api_testka_ui_queue.put(traceback.format_exc())
