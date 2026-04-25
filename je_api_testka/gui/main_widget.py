@@ -82,7 +82,7 @@ class APITestkaWidget(QWidget):
         url_row = QHBoxLayout()
         url_row.addWidget(QLabel(_t("url")))
         self.url_input = QLineEdit()
-        self.url_input.setPlaceholderText("http://httpbin.org/get")
+        self.url_input.setPlaceholderText("https://httpbin.org/get")
         url_row.addWidget(self.url_input, stretch=3)
 
         self.method_combo = QComboBox()
