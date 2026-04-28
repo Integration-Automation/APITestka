@@ -5,50 +5,39 @@
 [![PyPI](https://img.shields.io/pypi/v/je_api_testka.svg)](https://pypi.org/project/je_api_testka/)
 [![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
 
-**APITestka** 是一个轻量级、跨平台的自动化 API 测试框架。
-支持 HTTP/HTTPS、SOAP/XML 和 JSON，具备高性能的请求执行、
-详细的报告生成功能，以及灵活的 CLI 脚本支持。
+**APITestka** 是一个轻量级、跨平台的 Python 自动化 API 测试框架。
+最初是 HTTP/HTTPS / SOAP-XML / JSON 的请求执行器,搭配报告生成与 JSON 驱动的 executor;
+现在已扩充为完整工具集:变量链式请求、OpenAPI / Postman / HAR / cURL 导入器、
+record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用的 MCP server 等等。
 
-APITestka 专为速度与扩展性而设计，每秒可执行数千次请求，
-集成了模拟服务器与远程自动化功能，
-并可生成多种格式的报告以便于分析。
-
-> **其他语言：**
+> **其他语言:**
 > [English](../README.md) | [繁體中文](README_zh-TW.md)
 
 ---
 
 ## 目录
 
-- [功能特性](#功能特性)
-- [架构概览](#架构概览)
+- [亮点](#亮点)
 - [安装](#安装)
 - [快速开始](#快速开始)
-  - [使用 requests 后端](#使用-requests-后端)
-  - [使用 httpx 后端（同步）](#使用-httpx-后端同步)
-  - [使用 httpx 后端（异步）](#使用-httpx-后端异步)
-  - [HTTP/2 支持](#http2-支持)
-  - [SOAP/XML 请求](#soapxml-请求)
-  - [Session 持久化请求](#session-持久化请求)
-- [结果断言](#结果断言)
-- [报告生成](#报告生成)
-  - [HTML 报告](#html-报告)
-  - [JSON 报告](#json-报告)
-  - [XML 报告](#xml-报告)
-- [模拟服务器](#模拟服务器)
-- [回调执行器](#回调执行器)
-- [脚本化执行器](#脚本化执行器)
-  - [JSON 关键字驱动测试](#json-关键字驱动测试)
-  - [通过 Python 执行 JSON 文件](#通过-python-执行-json-文件)
-  - [执行整个目录的 JSON 文件](#执行整个目录的-json-文件)
-  - [添加自定义命令](#添加自定义命令)
-- [CLI 使用方式](#cli-使用方式)
-- [远程自动化（Socket 服务器）](#远程自动化socket-服务器)
-- [项目脚手架](#项目脚手架)
-- [GUI（可选）](#gui可选)
-- [测试记录](#测试记录)
+- [核心概念](#核心概念)
+- [功能总览](#功能总览)
+  - [HTTP / 协议后端](#http--协议后端)
+  - [数据层](#数据层)
+  - [断言、Diff 与 SLA](#断言diff-与-sla)
+  - [连接层](#连接层)
+  - [模拟服务器](#模拟服务器)
+  - [Runner](#runner)
+  - [报告与可观测性](#报告与可观测性)
+  - [生态集成](#生态集成)
+  - [CLI / 开发体验](#cli--开发体验)
+  - [安全检测](#安全检测)
+  - [OpenAPI 反推](#openapi-反推)
+  - [GUI](#gui)
+  - [可插拔 AI 后端](#可插拔-ai-后端)
+- [Claude 的 MCP Server](#claude-的-mcp-server)
 - [项目结构](#项目结构)
-- [系统要求](#系统要求)
+- [Optional Extras](#optional-extras)
 - [开发](#开发)
 - [贡献](#贡献)
 - [许可证](#许可证)
@@ -56,49 +45,25 @@ APITestka 专为速度与扩展性而设计，每秒可执行数千次请求，
 
 ---
 
-## 功能特性
+## 亮点
 
-| 类别 | 说明 |
+| 类别 | 内容 |
 |---|---|
-| **HTTP 客户端** | `requests`（同步、支持 Session）与 `httpx`（同步 + 异步、HTTP/2） |
-| **协议** | HTTP、HTTPS、SOAP/XML、JSON |
-| **报告格式** | HTML、JSON、XML |
-| **脚本化** | 通过 Executor 进行 JSON 关键字驱动测试执行 |
-| **模拟服务器** | 内置基于 Flask 的模拟服务器，用于本地测试 |
-| **远程自动化** | TCP Socket 服务器，支持远程命令执行 |
-| **断言** | 内置响应字段断言（状态码、头部、内容等） |
-| **回调系统** | API 调用完成后执行回调函数 |
-| **CLI** | 完整的命令行接口，支持 CI/CD 集成 |
-| **项目脚手架** | 自动生成项目结构与模板 |
-| **GUI** | 可选的 PySide6 GUI（通过 `pip install je_api_testka[gui]` 安装） |
-| **跨平台** | Windows、macOS、Linux |
-| **性能** | 每秒可执行数千次请求 |
-
----
-
-## 架构概览
-
-```
-je_api_testka/
-├── requests_wrapper/      # 基于 requests 的 HTTP 客户端
-├── httpx_wrapper/         # 基于 httpx 的 HTTP 客户端（同步 + 异步）
-├── utils/
-│   ├── assert_result/     # 响应断言
-│   ├── callback/          # 回调函数执行器
-│   ├── executor/          # JSON 关键字驱动的动作执行器
-│   ├── generate_report/   # HTML / JSON / XML 报告生成
-│   ├── mock_server/       # 基于 Flask 的模拟服务器
-│   ├── socket_server/     # TCP Socket 服务器（远程自动化）
-│   ├── project/           # 项目脚手架与模板
-│   ├── json/              # JSON 读写工具
-│   ├── xml/               # XML 解析/转换工具
-│   ├── test_record/       # 全局测试记录存储
-│   ├── logging/           # 日志实例
-│   ├── file_process/      # 文件列表工具
-│   ├── package_manager/   # 动态加载包
-│   └── exception/         # 自定义异常
-└── gui/                   # 可选的 PySide6 GUI
-```
+| **后端** | `requests`(同步、session)、`httpx`(同步 + 异步、HTTP/2)、WebSocket、SSE、GraphQL |
+| **数据层** | 变量存储、`{{var}}` 模板、CSV/JSON 数据驱动、环境配置、假数据 |
+| **断言** | 字段断言、JSON Schema、JSONPath、Snapshot、结构化 diff、OpenAPI contract drift、响应时间 SLA |
+| **连接** | mTLS、代理、DNS override、VCR-style cassette 录制/回放 |
+| **模拟服务器** | 静态、动态、stateful、故障注入、OpenAPI 驱动、Jinja 模板、Webhook 接收、record-replay 代理 |
+| **Runner** | 顺序与并行、Tag 过滤、Dependency-aware 排序、Retry 策略 |
+| **报告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趋势库 / Run diff |
+| **生态集成** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 导入、OpenAPI / Postman 导入 |
+| **CLI / DX** | 子命令式 CLI、REPL、终端摘要、Shell completion、Scaffold |
+| **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
+| **Spec 反推** | 测试记录 → OpenAPI、JSON Schema 推断、OpenAPI changelog |
+| **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback |
+| **MCP** | 一级支持 Claude Code,将框架作为 MCP 工具暴露 |
+| **GUI** | 可选 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI |
+| **跨平台** | Windows、macOS、Linux,Python 3.10–3.14 |
 
 ---
 
@@ -108,467 +73,398 @@ je_api_testka/
 pip install je_api_testka
 ```
 
-安装 GUI 支持：
+Optional extras(`pip install 'je_api_testka[<extra>]'`):
 
-```bash
-pip install je_api_testka[gui]
-```
+| Extra | 增加的功能 |
+|---|---|
+| `gui` | PySide6 GUI |
+| `websocket` | `websockets`,供 WebSocket wrapper 使用 |
+| `schema` | `jsonschema` / `jsonpath-ng` 进阶断言 |
+| `security` | `pyjwt` / `botocore` 给 JWT / AWS SigV4 |
+| `otel` | `opentelemetry-api` / `opentelemetry-sdk` tracing hook |
+| `mcp` | `mcp` Python SDK 给 MCP server |
 
 ---
 
 ## 快速开始
 
-### 使用 requests 后端
-
-```python
-from je_api_testka import test_api_method_requests
-
-# GET 请求
-result = test_api_method_requests("get", "http://httpbin.org/get")
-print(result["response_data"]["status_code"])  # 200
-
-# POST 请求，带参数
-result = test_api_method_requests(
-    "post",
-    "http://httpbin.org/post",
-    params={"task": "new task"}
-)
-print(result["response_data"]["status_code"])  # 200
-```
-
-### 使用 httpx 后端（同步）
-
-```python
-from je_api_testka import test_api_method_httpx
-
-result = test_api_method_httpx("get", "http://httpbin.org/get")
-print(result["response_data"]["status_code"])  # 200
-```
-
-### 使用 httpx 后端（异步）
-
-```python
-import asyncio
-from je_api_testka import test_api_method_httpx_async
-
-async def main():
-    result = await test_api_method_httpx_async("get", "http://httpbin.org/get")
-    print(result["response_data"]["status_code"])  # 200
-
-asyncio.run(main())
-```
-
-### HTTP/2 支持
-
-```python
-import asyncio
-from je_api_testka import test_api_method_httpx_async
-
-async def main():
-    result = await test_api_method_httpx_async(
-        "get",
-        "https://httpbin.org/get",
-        http2=True
-    )
-    print(result["response_data"]["status_code"])
-
-asyncio.run(main())
-```
-
-### SOAP/XML 请求
-
-```python
-from je_api_testka import test_api_method_requests
-
-result = test_api_method_requests(
-    "post",
-    "http://example.com/soap-endpoint",
-    soap=True,
-    data='<soap:Envelope>...</soap:Envelope>'
-)
-```
-
-当 `soap=True` 时，`Content-Type` 头部会自动设置为 `application/soap+xml`。
-
-### Session 持久化请求
-
-`requests` 后端支持 Session 方法，用于持久化连接（cookies、认证等）：
-
-```python
-from je_api_testka import test_api_method_requests
-
-# 可用方法：session_get, session_post, session_put, session_patch, session_delete, session_head, session_options
-result = test_api_method_requests("session_get", "http://httpbin.org/get")
-```
-
----
-
-## 结果断言
-
-传入 `result_check_dict` 可自动断言响应字段：
-
-```python
-from je_api_testka import test_api_method_requests
-
-# 若 status_code 不是 200，将抛出 APIAssertException
-test_api_method_requests(
-    "get",
-    "http://httpbin.org/get",
-    result_check_dict={"status_code": 200}
-)
-```
-
-可断言的响应数据字段：`status_code`、`text`、`content`、`headers`、`cookies`、`encoding`、`elapsed`、`request_time_sec`、`request_method`、`request_url`、`request_body`、`start_time`、`end_time`。
-
----
-
-## 报告生成
-
-报告从全局的 `test_record_instance` 生成，所有测试结果会自动记录。
-
-### HTML 报告
-
 ```python
 from je_api_testka import test_api_method_requests, generate_html_report
 
-test_api_method_requests("get", "http://httpbin.org/get")
-test_api_method_requests("post", "http://httpbin.org/post")
-
-# 生成 "my_report.html"，包含成功/失败表格
-generate_html_report("my_report")
-```
-
-### JSON 报告
-
-```python
-from je_api_testka import test_api_method_requests, generate_json_report
-
-test_api_method_requests("get", "http://httpbin.org/get")
-
-# 生成 "my_report_success.json" 和 "my_report_failure.json"
-generate_json_report("my_report")
-```
-
-### XML 报告
-
-```python
-from je_api_testka import test_api_method_requests, generate_xml_report
-
-test_api_method_requests("get", "http://httpbin.org/get")
-
-# 生成 "my_report_success.xml" 和 "my_report_failure.xml"
-generate_xml_report("my_report")
-```
-
----
-
-## 模拟服务器
-
-APITestka 内置基于 Flask 的模拟服务器，用于本地测试：
-
-```python
-from je_api_testka import flask_mock_server_instance, request
-
-# 添加自定义路由
-def my_endpoint():
-    return {"message": "hello", "params": dict(request.args)}
-
-flask_mock_server_instance.add_router(
-    {"/api/test": my_endpoint},
-    methods=["GET", "POST"]
+test_api_method_requests(
+    "get", "https://httpbin.org/get",
+    result_check_dict={"status_code": 200},
 )
-
-# 启动模拟服务器（默认：localhost:8090）
-flask_mock_server_instance.start_mock_server()
+generate_html_report("smoke")
 ```
 
-也可以创建自定义 host/port 的新实例：
-
-```python
-from je_api_testka.utils.mock_server.flask_mock_server import FlaskMockServer
-
-server = FlaskMockServer("0.0.0.0", 5000)
-server.add_router({"/health": lambda: "OK"}, methods=["GET"])
-server.start_mock_server()
-```
-
----
-
-## 回调执行器
-
-在 API 测试完成后执行回调函数：
-
-```python
-from je_api_testka import callback_executor
-
-def my_callback(message):
-    print(f"回调：{message}")
-
-callback_executor.callback_function(
-    trigger_function_name="AT_test_api_method",
-    callback_function=my_callback,
-    callback_function_param={"message": "测试完成！"},
-    callback_param_method="kwargs",
-    http_method="get",
-    test_url="http://httpbin.org/get"
-)
-```
-
----
-
-## 脚本化执行器
-
-Executor 实现了 JSON 关键字驱动测试，测试动作以 JSON 数组定义，并通过编程方式执行。
-
-### JSON 关键字驱动测试
-
-创建一个 JSON 文件（例如 `test_actions.json`）：
+JSON 驱动版本(`smoke.json`):
 
 ```json
 {
-    "api_testka": [
-        ["AT_test_api_method", {
-            "http_method": "get",
-            "test_url": "http://httpbin.org/get",
-            "result_check_dict": {"status_code": 200}
-        }],
-        ["AT_test_api_method", {
-            "http_method": "post",
-            "test_url": "http://httpbin.org/post",
-            "params": {"task": "new task"},
-            "result_check_dict": {"status_code": 200}
-        }]
-    ]
+  "api_testka": [
+    ["AT_test_api_method_requests", {
+      "http_method": "get",
+      "test_url": "https://httpbin.org/get",
+      "result_check_dict": {"status_code": 200}
+    }],
+    ["AT_generate_html_report", {"html_file_name": "smoke"}]
+  ]
 }
 ```
 
-### 通过 Python 执行 JSON 文件
-
-```python
-from je_api_testka import execute_action, read_action_json
-
-execute_action(read_action_json("test_actions.json"))
+```bash
+apitestka run smoke.json
 ```
 
-### 执行整个目录的 JSON 文件
+---
 
-```python
-from je_api_testka import execute_files, get_dir_files_as_list
+## 核心概念
 
-execute_files(get_dir_files_as_list("path/to/json_dir"))
-```
+- **后端** — 所有 HTTP 调用通过 `requests_wrapper` / `httpx_wrapper` /
+  `websocket_wrapper` / `sse_wrapper` / `graphql_wrapper`,共用同一份记录格式。
+- **`test_record_instance`** — thread-safe 全局单例,捕获所有 request/response;
+  报告、diff、badge、trend 都从这里读取。
+- **Executor** — `AT_*` 命名的命令对应到 Python 函数。JSON action list 驱动它,
+  所有新功能都在这里注册,`apitestka run` 即可使用。
+- **VariableStore** — thread-safe 的 key/value 存储。`{{var}}` placeholder
+  在 payload、URL、header、template 中均可解析。配 `AT_extract_and_store` 串接 request。
+- **Optional dependencies** — 重型功能(WebSocket、JSON Schema、JWT、MCP)走 extras,
+  未安装时调用会抛出友好提示。
 
-### 添加自定义命令
+---
 
-```python
-from je_api_testka import add_command_to_executor, execute_action
+## 功能总览
 
-def my_custom_function(url):
-    print(f"自定义测试：{url}")
+### HTTP / 协议后端
 
-add_command_to_executor({"my_test": my_custom_function})
-
-execute_action([
-    ["my_test", ["http://example.com"]]
-])
-```
-
-**内置的 Executor 命令：**
-
-| 命令 | 说明 |
+| 后端 | 函数 |
 |---|---|
-| `AT_test_api_method` | 使用 requests 后端测试 API |
-| `AT_test_api_method_httpx` | 使用 httpx 同步后端测试 API |
-| `AT_delegate_async_httpx` | 使用 httpx 异步后端测试 API（同步调用） |
-| `AT_generate_html` | 生成 HTML 报告数据 |
-| `AT_generate_html_report` | 生成 HTML 报告文件 |
-| `AT_generate_json` | 生成 JSON 报告数据 |
-| `AT_generate_json_report` | 生成 JSON 报告文件 |
-| `AT_generate_xml` | 生成 XML 报告数据 |
-| `AT_generate_xml_report` | 生成 XML 报告文件 |
-| `AT_execute_action` | 执行嵌套动作列表 |
-| `AT_execute_files` | 从多个文件执行动作 |
-| `AT_add_package_to_executor` | 动态加载包到执行器 |
-| `AT_add_package_to_callback_executor` | 动态加载包到回调执行器 |
-| `AT_flask_mock_server_add_router` | 添加路由到模拟服务器 |
-| `AT_start_flask_mock_server` | 启动模拟服务器 |
+| `requests` | `test_api_method_requests`(同步、session) |
+| `httpx` 同步 | `test_api_method_httpx` |
+| `httpx` 异步 | `test_api_method_httpx_async`(`http2=True` 启用 HTTP/2) |
+| WebSocket | `test_api_method_websocket`、`test_api_method_websocket_async`(extra:`websocket`) |
+| SSE | `iter_sse_events`、`test_api_method_sse` |
+| GraphQL | `test_api_method_graphql`、`test_api_method_graphql_async` |
 
----
+```python
+from je_api_testka import test_api_method_graphql
 
-## CLI 使用方式
-
-APITestka 提供完整的 CLI 接口：
-
-```bash
-# 执行单个 JSON 动作文件
-python -m je_api_testka -e test_actions.json
-
-# 执行目录中所有 JSON 文件
-python -m je_api_testka -d path/to/json_dir
-
-# 直接执行 JSON 字符串
-python -m je_api_testka --execute_str '[["AT_test_api_method", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]'
-
-# 创建新项目（含模板）
-python -m je_api_testka -c MyProject
+test_api_method_graphql(
+    "https://api.example.invalid/graphql",
+    query="query Get($id: ID!) { user(id: $id) { id name } }",
+    variables={"id": "42"},
+)
 ```
 
-| 参数 | 说明 |
+### 数据层
+
+```python
+from je_api_testka import (
+    variable_store, render_template, extract_and_store, load_env_profile,
+    fake_uuid, iter_csv_rows,
+)
+
+load_env_profile("envs/dev.json")
+extract_and_store({"data": {"id": 7}}, "data.id", "user_id")
+render_template("/users/{{user_id}}")        # -> "/users/7"
+
+for row in iter_csv_rows("data/users.csv"):
+    variable_store.set("email", row["email"])
+    test_api_method_requests("post", "https://x.invalid/login", json=row)
+```
+
+Executor 命令:`AT_set_variable`、`AT_get_variable`、`AT_clear_variables`、
+`AT_extract_and_store`、`AT_render_template`、`AT_fake_uuid`、`AT_fake_email`、
+`AT_fake_word`、`AT_load_env_profile`。
+
+### 断言、Diff 与 SLA
+
+```python
+from je_api_testka import (
+    check_json_schema, check_jsonpath, assert_snapshot,
+    diff_payloads, diff_openapi_specs, RetryPolicy, retry_call,
+)
+from je_api_testka.diff.sla_check import ResponseSLA, assert_sla
+
+check_json_schema(payload, {"type": "object", "required": ["id"]})
+check_jsonpath(payload, "$.data.id", expected=7)
+assert_snapshot("user-by-id", payload, ignore_keys=["timestamp"])
+diff = diff_payloads(prod_response, staging_response, ignore_paths=["server_time"])
+assert_sla(records, ResponseSLA(max_ms=2000, p95_ms=1500))
+```
+
+### 连接层
+
+```python
+from je_api_testka.connection import (
+    ConnectionOptions, apply_to_requests_kwargs,
+    dns_override, Cassette, replay_or_record,
+)
+
+options = ConnectionOptions(cert=("c.crt", "c.key"),
+                            proxies={"https": "http://proxy:8080"})
+
+with dns_override({"api.example.invalid": "127.0.0.1"}):
+    test_api_method_requests("get", "https://api.example.invalid/health")
+
+cassette = Cassette("tape.json")  # 离线 replay-or-record
+```
+
+### 模拟服务器
+
+`FlaskMockServer` 现支持以下功能:
+
+| 功能 | API |
 |---|---|
-| `-e`, `--execute_file` | 执行单个 JSON 动作文件 |
-| `-d`, `--execute_dir` | 执行目录中所有 JSON 文件 |
-| `--execute_str` | 直接执行 JSON 字符串 |
-| `-c`, `--create_project` | 创建项目目录及模板文件 |
-
----
-
-## 远程自动化（Socket 服务器）
-
-APITestka 内置 TCP Socket 服务器，用于远程命令执行：
-
-```python
-from je_api_testka import start_apitestka_socket_server
-
-# 启动 Socket 服务器（默认：localhost:9939）
-server = start_apitestka_socket_server(host="localhost", port=9939)
-```
-
-客户端可通过 TCP 发送 JSON 格式的动作列表，服务器会执行并返回结果。发送 `quit_server` 可关闭服务器。
-
-也支持 CLI 参数：
+| 静态 routes | `flask_mock_server_instance.add_router({...})` |
+| 动态 routes | `server.add_dynamic_route(...)` 搭配 `DynamicRouter` |
+| Stateful 存储 | `server.state`(`StatefulStore`) |
+| 故障注入 | `server.fault_injector.configure(latency_seconds=..., failure_probability=...)` |
+| OpenAPI 驱动 | `server.load_openapi(spec)` |
+| 模板回应 | `server.add_template_route("/x", {"msg": "{{name}}"})` |
+| 接收 Webhook | `server.add_webhook("/hook")`,读 `server.webhook_receiver.all()` |
+| Record-replay | `server.add_proxy("https://upstream", "tape.json")` |
 
 ```bash
-python -m je_api_testka.utils.socket_server.api_testka_socket_server localhost 9939
+apitestka mock --host 0.0.0.0 --port 9000
 ```
 
----
-
-## 项目脚手架
-
-生成含有关键字与执行器模板的项目结构：
+### Runner
 
 ```python
-from je_api_testka import create_project_dir
+from je_api_testka.runner import (
+    run_actions_parallel, filter_actions_by_tag, order_actions,
+)
 
-create_project_dir(project_path=".", parent_name="MyAPIProject")
+actions = order_actions(filter_actions_by_tag(actions, {"smoke"}))
+results = run_actions_parallel(actions, max_workers=8)
 ```
 
-生成的结构如下：
+### 报告与可观测性
 
+```python
+from je_api_testka import (
+    generate_html_report, generate_json_report, generate_xml_report,
+)
+from je_api_testka.utils.generate_report.junit_report import generate_junit_report
+from je_api_testka.utils.generate_report.allure_report import generate_allure_report
+from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report
+from je_api_testka.utils.generate_report.badge import generate_badge
+from je_api_testka.utils.generate_report.run_diff import diff_runs
+from je_api_testka.utils.generate_report.trend_store import record_current_run
+
+generate_html_report("report")
+generate_junit_report("junit.xml")          # GitHub Actions / Jenkins
+generate_allure_report("allure-results")    # `allure generate` 可吃
+generate_markdown_report("report.md")       # Slack / GitHub 友好
+generate_badge("badge.json")                # shields.io endpoint
+record_current_run("trend.sqlite")          # 历史趋势
 ```
-MyAPIProject/
-├── keyword/
-│   ├── keyword1.json          # 示例关键字测试（POST）
-│   ├── keyword2.json          # 示例关键字测试（GET）
-│   └── bad_keyword_1.json     # 含包加载的示例
-└── executor/
-    ├── executor_one_file.py   # 执行单个关键字文件
-    ├── executor_folder.py     # 执行目录中所有关键字文件
-    └── executor_bad_file.py   # 含动态包加载的示例
+
+OpenTelemetry hook(未安装 `opentelemetry-api` 时自动 no-op):
+
+```python
+from je_api_testka.utils.observability import instrument_request
+
+with instrument_request("GET", "https://x.invalid"):
+    test_api_method_requests("get", "https://x.invalid")
 ```
 
----
+### 生态集成
 
-## GUI（可选）
+```python
+from je_api_testka.integrations import (
+    notify_via_webhook, post_pr_comment,
+    curl_to_action, convert_har,
+)
+from je_api_testka.cli.import_specs import convert_spec_file
 
-APITestka 提供可选的 PySide6 图形用户界面：
+notify_via_webhook("https://hooks.slack.invalid/...", summary="...", platform="slack")
+post_pr_comment("acme/widget", pr_number=42, token="<gha-token>")
+
+action = curl_to_action("curl -X POST https://api/x -d '{\"a\":1}'")
+actions = convert_har("traffic.har")
+actions = convert_spec_file("openapi.json", spec_format="openapi")
+```
+
+### CLI / 开发体验
 
 ```bash
-pip install je_api_testka[gui]
+apitestka run actions.json              # 也可指定目录
+apitestka create my_project
+apitestka mock --port 9000
+apitestka import openapi.json out.json --format openapi
+apitestka repl                          # JSON action REPL
+apitestka summary                       # ANSI 彩色摘要
+apitestka scaffold https://api/x out.json
+apitestka completion bash               # source >> ~/.bashrc
+apitestka mcp                           # 走 stdio 启动 MCP server
 ```
 
-GUI 需要 PySide6 6.11.0 及 qt-material。
+### 安全检测
+
+```python
+from je_api_testka.security import (
+    basic_auth_header, bearer_token_header, build_jwt, aws_sigv4_headers,
+    scan_security_headers, cors_preflight, probe_rate_limit, probe_ssrf,
+    fuzz_string_inputs, run_pip_audit,
+)
+
+scan_security_headers(response_headers)              # HSTS / CSP / nosniff…
+cors_preflight("https://api/x", origin="https://app")
+probe_rate_limit("https://api/x", burst=20)
+probe_ssrf("https://api/fetch", parameter="url")
+run_pip_audit()
+```
+
+### OpenAPI 反推
+
+```python
+from je_api_testka.spec import infer_schema, records_to_openapi, openapi_changelog
+
+records_to_openapi(title="Recovered", version="0.1.0")
+openapi_changelog(prev_spec, current_spec)           # markdown changelog
+```
+
+### GUI
+
+```bash
+pip install 'je_api_testka[gui]'
+```
+
+`je_api_testka.gui` 中的 headless model(`HistoryPanelModel`、`EnvManagerModel`、
+`render_side_by_side`)让测试与 headless 工具无需 PySide6 也能驱动面板。
+真正的 Qt widget 在 `main_widget.py`。
+
+语种:English、繁體中文、简体中文、日本語。通过 `LanguageWrapper.reset_language(...)` 切换。
+
+### 可插拔 AI 后端
+
+默认 `NoOpAIBackend` 不会触网。要启用 LLM 驱动的测试生成,自行挂载:
+
+```python
+from je_api_testka.ai import AIBackend, set_ai_backend, generate_tests_from_openapi
+
+class AnthropicBackend(AIBackend):
+    def complete(self, prompt, *, context=None):
+        ...  # 调用你的 LLM provider
+        return llm_response_text
+
+set_ai_backend(AnthropicBackend())
+actions = generate_tests_from_openapi(my_openapi_spec)  # LLM 回应不是合法 JSON 时
+                                                        # 自动降级为确定性 happy path
+```
 
 ---
 
-## 测试记录
+## Claude 的 MCP Server
 
-所有 API 测试结果会自动存储在全局的 `test_record_instance` 中：
+APITestka 内置 [MCP](https://modelcontextprotocol.io/) server,Claude 等
+MCP-compatible client 可以直接驱动本框架。共暴露八个工具:
 
-```python
-from je_api_testka import test_api_method_requests, test_record_instance
+| Tool | 用途 |
+|---|---|
+| `apitestka_run_action` | 执行 action list |
+| `apitestka_test_api` | 一次性 HTTP 请求(走 `requests` 后端) |
+| `apitestka_curl_to_action` | cURL → action JSON |
+| `apitestka_har_import` | HAR 文件 → action list |
+| `apitestka_render_markdown` | 从当前记录生成 Markdown 报告 |
+| `apitestka_records_to_openapi` | 反推 OpenAPI 文档 |
+| `apitestka_clear_records` | 清空测试记录 |
+| `apitestka_get_records` | 拿当前的成功 / 失败记录 |
 
-test_api_method_requests("get", "http://httpbin.org/get")
-test_api_method_requests("get", "http://invalid-url")
+安装与启动:
 
-# 获取成功的测试记录
-print(len(test_record_instance.test_record_list))
-
-# 获取错误记录
-print(len(test_record_instance.error_record_list))
-
-# 清除所有记录
-test_record_instance.clean_record()
+```bash
+pip install 'je_api_testka[mcp]'
+apitestka-mcp        # 或: apitestka mcp / python -m je_api_testka.mcp_server
 ```
 
-每条成功记录包含：`status_code`、`text`、`content`、`headers`、`history`、`encoding`、`cookies`、`elapsed`、`request_time_sec`、`request_method`、`request_url`、`request_body`、`start_time`、`end_time`。
+Claude Code 配置(`~/.claude/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "apitestka": {
+      "command": "apitestka-mcp"
+    }
+  }
+}
+```
 
 ---
 
 ## 项目结构
 
 ```
-APITestka/
-├── je_api_testka/             # 主包
-│   ├── __init__.py            # 公开 API 导出
-│   ├── __main__.py            # CLI 入口点
-│   ├── requests_wrapper/      # requests HTTP 客户端封装
-│   ├── httpx_wrapper/         # httpx HTTP 客户端封装（同步 + 异步）
-│   ├── utils/                 # 工具模块
-│   └── gui/                   # 可选的 PySide6 GUI
-├── test/                      # 测试套件
-│   ├── test_requests/         # requests 后端测试
-│   ├── test_httpx_sync/       # httpx 同步后端测试
-│   ├── test_httpx_async/      # httpx 异步后端测试
-│   └── test_utils/            # 工具模块测试
-├── docs/                      # Sphinx 文档源码
-├── apitestka_driver/          # 独立驱动程序可执行文件
-├── licenses/                  # 许可证文件
-├── pyproject.toml             # 构建配置
-├── requirements.txt           # 运行时依赖
-└── dev_requirements.txt       # 开发依赖
+je_api_testka/
+├── __init__.py              # 公开 API
+├── __main__.py              # 旧版 CLI 入口
+├── ai/                      # 可插拔 AI 后端 + 周边
+├── cli/                     # apitestka CLI 子命令、REPL、shell completion
+├── connection/              # ConnectionOptions、DNS override、Cassette
+├── data/                    # VariableStore、template、faker、env profile
+├── diff/                    # Response diff / contract drift / SLA
+├── graphql_wrapper/         # GraphQL helper
+├── gui/                     # 可选 PySide6 GUI + headless model
+├── httpx_wrapper/           # httpx 同步 + 异步 wrapper
+├── integrations/            # 通知、PR comment、导入器
+├── mcp_server/              # Claude / MCP server
+├── pytest_plugin/           # pytest fixtures
+├── requests_wrapper/        # requests wrapper
+├── runner/                  # Parallel / tag / dependency runner
+├── security/                # Auth、fuzz、header / CORS / SSRF / rate limit / CVE
+├── spec/                    # OpenAPI 反推 / changelog
+├── sse_wrapper/             # SSE helper
+├── utils/                   # Executor、mock server、报告生成器等
+└── websocket_wrapper/       # WebSocket wrapper
 ```
 
 ---
 
-## 系统要求
+## Optional Extras
 
-- **Python** 3.10 或更高版本
-- **依赖包：** `requests`、`Flask`、`httpx`
-- **可选（GUI）：** `PySide6==6.11.0`、`qt-material`
+```bash
+pip install 'je_api_testka[websocket]'
+pip install 'je_api_testka[schema]'
+pip install 'je_api_testka[security]'
+pip install 'je_api_testka[otel]'
+pip install 'je_api_testka[mcp]'
+pip install 'je_api_testka[gui]'
+```
 
 ---
 
 ## 开发
 
 ```bash
-# 克隆仓库
 git clone https://github.com/Intergration-Automation-Testing/APITestka.git
 cd APITestka
-
-# 安装开发依赖
 pip install -r dev_requirements.txt
-
-# 运行测试
-pytest
+pytest                     # 整套(300+ 测试)
 ```
+
+CI 矩阵:Ubuntu / macOS / Windows × Python 3.10–3.14。
 
 ---
 
 ## 贡献
 
-请参阅 [CONTRIBUTING.md](../CONTRIBUTING.md) 了解贡献指南。
+请见 [CONTRIBUTING.md](../CONTRIBUTING.md)。每个 commit 必须附带单元测试
+(详情见 `CLAUDE.md` 的 *Testing Guidelines* 段)。
 
 ---
 
 ## 许可证
 
-本项目使用 MIT 许可证。详见 [licenses/APITestka_LICENSE](../licenses/APITestka_LICENSE)。
+MIT — 详见 [licenses/APITestka_LICENSE](../licenses/APITestka_LICENSE)。
 
 ---
 
 ## 链接
 
-- **主页：** https://github.com/Intergration-Automation-Testing/APITestka
-- **文档：** https://apitestka.readthedocs.io/en/latest/
-- **PyPI：** https://pypi.org/project/je_api_testka/
+- **首页:** https://github.com/Intergration-Automation-Testing/APITestka
+- **文档:** https://apitestka.readthedocs.io/en/latest/
+- **PyPI:** https://pypi.org/project/je_api_testka/
+- **MCP:** https://modelcontextprotocol.io/
