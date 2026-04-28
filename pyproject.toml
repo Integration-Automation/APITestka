@@ -39,6 +39,7 @@ find = { namespaces = false }
 
 [project.optional-dependencies]
 gui = ["PySide6==6.11.0", "qt-material"]
+websocket = ["websockets>=12.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
