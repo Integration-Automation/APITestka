@@ -10,6 +10,10 @@ from je_api_testka.connection.cassette import Cassette, CassetteRecord
 from je_api_testka.diff.contract_diff import diff_openapi_specs
 from je_api_testka.diff.response_diff import diff_payloads
 from je_api_testka.diff.sla_check import assert_sla
+from je_api_testka.integrations.curl_import import curl_to_action
+from je_api_testka.integrations.github_pr_comment import post_pr_comment
+from je_api_testka.integrations.har_import import convert_har
+from je_api_testka.integrations.notify import notify_via_webhook
 
 
 def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
@@ -98,6 +102,11 @@ class Executor:
             "AT_generate_badge": generate_badge,
             "AT_record_current_run": record_current_run,
             "AT_list_trend_rows": list_trend_rows,
+            # Integrations
+            "AT_notify_via_webhook": notify_via_webhook,
+            "AT_post_pr_comment": post_pr_comment,
+            "AT_curl_to_action": curl_to_action,
+            "AT_convert_har": convert_har,
         }
 
     def _execute_event(self, action: list) -> Any:
