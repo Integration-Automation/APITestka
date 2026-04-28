@@ -6,9 +6,27 @@ from je_api_testka.data.env_profile import load_env_profile
 from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
 from je_api_testka.data.template_render import render_template
 from je_api_testka.data.variable_store import extract_and_store, variable_store
+from je_api_testka.connection.cassette import Cassette, CassetteRecord
 from je_api_testka.diff.contract_diff import diff_openapi_specs
 from je_api_testka.diff.response_diff import diff_payloads
 from je_api_testka.diff.sla_check import assert_sla
+
+
+def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
+    cassette = Cassette(file_path)
+    record = cassette.get(method, url, body)
+    return record.__dict__ if record else {}
+
+
+def _cassette_record(file_path: str, method: str, url: str, request_body: str,
+                     response_status: int, response_body: str,
+                     response_headers: dict = None) -> None:
+    cassette = Cassette(file_path)
+    cassette.put(CassetteRecord(
+        method=method, url=url, request_body=request_body,
+        response_status=response_status, response_body=response_body,
+        response_headers=response_headers or {},
+    ))
 from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
@@ -66,6 +84,9 @@ class Executor:
             "AT_diff_payloads": diff_payloads,
             "AT_diff_openapi_specs": diff_openapi_specs,
             "AT_assert_sla": assert_sla,
+            # Cassette
+            "AT_cassette_lookup": _cassette_lookup,
+            "AT_cassette_record": _cassette_record,
         }
 
     def _execute_event(self, action: list) -> Any:
