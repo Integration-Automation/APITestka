@@ -2,27 +2,43 @@ import types
 from typing import Dict, Callable, Any, List, Union
 
 from je_api_testka import test_api_method_httpx
+from je_api_testka.ai.failure_classifier import classify_failures
+from je_api_testka.ai.fake_data_generator import generate_fake_payload
+from je_api_testka.ai.test_generator import generate_tests_from_openapi
+from je_api_testka.connection.cassette import Cassette, CassetteRecord
 from je_api_testka.data.env_profile import load_env_profile
 from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
 from je_api_testka.data.template_render import render_template
 from je_api_testka.data.variable_store import extract_and_store, variable_store
-from je_api_testka.connection.cassette import Cassette, CassetteRecord
 from je_api_testka.diff.contract_diff import diff_openapi_specs
 from je_api_testka.diff.response_diff import diff_payloads
 from je_api_testka.diff.sla_check import assert_sla
+from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.github_pr_comment import post_pr_comment
 from je_api_testka.integrations.har_import import convert_har
 from je_api_testka.integrations.notify import notify_via_webhook
+from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.security.cors_check import cors_preflight
 from je_api_testka.security.rate_limit_probe import probe_rate_limit
 from je_api_testka.security.ssrf_check import probe_ssrf
-from je_api_testka.ai.failure_classifier import classify_failures
-from je_api_testka.ai.fake_data_generator import generate_fake_payload
-from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.spec.openapi_changelog import openapi_changelog
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.spec.schema_inference import infer_schema
+from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
+from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
+from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
+from je_api_testka.utils.generate_report.badge import generate_badge
+from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
+from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
+from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
+from je_api_testka.utils.generate_report.run_diff import diff_runs
+from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
+from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
+from je_api_testka.utils.json.json_file.json_file import read_action_json
+from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
+from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
 def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
@@ -40,22 +56,6 @@ def _cassette_record(file_path: str, method: str, url: str, request_body: str,
         response_status=response_status, response_body=response_body,
         response_headers=response_headers or {},
     ))
-from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
-from je_api_testka.requests_wrapper.request_method import test_api_method_requests
-from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
-from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
-from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
-from je_api_testka.utils.generate_report.badge import generate_badge
-from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
-from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
-from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
-from je_api_testka.utils.generate_report.run_diff import diff_runs
-from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
-from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
-from je_api_testka.utils.json.json_file.json_file import read_action_json
-from je_api_testka.utils.logging.loggin_instance import apitestka_logger
-from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
-from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
 
 class Executor:
