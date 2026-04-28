@@ -48,4 +48,4 @@ def test_latency_is_applied():
 def test_configure_clamps_negative_latency():
     injector = FaultInjector()
     injector.configure(latency_seconds=-1)
-    assert injector.latency_seconds == 0.0
+    assert injector.latency_seconds == pytest.approx(0.0)

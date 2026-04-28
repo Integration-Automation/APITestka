@@ -9,10 +9,10 @@ from je_api_testka.connection.connection_options import (
 
 
 def test_apply_to_requests_merges_cert_and_proxy():
-    options = ConnectionOptions(cert=("c.crt", "c.key"), proxies={"http": "http://p.invalid"})
+    options = ConnectionOptions(cert=("c.crt", "c.key"), proxies={"http": "https://p.invalid"})
     merged = apply_to_requests_kwargs(options, {"timeout": 5})
     assert merged["cert"] == ("c.crt", "c.key")
-    assert merged["proxies"] == {"http": "http://p.invalid"}
+    assert merged["proxies"] == {"http": "https://p.invalid"}
     assert merged["timeout"] == 5
 
 

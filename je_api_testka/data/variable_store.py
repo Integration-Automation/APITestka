@@ -41,32 +41,56 @@ class VariableStore:
 variable_store = VariableStore()
 
 
+_MISSING = object()
+
+
+def _split_segment(raw: str) -> Optional[tuple]:
+    """Split ``foo[3]`` into ``("foo", 3)``; return ``None`` for malformed input."""
+    if "[" not in raw or not raw.endswith("]"):
+        return raw, None
+    segment, raw_index = raw[:-1].split("[", 1)
+    try:
+        return segment, int(raw_index)
+    except ValueError:
+        return None
+
+
+def _step_dict(cursor: Any, segment: str) -> Any:
+    if not segment:
+        return cursor
+    if not isinstance(cursor, dict) or segment not in cursor:
+        return _MISSING
+    return cursor[segment]
+
+
+def _step_list(cursor: Any, index: Optional[int]) -> Any:
+    if index is None:
+        return cursor
+    if not isinstance(cursor, list) or index >= len(cursor):
+        return _MISSING
+    return cursor[index]
+
+
 def extract_from_payload(payload: Any, path: str) -> Optional[Any]:
     """
     Walk a dotted path into ``payload``. ``a.b[0].c`` -> ``payload['a']['b'][0]['c']``.
 
-    Returns ``None`` if any segment is missing.
+    Returns ``None`` if any segment is missing or malformed.
     """
     if not path:
         return payload
     cursor: Any = payload
     for raw in path.split("."):
-        segment = raw
-        index: Optional[int] = None
-        if "[" in segment and segment.endswith("]"):
-            segment, raw_index = segment[:-1].split("[", 1)
-            try:
-                index = int(raw_index)
-            except ValueError:
-                return None
-        if segment:
-            if not isinstance(cursor, dict) or segment not in cursor:
-                return None
-            cursor = cursor[segment]
-        if index is not None:
-            if not isinstance(cursor, list) or index >= len(cursor):
-                return None
-            cursor = cursor[index]
+        split = _split_segment(raw)
+        if split is None:
+            return None
+        segment, index = split
+        cursor = _step_dict(cursor, segment)
+        if cursor is _MISSING:
+            return None
+        cursor = _step_list(cursor, index)
+        if cursor is _MISSING:
+            return None
     return cursor
 
 

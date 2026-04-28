@@ -10,7 +10,7 @@ from je_api_testka.utils.mock_server.template_response import make_template_view
 def test_template_view_renders_global_variable():
     variable_store.clear()
     variable_store.set("greeting", "hello")
-    app = Flask(__name__)
+    app = Flask(__name__)  # NOSONAR S4502: in-process test client, no form auth surface
     app.add_url_rule("/x", "x", make_template_view({"msg": "{{greeting}}"}))
     client = app.test_client()
     rsp = client.get("/x")
@@ -20,7 +20,7 @@ def test_template_view_renders_global_variable():
 
 def test_template_view_uses_request_json():
     variable_store.clear()
-    app = Flask(__name__)
+    app = Flask(__name__)  # NOSONAR S4502: in-process test client, no form auth surface
     app.add_url_rule(
         "/echo", "echo",
         make_template_view({"name": "{{request.json.name}}"}),

@@ -7,13 +7,13 @@ from je_api_testka.spec.records_to_openapi import records_to_openapi
 def test_groups_by_path_and_method():
     records = [
         {
-            "request_url": "http://x.invalid/users",
+            "request_url": "https://x.invalid/users",
             "request_method": "GET",
             "status_code": 200,
             "text": '{"id": 1}',
         },
         {
-            "request_url": "http://x.invalid/users",
+            "request_url": "https://x.invalid/users",
             "request_method": "POST",
             "status_code": 201,
             "text": "",
@@ -32,7 +32,7 @@ def test_skips_records_without_url():
 
 def test_default_response_when_body_empty():
     records = [{
-        "request_url": "http://x.invalid/health",
+        "request_url": "https://x.invalid/health",
         "request_method": "GET",
         "status_code": 200,
         "text": "",

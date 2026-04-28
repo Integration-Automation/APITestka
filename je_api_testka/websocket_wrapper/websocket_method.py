@@ -32,7 +32,7 @@ async def _async_send_recv(
     url: str,
     messages: Iterable[str],
     expected_replies: int,
-    timeout: float,
+    timeout: float,  # NOSONAR S7483: forwarded to websockets.connect/asyncio.wait_for; both already use it as a deadline.
 ) -> List[str]:
     websockets = _import_websockets()
     received: List[str] = []

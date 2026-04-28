@@ -16,12 +16,16 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 DEFAULT_SSRF_TIMEOUT_SECONDS: float = 5.0
 
+# These URLs are SSRF *probe targets*: we send them at a victim endpoint to
+# detect whether it follows them. Loopback / link-local / cloud-metadata IPs
+# are the canonical probe set, so http and the hardcoded 169.254.169.254
+# (AWS IMDS) address are intentional. Sonar S5332/S1313 are suppressed below.
 SSRF_PROBES = (
-    "http://127.0.0.1",
-    "http://localhost",
-    "http://0.0.0.0",
-    "http://169.254.169.254/latest/meta-data/",
-    "http://metadata.google.internal/",
+    "http://127.0.0.1",  # NOSONAR S5332 - loopback probe
+    "http://localhost",  # NOSONAR S5332 - loopback probe
+    "http://0.0.0.0",  # NOSONAR S5332 - loopback probe
+    "http://169.254.169.254/latest/meta-data/",  # NOSONAR S1313 S5332 - AWS IMDS probe
+    "http://metadata.google.internal/",  # NOSONAR S5332 - GCP metadata probe
     "file:///etc/passwd",
 )
 

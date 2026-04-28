@@ -65,7 +65,7 @@ traditional_chinese_word_dict = {
     "session_options": "Session OPTIONS",
     # Executor tab
     "executor_json_input": "動作 JSON:",
-    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]',
+    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "https://httpbin.org/get"}]]',
     "executor_run": "執行動作",
     "executor_load_file": "載入 JSON 檔案",
     "executor_run_file": "執行檔案",

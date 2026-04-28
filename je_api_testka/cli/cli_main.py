@@ -17,7 +17,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import List, Optional, Sequence
+from typing import Optional, Sequence
 
 from je_api_testka.utils.executor.action_executor import execute_action, execute_files
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list

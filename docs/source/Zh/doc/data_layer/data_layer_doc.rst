@@ -29,9 +29,9 @@ Thread-safe 全域單例 ``variable_store``。
 
    from je_api_testka import render_template, variable_store
 
-   variable_store.set("base", "http://api.invalid")
+   variable_store.set("base", "https://api.invalid")
    render_template({"url": "{{base}}/v1"})
-   # -> {'url': 'http://api.invalid/v1'}
+   # -> {'url': 'https://api.invalid/v1'}
 
 加 ``strict=True`` 可在 placeholder 找不到對應值時拋例外。
 

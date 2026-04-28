@@ -51,7 +51,7 @@ def test_chain_env_variable_template_diff(tmp_path):
     """Multi-step chain that uses several modules together."""
     variable_store.clear()
     profile = tmp_path / "dev.json"
-    profile.write_text(json.dumps({"base": "http://example.invalid"}), encoding="utf-8")
+    profile.write_text(json.dumps({"base": "https://example.invalid"}), encoding="utf-8")
 
     record = execute_action([
         ["AT_load_env_profile", {"file_path": str(profile)}],
@@ -63,7 +63,7 @@ def test_chain_env_variable_template_diff(tmp_path):
         }],
     ])
     rendered = list(record.values())
-    assert any(value == "http://example.invalid/users/7" for value in rendered)
+    assert any(value == "https://example.invalid/users/7" for value in rendered)
     diff = next(value for value in rendered if hasattr(value, "changed"))
     assert diff.changed == {"b": (2, 3)}
     variable_store.clear()

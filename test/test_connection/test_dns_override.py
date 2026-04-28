@@ -43,5 +43,7 @@ def test_dns_override_passes_through_unknown_host():
 def test_dns_override_restores_after_block():
     real = socket.getaddrinfo
     with dns_override({"example.invalid": "127.0.0.1"}):
-        pass
+        # entering and immediately exiting is what we want to verify;
+        # the assertion below proves the patch is reverted on __exit__.
+        assert socket.getaddrinfo is not real
     assert socket.getaddrinfo is real

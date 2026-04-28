@@ -10,12 +10,12 @@ from je_api_testka.utils.test_record.test_record_class import test_record_instan
 def test_generate_allure_report_writes_files(tmp_path):
     test_record_instance.clean_record()
     test_record_instance.test_record_list.append({
-        "request_url": "http://example.invalid/get",
+        "request_url": "https://example.invalid/get",
         "request_method": "GET",
         "status_code": 200,
     })
     test_record_instance.error_record_list.append([
-        {"test_url": "http://example.invalid/x"},
+        {"test_url": "https://example.invalid/x"},
         "boom",
     ])
 

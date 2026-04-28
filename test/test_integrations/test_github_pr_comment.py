@@ -17,7 +17,7 @@ from je_api_testka.utils.test_record.test_record_class import test_record_instan
 def test_build_pr_comment_body_includes_summary():
     test_record_instance.clean_record()
     test_record_instance.test_record_list.append({
-        "request_method": "GET", "request_url": "http://x.invalid",
+        "request_method": "GET", "request_url": "https://x.invalid",
         "status_code": 200, "request_time_sec": 0.01,
     })
     body = build_pr_comment_body(title="run #42")

@@ -11,8 +11,8 @@ from je_api_testka.gui.env_manager_model import EnvManagerModel
 
 def test_upsert_and_list():
     model = EnvManagerModel()
-    model.upsert("dev", {"base": "http://dev.invalid"})
-    model.upsert("prod", {"base": "http://prod.invalid"})
+    model.upsert("dev", {"base": "https://dev.invalid"})
+    model.upsert("prod", {"base": "https://prod.invalid"})
     names = sorted(env.name for env in model.list_envs())
     assert names == ["dev", "prod"]
 
@@ -20,10 +20,10 @@ def test_upsert_and_list():
 def test_activate_pushes_into_variable_store():
     variable_store.clear()
     model = EnvManagerModel()
-    model.upsert("dev", {"base": "http://dev.invalid"})
+    model.upsert("dev", {"base": "https://dev.invalid"})
     model.activate("dev")
     assert model.active == "dev"
-    assert variable_store.get("base") == "http://dev.invalid"
+    assert variable_store.get("base") == "https://dev.invalid"
     variable_store.clear()
 
 

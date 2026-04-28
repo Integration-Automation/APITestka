@@ -14,9 +14,9 @@ def _write_failures(path, urls):
 def test_new_failures_and_recoveries(tmp_path):
     prev = tmp_path / "prev_failure.json"
     curr = tmp_path / "curr_failure.json"
-    _write_failures(prev, ["http://a.invalid", "http://b.invalid"])
-    _write_failures(curr, ["http://b.invalid", "http://c.invalid"])
+    _write_failures(prev, ["https://a.invalid", "https://b.invalid"])
+    _write_failures(curr, ["https://b.invalid", "https://c.invalid"])
     diff = diff_runs(str(prev), str(curr))
-    assert diff.new_failures == ["http://c.invalid"]
-    assert diff.new_passes == ["http://a.invalid"]
-    assert diff.still_failing == ["http://b.invalid"]
+    assert diff.new_failures == ["https://c.invalid"]
+    assert diff.new_passes == ["https://a.invalid"]
+    assert diff.still_failing == ["https://b.invalid"]

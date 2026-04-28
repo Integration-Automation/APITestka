@@ -10,7 +10,7 @@ Returns three buckets:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, Tuple
 
 
 @dataclass
@@ -26,28 +26,42 @@ class DiffResult:
         return not (self.added or self.removed or self.changed)
 
 
+def _child_prefix(prefix: str, suffix: str) -> str:
+    return f"{prefix}.{suffix}" if prefix else suffix
+
+
+def _walk_dicts(left: dict, right: dict, prefix: str,
+                ignore: Iterable[str], result: DiffResult) -> None:
+    for key in left.keys() | right.keys():
+        child = _child_prefix(prefix, key)
+        if key not in right:
+            result.removed[child] = left[key]
+        elif key not in left:
+            result.added[child] = right[key]
+        else:
+            _walk(left[key], right[key], child, ignore, result)
+
+
+def _walk_lists(left: list, right: list, prefix: str,
+                ignore: Iterable[str], result: DiffResult) -> None:
+    for index in range(max(len(left), len(right))):
+        child = f"{prefix}[{index}]"
+        if index >= len(right):
+            result.removed[child] = left[index]
+        elif index >= len(left):
+            result.added[child] = right[index]
+        else:
+            _walk(left[index], right[index], child, ignore, result)
+
+
 def _walk(left: Any, right: Any, prefix: str, ignore: Iterable[str], result: DiffResult) -> None:
     if prefix in ignore:
         return
     if isinstance(left, dict) and isinstance(right, dict):
-        for key in left.keys() | right.keys():
-            child_prefix = f"{prefix}.{key}" if prefix else key
-            if key not in right:
-                result.removed[child_prefix] = left[key]
-            elif key not in left:
-                result.added[child_prefix] = right[key]
-            else:
-                _walk(left[key], right[key], child_prefix, ignore, result)
+        _walk_dicts(left, right, prefix, ignore, result)
         return
     if isinstance(left, list) and isinstance(right, list):
-        for index in range(max(len(left), len(right))):
-            child_prefix = f"{prefix}[{index}]"
-            if index >= len(right):
-                result.removed[child_prefix] = left[index]
-            elif index >= len(left):
-                result.added[child_prefix] = right[index]
-            else:
-                _walk(left[index], right[index], child_prefix, ignore, result)
+        _walk_lists(left, right, prefix, ignore, result)
         return
     if left != right:
         result.changed[prefix or "<root>"] = (left, right)

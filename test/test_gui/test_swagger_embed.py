@@ -14,13 +14,13 @@ from je_api_testka.utils.exception.exceptions import APITesterException
 
 
 def test_build_swagger_html_embeds_url_and_version():
-    html = build_swagger_html("http://example.invalid/openapi.json", version="5.0.0")
+    html = build_swagger_html("https://example.invalid/openapi.json", version="5.0.0")
     assert "swagger-ui-dist@5.0.0" in html
-    assert "http://example.invalid/openapi.json" in html
+    assert "https://example.invalid/openapi.json" in html
 
 
 def test_build_swagger_html_default_version_present():
-    html = build_swagger_html("http://example.invalid/openapi.json")
+    html = build_swagger_html("https://example.invalid/openapi.json")
     assert DEFAULT_SWAGGER_VERSION in html
 
 
@@ -34,5 +34,5 @@ def test_build_swagger_widget_dependency_missing(monkeypatch):
 
     monkeypatch.setattr(builtins, "__import__", _fake_import)
     with pytest.raises(APITesterException) as excinfo:
-        build_swagger_widget("http://example.invalid/openapi.json")
+        build_swagger_widget("https://example.invalid/openapi.json")
     assert "PySide6" in str(excinfo.value)

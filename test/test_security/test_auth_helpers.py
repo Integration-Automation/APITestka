@@ -56,6 +56,6 @@ def test_aws_sigv4_dependency_missing(monkeypatch):
     monkeypatch.setattr(builtins, "__import__", _fake_import)
     with pytest.raises(APITesterException) as excinfo:
         auth_helpers.aws_sigv4_headers(
-            "GET", "http://example.invalid/", "us-east-1", "s3", "AK", "SK"
+            "GET", "https://example.invalid/", "us-east-1", "s3", "AK", "SK"
         )
     assert "botocore" in str(excinfo.value)

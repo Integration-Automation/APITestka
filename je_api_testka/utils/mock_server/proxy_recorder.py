@@ -58,7 +58,7 @@ def attach_proxy(
             request_body=body,
             response_status=live.status_code,
             response_body=live.text,
-            response_headers={k: v for k, v in live.headers.items()},
+            response_headers=dict(live.headers.items()),
         )
         cassette.put(record)
         return Response(record.response_body, status=record.response_status,

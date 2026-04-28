@@ -12,7 +12,7 @@ We keep this rule-based by default so it works without an LLM. Categories:
 from __future__ import annotations
 
 from collections import Counter
-from typing import Iterable, List
+from typing import Iterable
 
 CATEGORY_NETWORK: str = "network"
 CATEGORY_AUTH: str = "auth"

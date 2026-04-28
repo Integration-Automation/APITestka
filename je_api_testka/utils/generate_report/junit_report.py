@@ -4,7 +4,10 @@ JUnit XML report generator for CI integration (GitHub Actions, Jenkins, etc).
 from __future__ import annotations
 
 from pathlib import Path
-from xml.etree.ElementTree import Element, ElementTree, SubElement
+# Element/SubElement/ElementTree are write-only in this module - no parsing of
+# untrusted XML happens, so the defusedxml replacement does not apply here.
+# nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+from xml.etree.ElementTree import Element, ElementTree, SubElement  # noqa: S405
 
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance

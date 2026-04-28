@@ -24,7 +24,7 @@ def test_parser_import_defaults(tmp_path):
 def test_main_invokes_import(tmp_path):
     spec = {
         "paths": {"/x": {"get": {"responses": {"200": {"description": "ok"}}}}},
-        "servers": [{"url": "http://example.invalid"}],
+        "servers": [{"url": "https://example.invalid"}],
     }
     spec_path = tmp_path / "spec.json"
     spec_path.write_text(json.dumps(spec), encoding="utf-8")

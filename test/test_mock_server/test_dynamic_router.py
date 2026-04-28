@@ -11,7 +11,9 @@ from je_api_testka.utils.mock_server.dynamic_router import (
 
 
 def _client_with(router: DynamicRouter):
-    app = Flask(__name__)
+    # In-process Flask test client; no real network exposure, no form auth
+    # surface, so CSRF protection is intentionally not configured.
+    app = Flask(__name__)  # NOSONAR S4502
     app.add_url_rule("/echo", "echo", router.dispatch, methods=["POST"])
     return app.test_client()
 

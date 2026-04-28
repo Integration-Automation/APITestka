@@ -12,12 +12,12 @@ def test_render_markdown_includes_counts():
     test_record_instance.clean_record()
     test_record_instance.test_record_list.append({
         "request_method": "GET",
-        "request_url": "http://x.invalid",
+        "request_url": "https://x.invalid",
         "status_code": 200,
         "request_time_sec": 0.05,
     })
     test_record_instance.error_record_list.append([
-        {"http_method": "POST", "test_url": "http://y.invalid"}, "boom",
+        {"http_method": "POST", "test_url": "https://y.invalid"}, "boom",
     ])
     md = render_markdown()
     assert "**Successes:** 1" in md

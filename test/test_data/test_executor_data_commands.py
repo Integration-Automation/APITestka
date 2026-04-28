@@ -44,10 +44,10 @@ def test_load_env_profile_via_executor(tmp_path):
     import json
 
     profile_path = tmp_path / "dev.json"
-    profile_path.write_text(json.dumps({"base": "http://x.invalid"}), encoding="utf-8")
+    profile_path.write_text(json.dumps({"base": "https://x.invalid"}), encoding="utf-8")
     variable_store.clear()
     execute_action([
         ["AT_load_env_profile", {"file_path": str(profile_path)}],
     ])
-    assert variable_store.get("base") == "http://x.invalid"
+    assert variable_store.get("base") == "https://x.invalid"
     variable_store.clear()

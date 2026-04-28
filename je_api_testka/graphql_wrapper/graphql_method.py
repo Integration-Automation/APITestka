@@ -51,7 +51,7 @@ async def test_api_method_graphql_async(
     variables: Optional[dict] = None,
     operation_name: Optional[str] = None,
     headers: Optional[dict] = None,
-    timeout: int = DEFAULT_GRAPHQL_TIMEOUT_SECONDS,
+    timeout: int = DEFAULT_GRAPHQL_TIMEOUT_SECONDS,  # NOSONAR S7483: httpx request timeout, not asyncio.wait_for
     **kwargs,
 ) -> Optional[dict]:
     """Async variant of :func:`test_api_method_graphql`."""

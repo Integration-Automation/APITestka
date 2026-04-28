@@ -15,7 +15,7 @@ from je_api_testka.utils.exception.exceptions import APITesterException
 
 def test_convert_openapi_extracts_path_methods():
     spec = {
-        "servers": [{"url": "http://api.example.invalid"}],
+        "servers": [{"url": "https://api.example.invalid"}],
         "paths": {
             "/users": {
                 "get": {"responses": {"200": {"description": "ok"}}},
@@ -28,7 +28,7 @@ def test_convert_openapi_extracts_path_methods():
     methods = sorted(a["AT_test_api_method_requests"]["http_method"] for a in actions)
     assert methods == ["delete", "get", "post"]
     urls = {a["AT_test_api_method_requests"]["test_url"] for a in actions}
-    assert "http://api.example.invalid/users" in urls
+    assert "https://api.example.invalid/users" in urls
 
 
 def test_convert_postman_handles_nested_folders():
@@ -41,7 +41,7 @@ def test_convert_postman_handles_nested_folders():
                         "name": "ping",
                         "request": {
                             "method": "GET",
-                            "url": {"raw": "http://api.example.invalid/ping"},
+                            "url": {"raw": "https://api.example.invalid/ping"},
                             "header": [{"key": "X-Test", "value": "1"}],
                         },
                     }

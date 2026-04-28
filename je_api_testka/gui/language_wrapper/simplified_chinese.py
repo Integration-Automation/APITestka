@@ -67,7 +67,7 @@ simplified_chinese_word_dict = {
     "session_options": "会话 OPTIONS",
     # Executor tab
     "executor_json_input": "动作 JSON：",
-    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]',
+    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "https://httpbin.org/get"}]]',
     "executor_run": "执行动作",
     "executor_load_file": "加载 JSON 文件",
     "executor_run_file": "运行文件",

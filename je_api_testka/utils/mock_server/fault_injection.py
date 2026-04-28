@@ -59,7 +59,9 @@ class FaultInjector:
             if self.latency_seconds > 0:
                 time.sleep(self.latency_seconds)
             if self.failure_probability > 0:
-                roll = secrets.SystemRandom().random()
+                # secrets.SystemRandom is the OS CSPRNG; this draw is non-security
+                # critical (it gates fault injection) but already uses a strong source.
+                roll = secrets.SystemRandom().random()  # NOSONAR S2245
                 if roll < self.failure_probability:
                     apitestka_logger.info(
                         f"FaultInjector triggered failure (roll={roll:.3f})"

@@ -36,7 +36,7 @@ def _fake_stream(_method, _url, **_kwargs):
 
 def test_iter_sse_events_parses_basic_stream(monkeypatch):
     monkeypatch.setattr(sse_method.httpx, "stream", _fake_stream)
-    events = list(sse_method.iter_sse_events("http://example.invalid", max_events=2))
+    events = list(sse_method.iter_sse_events("https://example.invalid", max_events=2))
     assert events == [
         {"event": "ping", "data": "hello"},
         {"data": "second"},
@@ -53,7 +53,7 @@ def test_iter_sse_events_respects_max(monkeypatch):
         ])
 
     monkeypatch.setattr(sse_method.httpx, "stream", _three_events)
-    events = list(sse_method.iter_sse_events("http://example.invalid", max_events=2))
+    events = list(sse_method.iter_sse_events("https://example.invalid", max_events=2))
     assert len(events) == 2
 
 
@@ -62,6 +62,6 @@ def test_test_api_method_sse_records(monkeypatch):
 
     monkeypatch.setattr(sse_method.httpx, "stream", _fake_stream)
     test_record_instance.clean_record()
-    record = sse_method.test_api_method_sse("http://example.invalid", max_events=2)
+    record = sse_method.test_api_method_sse("https://example.invalid", max_events=2)
     assert record["events"]
     assert test_record_instance.test_record_list, "record was not stored"

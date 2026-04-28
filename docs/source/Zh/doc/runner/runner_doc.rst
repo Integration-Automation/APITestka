@@ -14,7 +14,7 @@ metadata(``id``、``depends_on``、``tags``)。
    from je_api_testka.runner import run_actions_parallel
 
    actions = [["AT_test_api_method_requests", {"http_method": "get",
-                                                "test_url": f"http://x.invalid/{i}"}]
+                                                "test_url": f"https://x.invalid/{i}"}]
               for i in range(20)]
    results = run_actions_parallel(actions, max_workers=8)
 

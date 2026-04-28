@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import json
 import shutil
-import subprocess  # noqa: S404 - intentional, see _PIP_AUDIT_NOT_FOUND below
+# We deliberately delegate to the optional pip-audit binary; argv is built
+# from a list (no shell=True) and the path is resolved via shutil.which.
+import subprocess  # noqa: S404
 from typing import List
 
 from je_api_testka.utils.exception.exceptions import APITesterException
@@ -25,7 +27,10 @@ def run_pip_audit() -> List[dict]:
     binary = shutil.which("pip-audit")
     if binary is None:
         raise APITesterException(PIP_AUDIT_NOT_FOUND)
-    completed = subprocess.run(  # noqa: S603 - args list, no shell=True
+    # binary path is resolved via shutil.which and arguments are a static list;
+    # no untrusted input flows here.
+    # nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit.dangerous-subprocess-use-audit
+    completed = subprocess.run(  # noqa: S603
         [binary, "--format", "json"],
         check=False,
         capture_output=True,

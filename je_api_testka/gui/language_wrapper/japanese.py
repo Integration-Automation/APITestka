@@ -67,7 +67,7 @@ japanese_word_dict = {
     "session_options": "セッション OPTIONS",
     # Executor tab
     "executor_json_input": "アクション JSON：",
-    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]',
+    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "https://httpbin.org/get"}]]',
     "executor_run": "アクションを実行",
     "executor_load_file": "JSON ファイルを読み込み",
     "executor_run_file": "ファイルを実行",

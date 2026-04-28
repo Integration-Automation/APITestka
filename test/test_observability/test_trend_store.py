@@ -12,7 +12,7 @@ def test_record_then_list(tmp_path):
     db_path = str(tmp_path / "trend.sqlite")
     test_record_instance.clean_record()
     test_record_instance.test_record_list.append({
-        "request_url": "http://x.invalid", "request_time_sec": 0.5,
+        "request_url": "https://x.invalid", "request_time_sec": 0.5,
     })
     record_current_run(db_path)
     record_current_run(db_path)

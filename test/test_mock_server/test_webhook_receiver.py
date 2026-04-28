@@ -7,7 +7,7 @@ from je_api_testka.utils.mock_server.webhook_receiver import WebhookReceiver
 
 
 def _client_with_receiver():
-    app = Flask(__name__)
+    app = Flask(__name__)  # NOSONAR S4502: in-process test client, no form auth surface
     receiver = WebhookReceiver()
     receiver.attach(app, route="/hook")
     return app.test_client(), receiver
@@ -23,7 +23,7 @@ def test_webhook_captures_post_payload():
 
 
 def test_buffer_keeps_only_recent():
-    app = Flask(__name__)
+    app = Flask(__name__)  # NOSONAR S4502: in-process test client, no form auth surface
     receiver = WebhookReceiver(buffer_size=2)
     receiver.attach(app, route="/hook")
     client = app.test_client()

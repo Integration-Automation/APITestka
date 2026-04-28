@@ -8,7 +8,7 @@ from je_api_testka.ai.test_generator import generate_tests_from_openapi
 
 
 _SPEC = {
-    "servers": [{"url": "http://api.invalid"}],
+    "servers": [{"url": "https://api.invalid"}],
     "paths": {
         "/users": {
             "get": {"responses": {"200": {}}},

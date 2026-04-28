@@ -55,7 +55,7 @@ def test_render_markdown_tool_returns_string():
 def test_records_to_openapi_tool():
     test_record_instance.clean_record()
     test_record_instance.test_record_list.append({
-        "request_url": "http://x.invalid/health",
+        "request_url": "https://x.invalid/health",
         "request_method": "GET",
         "status_code": 200,
         "text": "",

@@ -33,7 +33,8 @@ class RetryPolicy:
         delay = self.initial_delay_seconds * (self.backoff_factor ** max(attempt - 1, 0))
         delay = min(delay, self.max_delay_seconds)
         if self.jitter:
-            delay = delay * (0.5 + secrets.SystemRandom().random() * 0.5)
+            # SystemRandom is the OS CSPRNG; suitable for retry jitter.
+            delay = delay * (0.5 + secrets.SystemRandom().random() * 0.5)  # NOSONAR S2245
         return max(delay, 0.0)
 
 

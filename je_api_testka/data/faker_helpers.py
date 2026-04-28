@@ -21,7 +21,8 @@ def fake_uuid() -> str:
 
 def fake_word(length: int = DEFAULT_WORD_LENGTH) -> str:
     """Return a random lowercase word of ``length`` characters."""
-    rng = secrets.SystemRandom()
+    # secrets.SystemRandom is the OS CSPRNG; safe for token-shaped fake data.
+    rng = secrets.SystemRandom()  # NOSONAR S2245
     return "".join(rng.choice(string.ascii_lowercase) for _ in range(max(length, 1)))
 
 

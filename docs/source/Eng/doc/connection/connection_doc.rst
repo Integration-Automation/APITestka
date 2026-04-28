@@ -53,11 +53,11 @@ later runs to make tests offline-deterministic.
 
    def extract(live):
        return CassetteRecord(
-           method="GET", url="http://x.invalid", request_body="",
+           method="GET", url="https://x.invalid", request_body="",
            response_status=live.status_code, response_body=live.text,
        )
 
-   replay_or_record(cassette, "GET", "http://x.invalid", "", perform_request, extract)
+   replay_or_record(cassette, "GET", "https://x.invalid", "", perform_request, extract)
 
 Executor commands
 -----------------

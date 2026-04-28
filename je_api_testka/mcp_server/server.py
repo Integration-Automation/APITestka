@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from dataclasses import dataclass
 from typing import Any, List
 
 from je_api_testka.mcp_server.tool_definitions import APITESTKA_TOOLS, dispatch_tool
@@ -25,26 +26,43 @@ MCP_NOT_INSTALLED: str = (
 )
 
 
-def _import_mcp():
+@dataclass
+class _MCPSymbols:
+    """Lazily-imported MCP class references and the stdio transport factory."""
+
+    server_cls: Any
+    stdio_server: Any
+    tool_cls: Any
+    text_content_cls: Any
+
+
+def _import_mcp() -> _MCPSymbols:
     try:
         from mcp.server import Server  # type: ignore
         from mcp.server.stdio import stdio_server  # type: ignore
         from mcp.types import TextContent, Tool  # type: ignore
-        return Server, stdio_server, Tool, TextContent
     except ImportError as error:
         apitestka_logger.error(f"mcp_server import mcp failed: {repr(error)}")
         raise APITesterException(MCP_NOT_INSTALLED) from error
+    return _MCPSymbols(
+        server_cls=Server,
+        stdio_server=stdio_server,
+        tool_cls=Tool,
+        text_content_cls=TextContent,
+    )
 
 
 def build_server():
     """Build and return a configured ``mcp.server.Server`` instance."""
-    Server, _stdio_server, Tool, TextContent = _import_mcp()
-    server = Server("apitestka")
+    symbols = _import_mcp()
+    server = symbols.server_cls("apitestka")
+    text_content_cls = symbols.text_content_cls
+    tool_cls = symbols.tool_cls
 
     @server.list_tools()
     async def _list_tools() -> List[Any]:
         return [
-            Tool(name=spec.name, description=spec.description, inputSchema=spec.input_schema)
+            tool_cls(name=spec.name, description=spec.description, inputSchema=spec.input_schema)
             for spec in APITESTKA_TOOLS
         ]
 
@@ -54,19 +72,22 @@ def build_server():
             result = dispatch_tool(name, arguments or {})
         except Exception as error:  # noqa: BLE001 - propagate to MCP client
             apitestka_logger.error(f"mcp_server dispatch_tool failed: {repr(error)}")
-            return [TextContent(type="text", text=f"error: {error!r}")]
+            return [text_content_cls(type="text", text=f"error: {error!r}")]
         if isinstance(result, str):
-            return [TextContent(type="text", text=result)]
-        return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, default=str))]
+            return [text_content_cls(type="text", text=result)]
+        return [text_content_cls(
+            type="text",
+            text=json.dumps(result, ensure_ascii=False, default=str),
+        )]
 
     return server
 
 
 async def serve_stdio() -> None:
     """Run the server over stdio until the client disconnects."""
-    Server, stdio_server, _Tool, _TextContent = _import_mcp()
+    symbols = _import_mcp()
     server = build_server()
-    async with stdio_server() as (read_stream, write_stream):
+    async with symbols.stdio_server() as (read_stream, write_stream):
         await server.run(read_stream, write_stream, server.create_initialization_options())
 
 
