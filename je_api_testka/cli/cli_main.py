@@ -91,6 +91,12 @@ def _cmd_completion(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_mcp(_args: argparse.Namespace) -> int:
+    from je_api_testka.mcp_server.server import main as mcp_main
+
+    return mcp_main()
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="apitestka", description="APITestka command line")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -134,6 +140,9 @@ def build_parser() -> argparse.ArgumentParser:
     completion_parser = sub.add_parser("completion", help="Print shell completion script")
     completion_parser.add_argument("shell", choices=("bash", "zsh", "fish", "powershell"))
     completion_parser.set_defaults(func=_cmd_completion)
+
+    mcp_parser = sub.add_parser("mcp", help="Run the APITestka MCP server (stdio transport)")
+    mcp_parser.set_defaults(func=_cmd_mcp)
     return parser
 
 
