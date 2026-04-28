@@ -37,6 +37,12 @@ content-type = "text/markdown"
 [tool.setuptools.packages]
 find = { namespaces = false }
 
+[project.scripts]
+apitestka = "je_api_testka.cli.cli_main:main"
+
+[project.entry-points."pytest11"]
+apitestka = "je_api_testka.pytest_plugin.plugin"
+
 [project.optional-dependencies]
 gui = ["PySide6==6.11.0", "qt-material"]
 websocket = ["websockets>=12.0"]
