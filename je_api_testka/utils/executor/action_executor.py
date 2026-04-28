@@ -17,6 +17,9 @@ from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.security.cors_check import cors_preflight
 from je_api_testka.security.rate_limit_probe import probe_rate_limit
 from je_api_testka.security.ssrf_check import probe_ssrf
+from je_api_testka.ai.failure_classifier import classify_failures
+from je_api_testka.ai.fake_data_generator import generate_fake_payload
+from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.spec.openapi_changelog import openapi_changelog
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.spec.schema_inference import infer_schema
@@ -121,6 +124,10 @@ class Executor:
             "AT_infer_schema": infer_schema,
             "AT_records_to_openapi": records_to_openapi,
             "AT_openapi_changelog": openapi_changelog,
+            # AI integrations
+            "AT_classify_failures": classify_failures,
+            "AT_generate_fake_payload": generate_fake_payload,
+            "AT_generate_tests_from_openapi": generate_tests_from_openapi,
         }
 
     def _execute_event(self, action: list) -> Any:
