@@ -21,9 +21,8 @@ def fake_uuid() -> str:
 
 def fake_word(length: int = DEFAULT_WORD_LENGTH) -> str:
     """Return a random lowercase word of ``length`` characters."""
-    # secrets.SystemRandom is the OS CSPRNG; safe for token-shaped fake data.
-    rng = secrets.SystemRandom()  # NOSONAR S2245
-    return "".join(rng.choice(string.ascii_lowercase) for _ in range(max(length, 1)))
+    # secrets.choice draws from the OS CSPRNG; the canonical Sonar-friendly form.
+    return "".join(secrets.choice(string.ascii_lowercase) for _ in range(max(length, 1)))
 
 
 def fake_email(domain: str = EMAIL_DOMAIN) -> str:
