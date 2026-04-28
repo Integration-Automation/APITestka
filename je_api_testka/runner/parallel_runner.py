@@ -11,7 +11,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Callable, Dict, List
 
 from je_api_testka.runner.metadata import strip_runner_metadata
-from je_api_testka.utils.executor.action_executor import executor
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 DEFAULT_MAX_WORKERS: int = 8
@@ -23,7 +22,11 @@ def run_actions_parallel(actions: List[list], max_workers: int = DEFAULT_MAX_WOR
     apitestka_logger.info(
         f"parallel_runner run_actions_parallel actions: {len(actions)} max_workers: {max_workers}"
     )
-    runner = runner or executor.execute_action
+    if runner is None:
+        # Lazy import: executor module imports the runner package, so importing
+        # it at module top creates a circular dependency.
+        from je_api_testka.utils.executor.action_executor import executor
+        runner = executor.execute_action
     cleaned = [strip_runner_metadata(action) for action in actions]
     results: Dict[int, Any] = {}
     with ThreadPoolExecutor(max_workers=max_workers) as pool:

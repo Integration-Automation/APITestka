@@ -13,24 +13,42 @@ from je_api_testka.data.variable_store import extract_and_store, variable_store
 from je_api_testka.diff.contract_diff import diff_openapi_specs
 from je_api_testka.diff.response_diff import diff_payloads
 from je_api_testka.diff.sla_check import assert_sla
+from je_api_testka.graphql_wrapper.graphql_method import test_api_method_graphql
 from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.github_pr_comment import post_pr_comment
 from je_api_testka.integrations.har_import import convert_har
 from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
+from je_api_testka.runner.dependency_runner import order_actions
+from je_api_testka.runner.parallel_runner import run_actions_parallel
+from je_api_testka.runner.tag_filter import filter_actions_by_tag
+from je_api_testka.security.auth_helpers import (
+    aws_sigv4_headers,
+    basic_auth_header,
+    bearer_token_header,
+    build_jwt,
+)
 from je_api_testka.security.cors_check import cors_preflight
+from je_api_testka.security.cve_check import run_pip_audit
+from je_api_testka.security.fuzz import fuzz_string_inputs
+from je_api_testka.security.header_scan import scan_security_headers
 from je_api_testka.security.rate_limit_probe import probe_rate_limit
 from je_api_testka.security.ssrf_check import probe_ssrf
 from je_api_testka.spec.openapi_changelog import openapi_changelog
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.spec.schema_inference import infer_schema
+from je_api_testka.sse_wrapper.sse_method import test_api_method_sse
+from je_api_testka.utils.assert_result.schema_check import check_json_schema, check_jsonpath
+from je_api_testka.utils.assert_result.snapshot import assert_snapshot
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
 from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
+from je_api_testka.utils.generate_report.allure_report import generate_allure_report
 from je_api_testka.utils.generate_report.badge import generate_badge
 from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
 from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
+from je_api_testka.utils.generate_report.junit_report import generate_junit_report
 from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
 from je_api_testka.utils.generate_report.run_diff import diff_runs
 from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
@@ -39,6 +57,7 @@ from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
+from je_api_testka.websocket_wrapper.websocket_method import test_api_method_websocket
 
 
 def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
@@ -128,6 +147,38 @@ class Executor:
             "AT_classify_failures": classify_failures,
             "AT_generate_fake_payload": generate_fake_payload,
             "AT_generate_tests_from_openapi": generate_tests_from_openapi,
+            # Extra protocol backends (sync entry points only; async variants
+            # are intentionally not registered because they return coroutines
+            # that the executor would not await).
+            "AT_test_api_method_websocket": test_api_method_websocket,
+            "AT_test_api_method_sse": test_api_method_sse,
+            "AT_test_api_method_graphql": test_api_method_graphql,
+            # Schema / JSONPath / snapshot assertions
+            "AT_check_json_schema": check_json_schema,
+            "AT_check_jsonpath": check_jsonpath,
+            "AT_assert_snapshot": assert_snapshot,
+            # Auth helpers
+            "AT_basic_auth_header": basic_auth_header,
+            "AT_bearer_token_header": bearer_token_header,
+            "AT_build_jwt": build_jwt,
+            "AT_aws_sigv4_headers": aws_sigv4_headers,
+            # Security scans
+            "AT_scan_security_headers": scan_security_headers,
+            "AT_fuzz_string_inputs": fuzz_string_inputs,
+            "AT_run_pip_audit": run_pip_audit,
+            # Mock server advanced features (bound methods on the global instance)
+            "AT_mock_add_dynamic_route": flask_mock_server_instance.add_dynamic_route,
+            "AT_mock_add_template_route": flask_mock_server_instance.add_template_route,
+            "AT_mock_add_webhook": flask_mock_server_instance.add_webhook,
+            "AT_mock_add_proxy": flask_mock_server_instance.add_proxy,
+            "AT_mock_load_openapi": flask_mock_server_instance.load_openapi,
+            # Runner
+            "AT_run_actions_parallel": run_actions_parallel,
+            "AT_filter_actions_by_tag": filter_actions_by_tag,
+            "AT_order_actions": order_actions,
+            # JUnit / Allure reports
+            "AT_generate_junit_report": generate_junit_report,
+            "AT_generate_allure_report": generate_allure_report,
         }
 
     def _execute_event(self, action: list) -> Any:

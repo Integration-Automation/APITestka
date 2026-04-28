@@ -29,16 +29,32 @@ EXPECTED_NEW_COMMANDS = (
     "AT_render_markdown", "AT_generate_markdown_report",
     "AT_diff_runs", "AT_generate_badge",
     "AT_record_current_run", "AT_list_trend_rows",
+    "AT_generate_junit_report", "AT_generate_allure_report",
     # Integrations
     "AT_notify_via_webhook", "AT_post_pr_comment",
     "AT_curl_to_action", "AT_convert_har",
     # Security
     "AT_cors_preflight", "AT_probe_rate_limit", "AT_probe_ssrf",
+    "AT_scan_security_headers", "AT_fuzz_string_inputs",
+    "AT_run_pip_audit",
+    "AT_basic_auth_header", "AT_bearer_token_header",
+    "AT_build_jwt", "AT_aws_sigv4_headers",
     # Spec
     "AT_infer_schema", "AT_records_to_openapi", "AT_openapi_changelog",
     # AI
     "AT_classify_failures", "AT_generate_fake_payload",
     "AT_generate_tests_from_openapi",
+    # Extra protocols
+    "AT_test_api_method_websocket",
+    "AT_test_api_method_sse",
+    "AT_test_api_method_graphql",
+    # Schema / snapshot assertions
+    "AT_check_json_schema", "AT_check_jsonpath", "AT_assert_snapshot",
+    # Mock server advanced
+    "AT_mock_add_dynamic_route", "AT_mock_add_template_route",
+    "AT_mock_add_webhook", "AT_mock_add_proxy", "AT_mock_load_openapi",
+    # Runner
+    "AT_run_actions_parallel", "AT_filter_actions_by_tag", "AT_order_actions",
 )
 
 
@@ -94,3 +110,61 @@ def test_har_import_then_count(tmp_path):
     record = execute_action([["AT_convert_har", {"file_path": str(har_path)}]])
     actions = next(iter(record.values()))
     assert len(actions) == 2
+
+
+def test_auth_helpers_via_executor():
+    record = execute_action([
+        ["AT_basic_auth_header", {"username": "alice", "password": "s3cret"}],
+        ["AT_bearer_token_header", {"token": "abc"}],
+    ])
+    values = list(record.values())
+    assert values[0]["Authorization"].startswith("Basic ")
+    assert values[1]["Authorization"] == "Bearer abc"
+
+
+def test_runner_helpers_via_executor():
+    actions = [
+        ["AT_fake_uuid", {"id": "u1", "tags": ["smoke"]}],
+        ["AT_fake_uuid", {"id": "u2", "tags": ["regression"]}],
+    ]
+    record = execute_action([
+        ["AT_filter_actions_by_tag", {"actions": actions, "wanted_tags": ["smoke"]}],
+        ["AT_order_actions", {"actions": actions}],
+    ])
+    values = list(record.values())
+    assert len(values[0]) == 1
+    assert len(values[1]) == 2
+
+
+def test_security_scan_via_executor():
+    record = execute_action([
+        ["AT_scan_security_headers", {"headers": {}}],
+        ["AT_fuzz_string_inputs", {"limit": 3}],
+    ])
+    findings, fuzz = list(record.values())
+    assert len(findings) > 0
+    assert len(fuzz) == 3
+
+
+def test_schema_assertions_via_executor():
+    pytest.importorskip("jsonschema")
+    record = execute_action([
+        ["AT_check_json_schema", {
+            "payload": {"name": "alice"},
+            "schema": {"type": "object", "required": ["name"]},
+        }],
+    ])
+    # The function returns None on success; the executor records None.
+    assert next(iter(record.values())) is None
+
+
+def test_mock_server_methods_via_executor():
+    """The mock server bound methods should be reachable via AT_*."""
+    spec = {"paths": {"/health": {
+        "get": {"responses": {"200": {"content": {"text/plain": {"example": "ok"}}}}},
+    }}}
+    record = execute_action([
+        ["AT_mock_load_openapi", {"spec": spec}],
+    ])
+    registered = next(iter(record.values()))
+    assert "GET /health" in registered
