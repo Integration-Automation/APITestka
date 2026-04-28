@@ -39,6 +39,23 @@ from je_api_testka.utils.xml.xml_file.xml_file import reformat_xml_file
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 # Flask
 from flask import request, redirect
+# WebSocket
+from je_api_testka.websocket_wrapper.websocket_method import (
+    test_api_method_websocket,
+    test_api_method_websocket_async,
+)
+# SSE
+from je_api_testka.sse_wrapper.sse_method import iter_sse_events, test_api_method_sse
+# GraphQL
+from je_api_testka.graphql_wrapper.graphql_method import (
+    test_api_method_graphql,
+    test_api_method_graphql_async,
+)
+# Schema / JSONPath / Snapshot assertions
+from je_api_testka.utils.assert_result.schema_check import check_json_schema, check_jsonpath
+from je_api_testka.utils.assert_result.snapshot import assert_snapshot
+# Retry policy
+from je_api_testka.utils.retry.retry_policy import RetryPolicy, retry_call
 
 __all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method_httpx_async",
            "add_command_to_executor",
@@ -50,5 +67,10 @@ __all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method
            "test_record_instance", "dict_to_elements_tree", "elements_tree_to_dict",
            "XMLParser", "reformat_xml_file", "generate_xml", "generate_xml_report",
            "callback_executor", "create_project_dir", "flask_mock_server_instance",
-           "request", "redirect"
+           "request", "redirect",
+           "test_api_method_websocket", "test_api_method_websocket_async",
+           "iter_sse_events", "test_api_method_sse",
+           "test_api_method_graphql", "test_api_method_graphql_async",
+           "check_json_schema", "check_jsonpath", "assert_snapshot",
+           "RetryPolicy", "retry_call",
            ]

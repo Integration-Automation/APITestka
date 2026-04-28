@@ -37,8 +37,20 @@ content-type = "text/markdown"
 [tool.setuptools.packages]
 find = { namespaces = false }
 
+[project.scripts]
+apitestka = "je_api_testka.cli.cli_main:main"
+apitestka-mcp = "je_api_testka.mcp_server.server:main"
+
+[project.entry-points."pytest11"]
+apitestka = "je_api_testka.pytest_plugin.plugin"
+
 [project.optional-dependencies]
 gui = ["PySide6==6.11.0", "qt-material"]
+websocket = ["websockets>=12.0"]
+schema = ["jsonschema>=4.0", "jsonpath-ng>=1.6"]
+security = ["pyjwt>=2.8", "botocore>=1.34"]
+otel = ["opentelemetry-api>=1.25", "opentelemetry-sdk>=1.25"]
+mcp = ["mcp>=1.0"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]

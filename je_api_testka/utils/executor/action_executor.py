@@ -2,18 +2,60 @@ import types
 from typing import Dict, Callable, Any, List, Union
 
 from je_api_testka import test_api_method_httpx
+from je_api_testka.ai.failure_classifier import classify_failures
+from je_api_testka.ai.fake_data_generator import generate_fake_payload
+from je_api_testka.ai.test_generator import generate_tests_from_openapi
+from je_api_testka.connection.cassette import Cassette, CassetteRecord
+from je_api_testka.data.env_profile import load_env_profile
+from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
+from je_api_testka.data.template_render import render_template
+from je_api_testka.data.variable_store import extract_and_store, variable_store
+from je_api_testka.diff.contract_diff import diff_openapi_specs
+from je_api_testka.diff.response_diff import diff_payloads
+from je_api_testka.diff.sla_check import assert_sla
 from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
+from je_api_testka.integrations.curl_import import curl_to_action
+from je_api_testka.integrations.github_pr_comment import post_pr_comment
+from je_api_testka.integrations.har_import import convert_har
+from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
+from je_api_testka.security.cors_check import cors_preflight
+from je_api_testka.security.rate_limit_probe import probe_rate_limit
+from je_api_testka.security.ssrf_check import probe_ssrf
+from je_api_testka.spec.openapi_changelog import openapi_changelog
+from je_api_testka.spec.records_to_openapi import records_to_openapi
+from je_api_testka.spec.schema_inference import infer_schema
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
 from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
+from je_api_testka.utils.generate_report.badge import generate_badge
 from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
 from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
+from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
+from je_api_testka.utils.generate_report.run_diff import diff_runs
+from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
 from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
+
+
+def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
+    cassette = Cassette(file_path)
+    record = cassette.get(method, url, body)
+    return record.__dict__ if record else {}
+
+
+def _cassette_record(file_path: str, method: str, url: str, request_body: str,
+                     response_status: int, response_body: str,
+                     response_headers: dict = None) -> None:
+    cassette = Cassette(file_path)
+    cassette.put(CassetteRecord(
+        method=method, url=url, request_body=request_body,
+        response_status=response_status, response_body=response_body,
+        response_headers=response_headers or {},
+    ))
 
 
 class Executor:
@@ -43,6 +85,49 @@ class Executor:
             # 模擬伺服器 / Mock server
             "AT_flask_mock_server_add_router": flask_mock_server_instance.add_router,
             "AT_start_flask_mock_server": flask_mock_server_instance.start_mock_server,
+            # 變數 / Variables
+            "AT_set_variable": variable_store.set,
+            "AT_get_variable": variable_store.get,
+            "AT_clear_variables": variable_store.clear,
+            "AT_extract_and_store": extract_and_store,
+            "AT_render_template": render_template,
+            # 假資料 / Fake data
+            "AT_fake_uuid": fake_uuid,
+            "AT_fake_email": fake_email,
+            "AT_fake_word": fake_word,
+            # 環境設定檔 / Env profile
+            "AT_load_env_profile": load_env_profile,
+            # Diff / Contract / SLA
+            "AT_diff_payloads": diff_payloads,
+            "AT_diff_openapi_specs": diff_openapi_specs,
+            "AT_assert_sla": assert_sla,
+            # Cassette
+            "AT_cassette_lookup": _cassette_lookup,
+            "AT_cassette_record": _cassette_record,
+            # Markdown / Run diff / Badge / Trend
+            "AT_render_markdown": render_markdown,
+            "AT_generate_markdown_report": generate_markdown_report,
+            "AT_diff_runs": diff_runs,
+            "AT_generate_badge": generate_badge,
+            "AT_record_current_run": record_current_run,
+            "AT_list_trend_rows": list_trend_rows,
+            # Integrations
+            "AT_notify_via_webhook": notify_via_webhook,
+            "AT_post_pr_comment": post_pr_comment,
+            "AT_curl_to_action": curl_to_action,
+            "AT_convert_har": convert_har,
+            # Security checks
+            "AT_cors_preflight": cors_preflight,
+            "AT_probe_rate_limit": probe_rate_limit,
+            "AT_probe_ssrf": probe_ssrf,
+            # Spec inference
+            "AT_infer_schema": infer_schema,
+            "AT_records_to_openapi": records_to_openapi,
+            "AT_openapi_changelog": openapi_changelog,
+            # AI integrations
+            "AT_classify_failures": classify_failures,
+            "AT_generate_fake_payload": generate_fake_payload,
+            "AT_generate_tests_from_openapi": generate_tests_from_openapi,
         }
 
     def _execute_event(self, action: list) -> Any:

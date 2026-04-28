@@ -65,7 +65,7 @@ english_word_dict = {
     "session_options": "Session OPTIONS",
     # Executor tab
     "executor_json_input": "Action JSON:",
-    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]',
+    "executor_json_placeholder": '[["AT_test_api_method_httpx", {"http_method": "get", "test_url": "https://httpbin.org/get"}]]',
     "executor_run": "Run Actions",
     "executor_load_file": "Load JSON File",
     "executor_run_file": "Run File",

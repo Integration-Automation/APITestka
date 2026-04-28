@@ -167,6 +167,20 @@ All code must pass static analysis without warnings from SonarQube, Codacy, Pyli
 - `assert` is allowed and expected in test files
 - Magic numbers are acceptable in test fixtures
 
+## Testing Guidelines
+
+- **Every new feature, fix, or refactor MUST ship with unit tests in the same commit.**
+  - New module → add a corresponding `test/test_<area>/test_<module>.py`.
+  - Bug fix → add a regression test that fails before the fix and passes after.
+  - Refactor → existing tests must still pass; add coverage for any newly-exposed branches.
+- Place tests under the matching subdirectory (`test/test_utils/`, `test/test_requests/`, etc.); create new subpackages with a `__init__.py` when introducing a fresh area.
+- Tests for **optional-dependency** modules (e.g. `websockets`, `jsonschema`) must:
+  - Skip gracefully via `pytest.importorskip("<package>")` when the dep is missing, AND
+  - Cover the "dependency missing" error path by monkeypatching the import to raise `ImportError`.
+- Use the existing fixtures in `test/conftest.py` (`mock_url`, `clean_test_records`, `assert_valid_response`, `run_report_suite`) rather than rolling new ones.
+- Run `pytest -x` locally before committing; CI runs the full matrix on Python 3.10–3.14.
+- A commit that introduces production code without tests is incomplete and should not be pushed.
+
 ## Commit Guidelines
 
 - Write commit messages in English

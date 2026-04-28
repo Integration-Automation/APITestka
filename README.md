@@ -5,13 +5,11 @@
 [![PyPI](https://img.shields.io/pypi/v/je_api_testka.svg)](https://pypi.org/project/je_api_testka/)
 [![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
 
-**APITestka** is a lightweight, cross-platform framework for automated API testing.
-It supports HTTP/HTTPS, SOAP/XML, and JSON, with high-performance request execution,
-detailed reporting, and flexible CLI scripting.
-
-Designed for speed and scalability, APITestka enables thousands of requests per second,
-integrates with mock servers and remote automation,
-and generates reports in multiple formats for easy analysis.
+**APITestka** is a lightweight, cross-platform Python framework for automated API testing.
+It started as an HTTP/HTTPS / SOAP-XML / JSON request runner with reporting and a JSON-driven
+executor, and now ships with a much wider toolkit — variable chaining, OpenAPI / Postman /
+HAR / cURL importers, a record-replay proxy, security probes, parallel runners, an MCP
+server for Claude, and more.
 
 > **Translations / Other Languages:**
 > [繁體中文](README/README_zh-TW.md) | [简体中文](README/README_zh-CN.md)
@@ -20,35 +18,27 @@ and generates reports in multiple formats for easy analysis.
 
 ## Table of Contents
 
-- [Features](#features)
-- [Architecture Overview](#architecture-overview)
+- [Highlights](#highlights)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-  - [Using the requests Backend](#using-the-requests-backend)
-  - [Using the httpx Backend (Sync)](#using-the-httpx-backend-sync)
-  - [Using the httpx Backend (Async)](#using-the-httpx-backend-async)
-  - [HTTP/2 Support](#http2-support)
-  - [SOAP/XML Request](#soapxml-request)
-  - [Session-Based Requests](#session-based-requests)
-- [Result Assertion](#result-assertion)
-- [Report Generation](#report-generation)
-  - [HTML Report](#html-report)
-  - [JSON Report](#json-report)
-  - [XML Report](#xml-report)
-- [Mock Server](#mock-server)
-- [Callback Executor](#callback-executor)
-- [Scripting with Executor](#scripting-with-executor)
-  - [JSON Keyword-Driven Testing](#json-keyword-driven-testing)
-  - [Executing JSON Files via Python](#executing-json-files-via-python)
-  - [Executing a Directory of JSON Files](#executing-a-directory-of-json-files)
-  - [Adding Custom Commands](#adding-custom-commands)
-- [CLI Usage](#cli-usage)
-- [Remote Automation (Socket Server)](#remote-automation-socket-server)
-- [Project Scaffolding](#project-scaffolding)
-- [GUI (Optional)](#gui-optional)
-- [Test Record](#test-record)
+- [Core Concepts](#core-concepts)
+- [Feature Map](#feature-map)
+  - [HTTP / Protocol Backends](#http--protocol-backends)
+  - [Data Layer](#data-layer)
+  - [Assertions, Diffs and SLAs](#assertions-diffs-and-slas)
+  - [Connection Layer](#connection-layer)
+  - [Mock Server](#mock-server)
+  - [Runner](#runner)
+  - [Reports and Observability](#reports-and-observability)
+  - [Integrations](#integrations)
+  - [CLI / Developer Experience](#cli--developer-experience)
+  - [Security Probes](#security-probes)
+  - [OpenAPI Inference](#openapi-inference)
+  - [GUI](#gui)
+  - [Pluggable AI Backend](#pluggable-ai-backend)
+- [MCP Server for Claude](#mcp-server-for-claude)
 - [Project Structure](#project-structure)
-- [Requirements](#requirements)
+- [Optional Extras](#optional-extras)
 - [Development](#development)
 - [Contributing](#contributing)
 - [License](#license)
@@ -56,49 +46,25 @@ and generates reports in multiple formats for easy analysis.
 
 ---
 
-## Features
+## Highlights
 
-| Category | Details |
+| Area | What you get |
 |---|---|
-| **HTTP Clients** | `requests` (sync, session support) and `httpx` (sync + async, HTTP/2) |
-| **Protocols** | HTTP, HTTPS, SOAP/XML, JSON |
-| **Report Formats** | HTML, JSON, XML |
-| **Scripting** | JSON keyword-driven test execution via Executor |
-| **Mock Server** | Built-in Flask-based mock server for local testing |
-| **Remote Automation** | TCP socket server for remote command execution |
-| **Assertions** | Built-in response field assertion (status code, headers, body, etc.) |
-| **Callback System** | Execute callback functions after API calls |
-| **CLI** | Full command-line interface for CI/CD integration |
-| **Project Scaffolding** | Auto-generate project structure with templates |
-| **GUI** | Optional PySide6 GUI (install with `pip install je_api_testka[gui]`) |
-| **Cross-Platform** | Windows, macOS, Linux |
-| **Performance** | Thousands of requests per second |
-
----
-
-## Architecture Overview
-
-```
-je_api_testka/
-├── requests_wrapper/      # requests-based HTTP client
-├── httpx_wrapper/         # httpx-based HTTP client (sync + async)
-├── utils/
-│   ├── assert_result/     # Response assertion
-│   ├── callback/          # Callback function executor
-│   ├── executor/          # JSON keyword-driven action executor
-│   ├── generate_report/   # HTML / JSON / XML report generation
-│   ├── mock_server/       # Flask-based mock server
-│   ├── socket_server/     # TCP socket server for remote automation
-│   ├── project/           # Project scaffolding & templates
-│   ├── json/              # JSON read/write utilities
-│   ├── xml/               # XML parse/convert utilities
-│   ├── test_record/       # Global test record storage
-│   ├── logging/           # Logging instance
-│   ├── file_process/      # File listing utilities
-│   ├── package_manager/   # Dynamic package loading
-│   └── exception/         # Custom exceptions
-└── gui/                   # Optional PySide6 GUI
-```
+| **Backends** | `requests` (sync, sessions), `httpx` (sync + async, HTTP/2), WebSocket, SSE, GraphQL |
+| **Data layer** | Variable store, `{{var}}` templating, CSV/JSON data-driven loops, env profiles, fake data |
+| **Assertions** | Field assertions, JSON Schema, JSONPath, snapshot, structural diffs, OpenAPI contract drift, response-time SLAs |
+| **Connection** | mTLS, proxies, DNS override, VCR-style cassette record/replay |
+| **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy |
+| **Runner** | Sequential & parallel execution, tag filters, dependency-aware ordering, retry policies |
+| **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff |
+| **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer |
+| **CLI / DX** | Subcommand CLI, REPL, terminal summary, shell completion, scaffold |
+| **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
+| **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog |
+| **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification |
+| **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
+| **GUI** | Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed |
+| **Cross-platform** | Windows, macOS, Linux. Python 3.10–3.14 |
 
 ---
 
@@ -108,462 +74,396 @@ je_api_testka/
 pip install je_api_testka
 ```
 
-To install with GUI support:
+Optional extras (install with `pip install 'je_api_testka[<extra>]'`):
 
-```bash
-pip install je_api_testka[gui]
-```
+| Extra | Adds |
+|---|---|
+| `gui` | PySide6 GUI |
+| `websocket` | `websockets` for the WebSocket wrapper |
+| `schema` | `jsonschema` and `jsonpath-ng` for advanced assertions |
+| `security` | `pyjwt` and `botocore` for JWT / AWS SigV4 helpers |
+| `otel` | `opentelemetry-api` / `opentelemetry-sdk` for tracing hooks |
+| `mcp` | `mcp` Python SDK for the MCP server |
 
 ---
 
 ## Quick Start
 
-### Using the requests Backend
-
-```python
-from je_api_testka import test_api_method_requests
-
-# GET request
-result = test_api_method_requests("get", "http://httpbin.org/get")
-print(result["response_data"]["status_code"])  # 200
-
-# POST request with parameters
-result = test_api_method_requests(
-    "post",
-    "http://httpbin.org/post",
-    params={"task": "new task"}
-)
-print(result["response_data"]["status_code"])  # 200
-```
-
-### Using the httpx Backend (Sync)
-
-```python
-from je_api_testka import test_api_method_httpx
-
-result = test_api_method_httpx("get", "http://httpbin.org/get")
-print(result["response_data"]["status_code"])  # 200
-```
-
-### Using the httpx Backend (Async)
-
-```python
-import asyncio
-from je_api_testka import test_api_method_httpx_async
-
-async def main():
-    result = await test_api_method_httpx_async("get", "http://httpbin.org/get")
-    print(result["response_data"]["status_code"])  # 200
-
-asyncio.run(main())
-```
-
-### HTTP/2 Support
-
-```python
-import asyncio
-from je_api_testka import test_api_method_httpx_async
-
-async def main():
-    result = await test_api_method_httpx_async(
-        "get",
-        "https://httpbin.org/get",
-        http2=True
-    )
-    print(result["response_data"]["status_code"])
-
-asyncio.run(main())
-```
-
-### SOAP/XML Request
-
-```python
-from je_api_testka import test_api_method_requests
-
-result = test_api_method_requests(
-    "post",
-    "http://example.com/soap-endpoint",
-    soap=True,
-    data='<soap:Envelope>...</soap:Envelope>'
-)
-```
-
-When `soap=True`, the `Content-Type` header is automatically set to `application/soap+xml`.
-
-### Session-Based Requests
-
-The `requests` backend supports session-based methods for persistent connections (cookies, auth, etc.):
-
-```python
-from je_api_testka import test_api_method_requests
-
-# Use session_get, session_post, session_put, session_patch, session_delete, session_head, session_options
-result = test_api_method_requests("session_get", "http://httpbin.org/get")
-```
-
----
-
-## Result Assertion
-
-Pass a `result_check_dict` to automatically assert response fields:
-
-```python
-from je_api_testka import test_api_method_requests
-
-# This will raise APIAssertException if status_code is not 200
-test_api_method_requests(
-    "get",
-    "http://httpbin.org/get",
-    result_check_dict={"status_code": 200}
-)
-```
-
-You can assert on any field in the response data: `status_code`, `text`, `content`, `headers`, `cookies`, `encoding`, `elapsed`, `request_time_sec`, `request_method`, `request_url`, `request_body`, `start_time`, `end_time`.
-
----
-
-## Report Generation
-
-Reports are generated from the global `test_record_instance`, which automatically records all test results.
-
-### HTML Report
-
 ```python
 from je_api_testka import test_api_method_requests, generate_html_report
 
-test_api_method_requests("get", "http://httpbin.org/get")
-test_api_method_requests("post", "http://httpbin.org/post")
-
-# Generates "my_report.html" with success/failure tables
-generate_html_report("my_report")
-```
-
-### JSON Report
-
-```python
-from je_api_testka import test_api_method_requests, generate_json_report
-
-test_api_method_requests("get", "http://httpbin.org/get")
-
-# Generates "my_report_success.json" and "my_report_failure.json"
-generate_json_report("my_report")
-```
-
-### XML Report
-
-```python
-from je_api_testka import test_api_method_requests, generate_xml_report
-
-test_api_method_requests("get", "http://httpbin.org/get")
-
-# Generates "my_report_success.xml" and "my_report_failure.xml"
-generate_xml_report("my_report")
-```
-
----
-
-## Mock Server
-
-APITestka includes a built-in Flask-based mock server for local testing:
-
-```python
-from je_api_testka import flask_mock_server_instance, request
-
-# Add custom routes
-def my_endpoint():
-    return {"message": "hello", "params": dict(request.args)}
-
-flask_mock_server_instance.add_router(
-    {"/api/test": my_endpoint},
-    methods=["GET", "POST"]
+test_api_method_requests(
+    "get", "https://httpbin.org/get",
+    result_check_dict={"status_code": 200},
 )
-
-# Start the mock server (default: localhost:8090)
-flask_mock_server_instance.start_mock_server()
+generate_html_report("smoke")
 ```
 
-You can also create a new instance with a custom host/port:
-
-```python
-from je_api_testka.utils.mock_server.flask_mock_server import FlaskMockServer
-
-server = FlaskMockServer("0.0.0.0", 5000)
-server.add_router({"/health": lambda: "OK"}, methods=["GET"])
-server.start_mock_server()
-```
-
----
-
-## Callback Executor
-
-Execute a callback function after an API test completes:
-
-```python
-from je_api_testka import callback_executor
-
-def my_callback(message):
-    print(f"Callback: {message}")
-
-callback_executor.callback_function(
-    trigger_function_name="AT_test_api_method",
-    callback_function=my_callback,
-    callback_function_param={"message": "Test done!"},
-    callback_param_method="kwargs",
-    http_method="get",
-    test_url="http://httpbin.org/get"
-)
-```
-
----
-
-## Scripting with Executor
-
-The Executor enables JSON keyword-driven testing, where test actions are defined as JSON arrays and executed programmatically.
-
-### JSON Keyword-Driven Testing
-
-Create a JSON file (e.g., `test_actions.json`):
+JSON-driven equivalent (`smoke.json`):
 
 ```json
 {
-    "api_testka": [
-        ["AT_test_api_method", {
-            "http_method": "get",
-            "test_url": "http://httpbin.org/get",
-            "result_check_dict": {"status_code": 200}
-        }],
-        ["AT_test_api_method", {
-            "http_method": "post",
-            "test_url": "http://httpbin.org/post",
-            "params": {"task": "new task"},
-            "result_check_dict": {"status_code": 200}
-        }]
-    ]
+  "api_testka": [
+    ["AT_test_api_method_requests", {
+      "http_method": "get",
+      "test_url": "https://httpbin.org/get",
+      "result_check_dict": {"status_code": 200}
+    }],
+    ["AT_generate_html_report", {"html_file_name": "smoke"}]
+  ]
 }
 ```
 
-### Executing JSON Files via Python
-
-```python
-from je_api_testka import execute_action, read_action_json
-
-execute_action(read_action_json("test_actions.json"))
+```bash
+apitestka run smoke.json
 ```
 
-### Executing a Directory of JSON Files
+---
 
-```python
-from je_api_testka import execute_files, get_dir_files_as_list
+## Core Concepts
 
-execute_files(get_dir_files_as_list("path/to/json_dir"))
-```
+- **Backends** — every HTTP call goes through `requests_wrapper`, `httpx_wrapper`,
+  `websocket_wrapper`, `sse_wrapper`, or `graphql_wrapper`. They share a record format.
+- **`test_record_instance`** — a thread-safe singleton that captures every request /
+  response. Reports, diffs, badges, and the trend store all read from it.
+- **Executor** — a command map (`AT_*` keys) over Python callables. JSON action lists
+  drive it. New features register themselves here so `apitestka run` can use them
+  without writing Python.
+- **VariableStore** — a thread-safe key/value store. `{{var}}` placeholders inside
+  payloads, URLs, headers, and templates resolve against it. Combine with
+  `AT_extract_and_store` to chain requests.
+- **Optional dependencies** — heavyweight features (WebSockets, JSON Schema, JWT, MCP)
+  live behind extras and raise a friendly error if you call them without installing.
 
-### Adding Custom Commands
+---
 
-```python
-from je_api_testka import add_command_to_executor, execute_action
+## Feature Map
 
-def my_custom_function(url):
-    print(f"Custom test on: {url}")
+### HTTP / Protocol Backends
 
-add_command_to_executor({"my_test": my_custom_function})
-
-execute_action([
-    ["my_test", ["http://example.com"]]
-])
-```
-
-**Available built-in Executor commands:**
-
-| Command | Description |
+| Backend | Function |
 |---|---|
-| `AT_test_api_method` | Test API with requests backend |
-| `AT_test_api_method_httpx` | Test API with httpx sync backend |
-| `AT_delegate_async_httpx` | Test API with httpx async backend (run synchronously) |
-| `AT_generate_html` | Generate HTML report data |
-| `AT_generate_html_report` | Generate HTML report file |
-| `AT_generate_json` | Generate JSON report data |
-| `AT_generate_json_report` | Generate JSON report file |
-| `AT_generate_xml` | Generate XML report data |
-| `AT_generate_xml_report` | Generate XML report file |
-| `AT_execute_action` | Execute nested action list |
-| `AT_execute_files` | Execute actions from multiple files |
-| `AT_add_package_to_executor` | Dynamically load a package into executor |
-| `AT_add_package_to_callback_executor` | Dynamically load a package into callback executor |
-| `AT_flask_mock_server_add_router` | Add route to mock server |
-| `AT_start_flask_mock_server` | Start mock server |
+| `requests` | `test_api_method_requests` (sync, sessions) |
+| `httpx` sync | `test_api_method_httpx` |
+| `httpx` async | `test_api_method_httpx_async` (HTTP/2 via `http2=True`) |
+| WebSocket | `test_api_method_websocket`, `test_api_method_websocket_async` (extra: `websocket`) |
+| SSE | `iter_sse_events`, `test_api_method_sse` |
+| GraphQL | `test_api_method_graphql`, `test_api_method_graphql_async` |
 
----
+```python
+from je_api_testka import test_api_method_graphql
 
-## CLI Usage
-
-APITestka provides a full CLI interface:
-
-```bash
-# Execute a single JSON action file
-python -m je_api_testka -e test_actions.json
-
-# Execute all JSON files in a directory
-python -m je_api_testka -d path/to/json_dir
-
-# Execute a JSON string directly
-python -m je_api_testka --execute_str '[["AT_test_api_method", {"http_method": "get", "test_url": "http://httpbin.org/get"}]]'
-
-# Create a new project with templates
-python -m je_api_testka -c MyProject
+test_api_method_graphql(
+    "https://api.example.invalid/graphql",
+    query="query Get($id: ID!) { user(id: $id) { id name } }",
+    variables={"id": "42"},
+)
 ```
 
-| Flag | Description |
+### Data Layer
+
+```python
+from je_api_testka import (
+    variable_store, render_template, extract_and_store, load_env_profile,
+    fake_uuid, iter_csv_rows,
+)
+
+load_env_profile("envs/dev.json")           # populates variable_store
+extract_and_store({"data": {"id": 7}}, "data.id", "user_id")
+render_template("/users/{{user_id}}")        # -> "/users/7"
+
+for row in iter_csv_rows("data/users.csv"):
+    variable_store.set("email", row["email"])
+    test_api_method_requests("post", "https://x.invalid/login", json=row)
+```
+
+Executor commands: `AT_set_variable`, `AT_get_variable`, `AT_clear_variables`,
+`AT_extract_and_store`, `AT_render_template`, `AT_fake_uuid`, `AT_fake_email`,
+`AT_fake_word`, `AT_load_env_profile`.
+
+### Assertions, Diffs and SLAs
+
+```python
+from je_api_testka import (
+    check_json_schema, check_jsonpath, assert_snapshot,
+    diff_payloads, diff_openapi_specs, RetryPolicy, retry_call,
+)
+from je_api_testka.diff.sla_check import ResponseSLA, assert_sla
+
+check_json_schema(payload, {"type": "object", "required": ["id"]})
+check_jsonpath(payload, "$.data.id", expected=7)
+assert_snapshot("user-by-id", payload, ignore_keys=["timestamp"])
+diff = diff_payloads(prod_response, staging_response, ignore_paths=["server_time"])
+assert_sla(records, ResponseSLA(max_ms=2000, p95_ms=1500))
+```
+
+### Connection Layer
+
+```python
+from je_api_testka.connection import (
+    ConnectionOptions, apply_to_requests_kwargs,
+    dns_override, Cassette, replay_or_record,
+)
+
+options = ConnectionOptions(cert=("c.crt", "c.key"),
+                            proxies={"https": "http://proxy:8080"})
+
+with dns_override({"api.example.invalid": "127.0.0.1"}):
+    test_api_method_requests("get", "https://api.example.invalid/health")
+
+cassette = Cassette("tape.json")  # offline replay-or-record
+```
+
+### Mock Server
+
+The bundled `FlaskMockServer` now supports several layered features:
+
+| Feature | API |
 |---|---|
-| `-e`, `--execute_file` | Execute a single JSON action file |
-| `-d`, `--execute_dir` | Execute all JSON files in a directory |
-| `--execute_str` | Execute a JSON string directly |
-| `-c`, `--create_project` | Create a project directory with template files |
-
----
-
-## Remote Automation (Socket Server)
-
-APITestka includes a TCP socket server for remote command execution:
-
-```python
-from je_api_testka import start_apitestka_socket_server
-
-# Start the socket server (default: localhost:9939)
-server = start_apitestka_socket_server(host="localhost", port=9939)
-```
-
-Clients can send JSON-formatted action lists via TCP, and the server will execute them and return results. Send `quit_server` to shut down the server.
-
-The server also supports CLI arguments:
+| Static routes | `flask_mock_server_instance.add_router({...})` |
+| Dynamic routes | `server.add_dynamic_route(...)` + `DynamicRouter` rules |
+| Stateful store | `server.state` (`StatefulStore`) |
+| Fault injection | `server.fault_injector.configure(latency_seconds=..., failure_probability=...)` |
+| OpenAPI driven | `server.load_openapi(spec)` |
+| Templated | `server.add_template_route("/x", {"msg": "{{name}}"})` |
+| Webhook receive | `server.add_webhook("/hook")` then read `server.webhook_receiver.all()` |
+| Record-replay | `server.add_proxy("https://upstream", "tape.json")` |
 
 ```bash
-python -m je_api_testka.utils.socket_server.api_testka_socket_server localhost 9939
+apitestka mock --host 0.0.0.0 --port 9000
 ```
 
----
-
-## Project Scaffolding
-
-Generate a project structure with keyword and executor templates:
+### Runner
 
 ```python
-from je_api_testka import create_project_dir
+from je_api_testka.runner import (
+    run_actions_parallel, filter_actions_by_tag, order_actions,
+)
 
-create_project_dir(project_path=".", parent_name="MyAPIProject")
+actions = order_actions(filter_actions_by_tag(actions, {"smoke"}))
+results = run_actions_parallel(actions, max_workers=8)
 ```
 
-This creates:
+### Reports and Observability
 
+```python
+from je_api_testka import (
+    generate_html_report, generate_json_report, generate_xml_report,
+)
+from je_api_testka.utils.generate_report.junit_report import generate_junit_report
+from je_api_testka.utils.generate_report.allure_report import generate_allure_report
+from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report
+from je_api_testka.utils.generate_report.badge import generate_badge
+from je_api_testka.utils.generate_report.run_diff import diff_runs
+from je_api_testka.utils.generate_report.trend_store import record_current_run
+
+generate_html_report("report")
+generate_junit_report("junit.xml")          # GitHub Actions / Jenkins
+generate_allure_report("allure-results")    # `allure generate` consumable
+generate_markdown_report("report.md")       # Slack / GitHub-friendly
+generate_badge("badge.json")                # shields.io endpoint
+record_current_run("trend.sqlite")          # historical trend
 ```
-MyAPIProject/
-├── keyword/
-│   ├── keyword1.json          # Example keyword test (POST)
-│   ├── keyword2.json          # Example keyword test (GET)
-│   └── bad_keyword_1.json     # Example with package loading
-└── executor/
-    ├── executor_one_file.py   # Execute a single keyword file
-    ├── executor_folder.py     # Execute all keyword files in directory
-    └── executor_bad_file.py   # Example with dynamic package loading
+
+OpenTelemetry hook (no-op when `opentelemetry-api` is absent):
+
+```python
+from je_api_testka.utils.observability import instrument_request
+
+with instrument_request("GET", "https://x.invalid"):
+    test_api_method_requests("get", "https://x.invalid")
 ```
 
----
+### Integrations
 
-## GUI (Optional)
+```python
+from je_api_testka.integrations import (
+    notify_via_webhook, post_pr_comment,
+    curl_to_action, convert_har,
+)
+from je_api_testka.cli.import_specs import convert_spec_file
 
-APITestka provides an optional PySide6-based GUI:
+notify_via_webhook("https://hooks.slack.invalid/...", summary="...", platform="slack")
+post_pr_comment("acme/widget", pr_number=42, token="<gha-token>")
+
+action = curl_to_action("curl -X POST https://api/x -d '{\"a\":1}'")
+actions = convert_har("traffic.har")
+actions = convert_spec_file("openapi.json", spec_format="openapi")
+```
+
+### CLI / Developer Experience
 
 ```bash
-pip install je_api_testka[gui]
+apitestka run actions.json              # or directory
+apitestka create my_project
+apitestka mock --port 9000
+apitestka import openapi.json out.json --format openapi
+apitestka repl                          # JSON action REPL
+apitestka summary                       # ANSI-coloured summary
+apitestka scaffold https://api/x out.json
+apitestka completion bash               # source >> ~/.bashrc
+apitestka mcp                           # MCP server over stdio
 ```
 
-The GUI requires PySide6 6.11.0 and qt-material.
+### Security Probes
+
+```python
+from je_api_testka.security import (
+    basic_auth_header, bearer_token_header, build_jwt, aws_sigv4_headers,
+    scan_security_headers, cors_preflight, probe_rate_limit, probe_ssrf,
+    fuzz_string_inputs, run_pip_audit,
+)
+
+scan_security_headers(response_headers)              # HSTS, CSP, nosniff…
+cors_preflight("https://api/x", origin="https://app")
+probe_rate_limit("https://api/x", burst=20)
+probe_ssrf("https://api/fetch", parameter="url")
+run_pip_audit()                                      # delegates to pip-audit
+```
+
+### OpenAPI Inference
+
+```python
+from je_api_testka.spec import infer_schema, records_to_openapi, openapi_changelog
+
+records_to_openapi(title="Recovered", version="0.1.0")
+openapi_changelog(prev_spec, current_spec)           # markdown diff
+```
+
+### GUI
+
+```bash
+pip install 'je_api_testka[gui]'
+```
+
+Headless models (`HistoryPanelModel`, `EnvManagerModel`, `render_side_by_side`) live in
+`je_api_testka.gui`, allowing tests and headless tooling to drive panels without
+PySide6. The actual Qt widgets live in `main_widget.py`.
+
+Locales: English, 繁體中文, 简体中文, 日本語. Switch via `LanguageWrapper.reset_language(...)`.
+
+### Pluggable AI Backend
+
+Default backend (`NoOpAIBackend`) never calls a network. Plug in your own to enable
+LLM-driven test generation:
+
+```python
+from je_api_testka.ai import AIBackend, set_ai_backend, generate_tests_from_openapi
+
+class AnthropicBackend(AIBackend):
+    def complete(self, prompt, *, context=None):
+        ...  # call your provider
+        return llm_response_text
+
+set_ai_backend(AnthropicBackend())
+actions = generate_tests_from_openapi(my_openapi_spec)  # falls back to a deterministic
+                                                        # happy path if the LLM reply is
+                                                        # not valid JSON
+```
 
 ---
 
-## Test Record
+## MCP Server for Claude
 
-All API test results are automatically stored in a global `test_record_instance`:
+APITestka ships an [MCP](https://modelcontextprotocol.io/) server so Claude (and any other
+MCP-compatible client) can drive the framework. Eight tools are exposed:
 
-```python
-from je_api_testka import test_api_method_requests, test_record_instance
+| Tool | Purpose |
+|---|---|
+| `apitestka_run_action` | Execute an action list |
+| `apitestka_test_api` | One-shot HTTP request via `requests` backend |
+| `apitestka_curl_to_action` | cURL → action JSON |
+| `apitestka_har_import` | HAR file → action list |
+| `apitestka_render_markdown` | Markdown report from current records |
+| `apitestka_records_to_openapi` | Reconstruct an OpenAPI document |
+| `apitestka_clear_records` | Wipe the test record |
+| `apitestka_get_records` | Return successes / failures |
 
-test_api_method_requests("get", "http://httpbin.org/get")
-test_api_method_requests("get", "http://invalid-url")
+Install and run:
 
-# Access successful test records
-print(len(test_record_instance.test_record_list))
-
-# Access error records
-print(len(test_record_instance.error_record_list))
-
-# Clean all records
-test_record_instance.clean_record()
+```bash
+pip install 'je_api_testka[mcp]'
+apitestka-mcp        # or: apitestka mcp / python -m je_api_testka.mcp_server
 ```
 
-Each successful record contains: `status_code`, `text`, `content`, `headers`, `history`, `encoding`, `cookies`, `elapsed`, `request_time_sec`, `request_method`, `request_url`, `request_body`, `start_time`, `end_time`.
+Claude Code config (`~/.claude/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "apitestka": {
+      "command": "apitestka-mcp"
+    }
+  }
+}
+```
 
 ---
 
 ## Project Structure
 
 ```
-APITestka/
-├── je_api_testka/             # Main package
-│   ├── __init__.py            # Public API exports
-│   ├── __main__.py            # CLI entry point
-│   ├── requests_wrapper/      # requests HTTP client wrapper
-│   ├── httpx_wrapper/         # httpx HTTP client wrapper (sync + async)
-│   ├── utils/                 # Utility modules
-│   └── gui/                   # Optional PySide6 GUI
-├── test/                      # Test suite
-│   ├── test_requests/         # Tests for requests backend
-│   ├── test_httpx_sync/       # Tests for httpx sync backend
-│   ├── test_httpx_async/      # Tests for httpx async backend
-│   └── test_utils/            # Tests for utility modules
-├── docs/                      # Sphinx documentation source
-├── apitestka_driver/          # Standalone driver executables
-├── licenses/                  # License files
-├── pyproject.toml             # Build configuration
-├── requirements.txt           # Runtime dependencies
-└── dev_requirements.txt       # Development dependencies
+je_api_testka/
+├── __init__.py              # Public API exports
+├── __main__.py              # Legacy CLI entry point
+├── ai/                      # Pluggable AI backend + helpers
+├── cli/                     # apitestka CLI subcommands + REPL + completions
+├── connection/              # ConnectionOptions, DNS override, Cassette
+├── data/                    # VariableStore, templates, faker, env profiles
+├── diff/                    # Response diff / contract drift / SLA
+├── graphql_wrapper/         # GraphQL helper
+├── gui/                     # Optional PySide6 GUI + headless models
+├── httpx_wrapper/           # httpx sync + async wrapper
+├── integrations/            # Notifications, PR comments, importers
+├── mcp_server/              # Claude / MCP server
+├── pytest_plugin/           # pytest fixtures
+├── requests_wrapper/        # requests wrapper
+├── runner/                  # Parallel runner, tag filter, dependency runner
+├── security/                # Auth helpers, fuzz, header / CORS / SSRF / rate-limit / CVE
+├── spec/                    # OpenAPI inference / changelog
+├── sse_wrapper/             # Server-Sent Events helper
+├── utils/                   # Executor, mock server, generators, etc.
+└── websocket_wrapper/       # WebSocket wrapper
 ```
 
 ---
 
-## Requirements
+## Optional Extras
 
-- **Python** 3.10 or later
-- **Dependencies:** `requests`, `Flask`, `httpx`
-- **Optional (GUI):** `PySide6==6.11.0`, `qt-material`
+```bash
+pip install 'je_api_testka[websocket]'
+pip install 'je_api_testka[schema]'
+pip install 'je_api_testka[security]'
+pip install 'je_api_testka[otel]'
+pip install 'je_api_testka[mcp]'
+pip install 'je_api_testka[gui]'
+```
 
 ---
 
 ## Development
 
 ```bash
-# Clone the repository
 git clone https://github.com/Intergration-Automation-Testing/APITestka.git
 cd APITestka
-
-# Install development dependencies
 pip install -r dev_requirements.txt
-
-# Run tests
-pytest
+pytest                     # full suite (~300+ tests)
 ```
+
+CI runs the suite against Python 3.10 – 3.14 on Ubuntu, macOS, and Windows.
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Every commit must ship with unit tests
+(see `CLAUDE.md` → *Testing Guidelines*).
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See [licenses/APITestka_LICENSE](licenses/APITestka_LICENSE).
+MIT — see [licenses/APITestka_LICENSE](licenses/APITestka_LICENSE).
 
 ---
 
@@ -572,3 +472,4 @@ This project is licensed under the MIT License. See [licenses/APITestka_LICENSE]
 - **Homepage:** https://github.com/Intergration-Automation-Testing/APITestka
 - **Documentation:** https://apitestka.readthedocs.io/en/latest/
 - **PyPI:** https://pypi.org/project/je_api_testka/
+- **MCP:** https://modelcontextprotocol.io/
