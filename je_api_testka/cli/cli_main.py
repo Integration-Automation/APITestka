@@ -6,6 +6,10 @@ Subcommands:
     create      Scaffold a new project.
     mock        Start the bundled Flask mock server.
     import      Convert OpenAPI/Postman documents into action JSON.
+    repl        Interactive JSON-action REPL.
+    summary     Print a terminal summary of the latest run.
+    scaffold    Generate a starter action JSON for a URL.
+    completion  Print a shell completion script.
 """
 from __future__ import annotations
 
@@ -59,6 +63,34 @@ def _cmd_import(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_repl(_args: argparse.Namespace) -> int:
+    from je_api_testka.cli.repl import repl_loop
+
+    repl_loop()
+    return 0
+
+
+def _cmd_summary(_args: argparse.Namespace) -> int:
+    from je_api_testka.cli.tui_summary import print_terminal_summary
+
+    print_terminal_summary()
+    return 0
+
+
+def _cmd_scaffold(args: argparse.Namespace) -> int:
+    from je_api_testka.cli.scaffold_test import write_scaffold
+
+    write_scaffold(args.output, args.url, method=args.method)
+    return 0
+
+
+def _cmd_completion(args: argparse.Namespace) -> int:
+    from je_api_testka.cli.completion import generate_completion_script
+
+    print(generate_completion_script(args.shell))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="apitestka", description="APITestka command line")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -86,6 +118,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="Source spec format",
     )
     import_parser.set_defaults(func=_cmd_import)
+
+    repl_parser = sub.add_parser("repl", help="Interactive JSON-action REPL")
+    repl_parser.set_defaults(func=_cmd_repl)
+
+    summary_parser = sub.add_parser("summary", help="Print terminal summary of latest run")
+    summary_parser.set_defaults(func=_cmd_summary)
+
+    scaffold_parser = sub.add_parser("scaffold", help="Generate starter action JSON for a URL")
+    scaffold_parser.add_argument("url", help="Target URL")
+    scaffold_parser.add_argument("output", help="Destination JSON file")
+    scaffold_parser.add_argument("--method", default="GET")
+    scaffold_parser.set_defaults(func=_cmd_scaffold)
+
+    completion_parser = sub.add_parser("completion", help="Print shell completion script")
+    completion_parser.add_argument("shell", choices=("bash", "zsh", "fish", "powershell"))
+    completion_parser.set_defaults(func=_cmd_completion)
     return parser
 
 
