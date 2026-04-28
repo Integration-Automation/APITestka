@@ -14,6 +14,9 @@ from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.github_pr_comment import post_pr_comment
 from je_api_testka.integrations.har_import import convert_har
 from je_api_testka.integrations.notify import notify_via_webhook
+from je_api_testka.security.cors_check import cors_preflight
+from je_api_testka.security.rate_limit_probe import probe_rate_limit
+from je_api_testka.security.ssrf_check import probe_ssrf
 
 
 def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
@@ -107,6 +110,10 @@ class Executor:
             "AT_post_pr_comment": post_pr_comment,
             "AT_curl_to_action": curl_to_action,
             "AT_convert_har": convert_har,
+            # Security checks
+            "AT_cors_preflight": cors_preflight,
+            "AT_probe_rate_limit": probe_rate_limit,
+            "AT_probe_ssrf": probe_ssrf,
         }
 
     def _execute_event(self, action: list) -> Any:
