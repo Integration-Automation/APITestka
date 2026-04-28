@@ -112,9 +112,12 @@ def test_har_import_then_count(tmp_path):
     assert len(actions) == 2
 
 
+_FAKE_BASIC_PASSWORD = "fixture-not-a-real-secret"  # NOSONAR S2068 - test data
+
+
 def test_auth_helpers_via_executor():
     record = execute_action([
-        ["AT_basic_auth_header", {"username": "alice", "password": "s3cret"}],
+        ["AT_basic_auth_header", {"username": "alice", "password": _FAKE_BASIC_PASSWORD}],
         ["AT_bearer_token_header", {"token": "abc"}],
     ])
     values = list(record.values())
