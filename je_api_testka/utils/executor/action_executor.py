@@ -17,6 +17,9 @@ from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.security.cors_check import cors_preflight
 from je_api_testka.security.rate_limit_probe import probe_rate_limit
 from je_api_testka.security.ssrf_check import probe_ssrf
+from je_api_testka.spec.openapi_changelog import openapi_changelog
+from je_api_testka.spec.records_to_openapi import records_to_openapi
+from je_api_testka.spec.schema_inference import infer_schema
 
 
 def _cassette_lookup(file_path: str, method: str, url: str, body: str = "") -> dict:
@@ -114,6 +117,10 @@ class Executor:
             "AT_cors_preflight": cors_preflight,
             "AT_probe_rate_limit": probe_rate_limit,
             "AT_probe_ssrf": probe_ssrf,
+            # Spec inference
+            "AT_infer_schema": infer_schema,
+            "AT_records_to_openapi": records_to_openapi,
+            "AT_openapi_changelog": openapi_changelog,
         }
 
     def _execute_event(self, action: list) -> Any:
