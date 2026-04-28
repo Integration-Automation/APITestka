@@ -3,6 +3,10 @@ from flask.app import Flask
 from je_api_testka.utils.exception.exception_tags import get_bad_api_router_setting
 from je_api_testka.utils.exception.exceptions import MockServerException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.mock_server.dynamic_router import DynamicRouter
+from je_api_testka.utils.mock_server.fault_injection import FaultInjector
+from je_api_testka.utils.mock_server.openapi_loader import register_openapi_routes
+from je_api_testka.utils.mock_server.stateful_store import StatefulStore
 
 
 class FlaskMockServer:
@@ -21,6 +25,9 @@ class FlaskMockServer:
         self.app = Flask(__name__)  # NOSONAR S4502
         self.host = host
         self.port = port
+        self.state = StatefulStore()
+        self.fault_injector = FaultInjector()
+        self.dynamic_router = DynamicRouter()
 
     @classmethod
     def api_testka_index_function(cls) -> str:
@@ -30,6 +37,18 @@ class FlaskMockServer:
         """
         apitestka_logger.info("FlaskMockServer api_testka_index_function")
         return "APITestka main index"
+
+    def add_dynamic_route(self, rule: str, methods=None) -> None:
+        """Register a single endpoint backed by the configured DynamicRouter."""
+        apitestka_logger.info(f"FlaskMockServer add_dynamic_route rule: {rule}")
+        view = self.fault_injector.wrap(self.dynamic_router.dispatch)
+        view.__name__ = f"dynamic_{rule.strip('/').replace('/', '_') or 'root'}"
+        self.app.route(rule, methods=methods or ["GET"])(view)
+
+    def load_openapi(self, spec: dict) -> dict:
+        """Mass-register endpoints from an OpenAPI 3.x document."""
+        apitestka_logger.info("FlaskMockServer load_openapi")
+        return register_openapi_routes(self, spec)
 
     def add_router(self, rule_and_function_dict: dict, **kwargs) -> None:
         """
