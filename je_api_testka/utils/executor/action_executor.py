@@ -2,6 +2,10 @@ import types
 from typing import Dict, Callable, Any, List, Union
 
 from je_api_testka import test_api_method_httpx
+from je_api_testka.data.env_profile import load_env_profile
+from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
+from je_api_testka.data.template_render import render_template
+from je_api_testka.data.variable_store import extract_and_store, variable_store
 from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
@@ -43,6 +47,18 @@ class Executor:
             # 模擬伺服器 / Mock server
             "AT_flask_mock_server_add_router": flask_mock_server_instance.add_router,
             "AT_start_flask_mock_server": flask_mock_server_instance.start_mock_server,
+            # 變數 / Variables
+            "AT_set_variable": variable_store.set,
+            "AT_get_variable": variable_store.get,
+            "AT_clear_variables": variable_store.clear,
+            "AT_extract_and_store": extract_and_store,
+            "AT_render_template": render_template,
+            # 假資料 / Fake data
+            "AT_fake_uuid": fake_uuid,
+            "AT_fake_email": fake_email,
+            "AT_fake_word": fake_word,
+            # 環境設定檔 / Env profile
+            "AT_load_env_profile": load_env_profile,
         }
 
     def _execute_event(self, action: list) -> Any:
