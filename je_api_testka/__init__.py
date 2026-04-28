@@ -51,6 +51,11 @@ from je_api_testka.graphql_wrapper.graphql_method import (
     test_api_method_graphql,
     test_api_method_graphql_async,
 )
+# Schema / JSONPath / Snapshot assertions
+from je_api_testka.utils.assert_result.schema_check import check_json_schema, check_jsonpath
+from je_api_testka.utils.assert_result.snapshot import assert_snapshot
+# Retry policy
+from je_api_testka.utils.retry.retry_policy import RetryPolicy, retry_call
 
 __all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method_httpx_async",
            "add_command_to_executor",
@@ -66,4 +71,6 @@ __all__ = ["test_api_method_requests", "test_api_method_httpx", "test_api_method
            "test_api_method_websocket", "test_api_method_websocket_async",
            "iter_sse_events", "test_api_method_sse",
            "test_api_method_graphql", "test_api_method_graphql_async",
+           "check_json_schema", "check_jsonpath", "assert_snapshot",
+           "RetryPolicy", "retry_call",
            ]
