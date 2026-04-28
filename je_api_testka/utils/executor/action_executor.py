@@ -32,8 +32,12 @@ from je_api_testka.requests_wrapper.request_method import test_api_method_reques
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
 from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
+from je_api_testka.utils.generate_report.badge import generate_badge
 from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
 from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
+from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
+from je_api_testka.utils.generate_report.run_diff import diff_runs
+from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
 from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
@@ -87,6 +91,13 @@ class Executor:
             # Cassette
             "AT_cassette_lookup": _cassette_lookup,
             "AT_cassette_record": _cassette_record,
+            # Markdown / Run diff / Badge / Trend
+            "AT_render_markdown": render_markdown,
+            "AT_generate_markdown_report": generate_markdown_report,
+            "AT_diff_runs": diff_runs,
+            "AT_generate_badge": generate_badge,
+            "AT_record_current_run": record_current_run,
+            "AT_list_trend_rows": list_trend_rows,
         }
 
     def _execute_event(self, action: list) -> Any:
