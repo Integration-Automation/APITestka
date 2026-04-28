@@ -6,6 +6,9 @@ from je_api_testka.data.env_profile import load_env_profile
 from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
 from je_api_testka.data.template_render import render_template
 from je_api_testka.data.variable_store import extract_and_store, variable_store
+from je_api_testka.diff.contract_diff import diff_openapi_specs
+from je_api_testka.diff.response_diff import diff_payloads
+from je_api_testka.diff.sla_check import assert_sla
 from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
@@ -59,6 +62,10 @@ class Executor:
             "AT_fake_word": fake_word,
             # 環境設定檔 / Env profile
             "AT_load_env_profile": load_env_profile,
+            # Diff / Contract / SLA
+            "AT_diff_payloads": diff_payloads,
+            "AT_diff_openapi_specs": diff_openapi_specs,
+            "AT_assert_sla": assert_sla,
         }
 
     def _execute_event(self, action: list) -> Any:
