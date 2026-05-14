@@ -45,7 +45,7 @@ apitestka-mcp = "je_api_testka.mcp_server.server:main"
 apitestka = "je_api_testka.pytest_plugin.plugin"
 
 [project.optional-dependencies]
-gui = ["PySide6==6.11.0", "qt-material"]
+gui = ["PySide6==6.11.1", "qt-material"]
 websocket = ["websockets>=12.0"]
 schema = ["jsonschema>=4.0", "jsonpath-ng>=1.6"]
 security = ["pyjwt>=2.8", "botocore>=1.34"]

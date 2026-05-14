@@ -11,5 +11,5 @@ sphinx-rtd-theme
 pytest
 pytest-asyncio
 pytest-timeout
-Pyside6 == 6.11.0
+Pyside6 == 6.11.1
 qt_material
