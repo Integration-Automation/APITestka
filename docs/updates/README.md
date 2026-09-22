@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20260923-03 | 2026-09-23 | Licence texts restored; root LICENSE ships in the wheel | #done #packaging | [2026-09](2026-09.md) |
 | U-20260923-02 | 2026-09-23 | PySide6 6.11.2 and Dependabot on dev | #done #deps #ci | [2026-09](2026-09.md) |
 | U-20260923-01 | 2026-09-23 | Keep the mcp extra below 2.0 and test the server end to end | #done #mcp #bugfix | [2026-09](2026-09.md) |
 | U-20260922-04 | 2026-09-22 | Contract test for the legacy CLI flags | #done #tests | [2026-09](2026-09.md) |
@@ -69,4 +70,4 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-09.md](2026-09.md) | 2026-09 | 6 |
+| [2026-09.md](2026-09.md) | 2026-09 | 7 |
