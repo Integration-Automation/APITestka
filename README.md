@@ -444,7 +444,7 @@ pip install 'je_api_testka[gui]'
 ## Development
 
 ```bash
-git clone https://github.com/Intergration-Automation-Testing/APITestka.git
+git clone https://github.com/Integration-Automation/APITestka.git
 cd APITestka
 pip install -r dev_requirements.txt
 pytest                     # full suite (~300+ tests)
@@ -469,7 +469,7 @@ MIT — see [licenses/APITestka_LICENSE](licenses/APITestka_LICENSE).
 
 ## Links
 
-- **Homepage:** https://github.com/Intergration-Automation-Testing/APITestka
+- **Homepage:** https://github.com/Integration-Automation/APITestka
 - **Documentation:** https://apitestka.readthedocs.io/en/latest/
 - **PyPI:** https://pypi.org/project/je_api_testka/
 - **MCP:** https://modelcontextprotocol.io/

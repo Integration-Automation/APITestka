@@ -9,7 +9,7 @@ detailed reporting, and flexible CLI scripting.
 .. note::
 
    - **PyPI:** https://pypi.org/project/je_api_testka/
-   - **GitHub:** https://github.com/Intergration-Automation-Testing/APITestka
+   - **GitHub:** https://github.com/Integration-Automation/APITestka
 
 .. toctree::
    :maxdepth: 2

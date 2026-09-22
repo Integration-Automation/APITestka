@@ -26,9 +26,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Intergration-Automation-Testing/APITestka"
+Homepage = "https://github.com/Integration-Automation/APITestka"
 Documentation = "https://apitestka.readthedocs.io/en/latest/"
-Code = "https://github.com/Intergration-Automation-Testing/APITestka"
+Code = "https://github.com/Integration-Automation/APITestka"
 
 [project.readme]
 file = "README.md"
