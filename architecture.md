@@ -29,7 +29,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/utils/socket_server/` | `start_apitestka_socket_server` (TCP command server) |
 | `je_api_testka/utils/package_manager/` | `package_manager`: loads an installed package's members into the executor |
 | `je_api_testka/utils/project/` | `create_project_dir` scaffolding (keyword and executor templates) |
-| `je_api_testka/utils/{json,xml,file_process,logging,exception,retry,observability}/` | JSON and XML I/O, directory listing, `apitestka_logger`, exception hierarchy, `RetryPolicy`, OpenTelemetry hooks |
+| `je_api_testka/utils/{json,xml,file_process,logging,exception,retry,observability}/` | JSON and XML I/O, directory listing, `apitestka_logger` (file at `$APITESTKA_LOG_FILE` or `~/.je_api_testka/logs/APITestka.log`, opened on first use; the root logger is left alone), exception hierarchy, `RetryPolicy`, OpenTelemetry hooks |
 | `je_api_testka/data/` | Variable store, template rendering, env profiles, fake-data helpers, data rows |
 | `je_api_testka/connection/` | Connection options, DNS override, record/replay cassettes |
 | `je_api_testka/diff/`, `spec/` | Response and contract diff, SLA checks; schema inference, records → OpenAPI, OpenAPI changelog |

@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20260923-05 | 2026-09-23 | APITestka.log moves out of the working directory; root logger left alone | #done #logging | [2026-09](2026-09.md) |
 | U-20260923-04 | 2026-09-23 | dev.toml carries the scripts, plugin and extras again | #done #packaging | [2026-09](2026-09.md) |
 | U-20260923-03 | 2026-09-23 | Licence texts restored; root LICENSE ships in the wheel | #done #packaging | [2026-09](2026-09.md) |
 | U-20260923-02 | 2026-09-23 | PySide6 6.11.2 and Dependabot on dev | #done #deps #ci | [2026-09](2026-09.md) |
@@ -71,4 +72,4 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-09.md](2026-09.md) | 2026-09 | 8 |
+| [2026-09.md](2026-09.md) | 2026-09 | 9 |
