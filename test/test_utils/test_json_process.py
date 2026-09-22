@@ -55,3 +55,43 @@ def test_reformat_read_json(tmp_path):
     read_data = read_action_json(json_path)
     reformatted = reformat_json(read_data)
     assert isinstance(reformatted, str)
+
+
+def test_read_action_json_missing_file_raises(tmp_path):
+    from je_api_testka.utils.exception.exceptions import APITesterJsonException
+
+    with pytest.raises(APITesterJsonException, match="not found"):
+        read_action_json(str(tmp_path / "absent.json"))
+
+
+def test_read_action_json_invalid_json_raises_with_cause(tmp_path):
+    from je_api_testka.utils.exception.exceptions import APITesterJsonException
+
+    broken = tmp_path / "broken.json"
+    broken.write_text("[[", encoding="utf-8")
+    with pytest.raises(APITesterJsonException) as caught:
+        read_action_json(str(broken))
+    assert isinstance(caught.value.__cause__, json.JSONDecodeError)
+
+
+def test_read_action_json_reads_utf8_whatever_the_locale(tmp_path):
+    # A file saved as UTF-8 by an editor, with characters outside cp950 (the zh-TW Windows locale).
+    path = tmp_path / "actions.json"
+    actions = [["AT_test_api_method", {"test_url": "https://例子.測試/😀"}]]
+    path.write_text(json.dumps(actions, ensure_ascii=False), encoding="utf-8")
+    assert read_action_json(str(path)) == actions
+
+
+def test_write_action_json_writes_utf8_text(tmp_path):
+    path = tmp_path / "actions.json"
+    actions = [["AT_test_api_method", {"note": "測試 😀"}]]
+    write_action_json(str(path), actions)
+    assert "測試 😀" in path.read_text(encoding="utf-8")
+    assert read_action_json(str(path)) == actions
+
+
+def test_write_action_json_unserialisable_data_raises(tmp_path):
+    from je_api_testka.utils.exception.exceptions import APITesterJsonException
+
+    with pytest.raises(APITesterJsonException):
+        write_action_json(str(tmp_path / "x.json"), [object()])
