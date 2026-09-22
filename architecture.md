@@ -115,7 +115,8 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - **PyBreeze (subprocess)** runs `python -m je_api_testka --execute_str <json>` or `--execute_file <path>`
   (`PyBreeze/pybreeze/extend/process_executor/python_task_process_manager.py`; the package name is in
   `.../process_executor/api_testka/api_testka_process.py`). On Windows PyBreeze runs `json.dumps` on
-  the string again, so the legacy flags and the double decode in `__main__.py` are an implicit contract.
+  the string again, so the legacy flags and the double decode in `__main__.py` are a contract, guarded by
+  `test/test_cli/test_legacy_cli_contract.py`.
 - **PyBreeze (in-process)** embeds `je_api_testka.gui.main_widget.APITestkaWidget`
   (`pybreeze/pybreeze_ui/menu/automation_menu/api_testka_menu/build_api_testka_menu.py`). It also
   generates scripts that import `test_api_method_requests` (`pybreeze/utils/curl_import/script_templates.py`).
