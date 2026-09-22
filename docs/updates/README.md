@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20260923-08 | 2026-09-23 | Action JSON is read and written as UTF-8; bad files raise | #bugfix #encoding | [2026-09](2026-09.md) |
 | U-20260923-07 | 2026-09-23 | Socket server stops reading sys.argv; its documented command line works | #change #bugfix #socket | [2026-09](2026-09.md) |
 | U-20260923-06 | 2026-09-23 | CLAUDE.md package tree matches the code | #done #docs | [2026-09](2026-09.md) |
 | U-20260923-05 | 2026-09-23 | APITestka.log moves out of the working directory; root logger left alone | #done #logging | [2026-09](2026-09.md) |
@@ -74,4 +75,4 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-09.md](2026-09.md) | 2026-09 | 11 |
+| [2026-09.md](2026-09.md) | 2026-09 | 12 |
