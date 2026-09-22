@@ -6,11 +6,10 @@ from httpx import get, put, patch, post, head, delete, options, Response
 from je_api_testka.httpx_wrapper.httpx_data import get_httpx_data
 from je_api_testka.utils.assert_result.result_check import check_result
 from je_api_testka.utils.exception.exception_tags import (
-    get_data_error_message,
     wrong_http_method_error_message,
     http_method_have_wrong_type,
 )
-from je_api_testka.utils.exception.exceptions import APITesterGetDataException, APITesterException
+from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -61,10 +60,7 @@ def get_httpx_response(response: Response,
         f"start_time: {start_time} "
         f"end_time: {end_time} "
     )
-    try:
-        return get_httpx_data(response, start_time, end_time)
-    except APITesterGetDataException:
-        raise APITesterGetDataException(get_data_error_message)
+    return get_httpx_data(response, start_time, end_time)
 
 
 def send_httpx_requests(http_method: str, test_url: str, verify: bool = True, timeout: int = 5, **kwargs) -> Response:

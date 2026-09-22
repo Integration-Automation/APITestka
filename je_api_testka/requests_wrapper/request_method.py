@@ -9,11 +9,10 @@ from requests.structures import CaseInsensitiveDict
 from je_api_testka.requests_wrapper.requests_data import get_requests_data
 from je_api_testka.utils.assert_result.result_check import check_result
 from je_api_testka.utils.exception.exception_tags import (
-    get_data_error_message,
     http_method_have_wrong_type,
     wrong_http_method_error_message,
 )
-from je_api_testka.utils.exception.exceptions import APITesterException, APITesterGetDataException
+from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -95,10 +94,7 @@ def get_response(response: requests.Response,
         "request_method.py get_response "
         f"response: {response} start_time: {start_time} end_time: {end_time}"
     )
-    try:
-        return get_requests_data(response, start_time, end_time)
-    except APITesterGetDataException:
-        raise APITesterGetDataException(get_data_error_message)
+    return get_requests_data(response, start_time, end_time)
 
 
 def test_api_method_requests(http_method: str, test_url: str,
