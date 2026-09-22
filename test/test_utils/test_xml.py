@@ -1,4 +1,7 @@
+import pytest
+
 from je_api_testka import XMLParser, dict_to_elements_tree, elements_tree_to_dict
+from je_api_testka.utils.exception.exceptions import APITesterXMLException
 
 _TEST_XML_STRING = """<?xml version="1.0"?>
 <data>
@@ -55,3 +58,28 @@ def test_roundtrip_xml_dict_xml():
     parser2 = XMLParser(xml_string, "string")
     assert parser2.xml_root is not None
     assert parser2.xml_root.tag == "data"
+
+
+_ENTITY_BOMB = """<?xml version="1.0"?>
+<!DOCTYPE lolz [<!ENTITY lol "lol"><!ENTITY lol2 "&lol;&lol;&lol;&lol;">]>
+<lolz>&lol2;</lolz>
+"""
+
+
+@pytest.mark.parametrize("text", ["<data><unclosed></data>", _ENTITY_BOMB], ids=["malformed", "entity-expansion"])
+def test_xml_parser_from_string_rejects_bad_xml(text):
+    with pytest.raises(APITesterXMLException) as caught:
+        XMLParser(text, "string")
+    assert caught.value.__cause__ is not None
+
+
+def test_xml_parser_from_file_rejects_a_missing_file(tmp_path):
+    with pytest.raises(APITesterXMLException) as caught:
+        XMLParser(str(tmp_path / "absent.xml"), "file")
+    assert isinstance(caught.value.__cause__, OSError)
+
+
+def test_xml_parser_from_file_reads_a_file(tmp_path):
+    path = tmp_path / "data.xml"
+    path.write_text(_TEST_XML_STRING, encoding="utf-8")
+    assert XMLParser(str(path), "file").xml_root.tag == "data"

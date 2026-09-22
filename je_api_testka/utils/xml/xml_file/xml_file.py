@@ -1,4 +1,4 @@
-from defusedxml import ElementTree, minidom
+from defusedxml import DefusedXmlException, ElementTree, minidom
 # _WriterElementTree is used only for write_xml serialization (ElementTree(...).write).
 # Parsing is delegated to defusedxml above.
 from xml.etree import ElementTree as _WriterElementTree  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
@@ -6,6 +6,10 @@ from xml.etree import ElementTree as _WriterElementTree  # nosec B405  # nosemgr
 from je_api_testka.utils.exception.exception_tags import cant_read_xml_error, xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException, APITesterXMLTypeException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+
+# Malformed XML, and XML that defusedxml refuses (entity expansion, external entities, DTDs).
+# The old clauses caught APITesterXMLException, which the parser never raises.
+_PARSE_ERRORS = (ElementTree.ParseError, DefusedXmlException)
 
 
 def reformat_xml_file(xml_string: str):
@@ -63,8 +67,8 @@ class XMLParser:
         apitestka_logger.info(f"XMLParser xml_parser_from_string kwargs: {kwargs}")
         try:
             self.xml_root = ElementTree.fromstring(self.xml_string, **kwargs)
-        except APITesterXMLException:
-            raise APITesterXMLException(cant_read_xml_error)
+        except _PARSE_ERRORS as error:
+            raise APITesterXMLException(f"{cant_read_xml_error}: {error}") from error
         return self.xml_root
 
     def xml_parser_from_file(self, **kwargs):
@@ -78,8 +82,8 @@ class XMLParser:
         apitestka_logger.info(f"XMLParser xml_parser_from_file kwargs: {kwargs}")
         try:
             self.tree = ElementTree.parse(self.xml_string, **kwargs)
-        except APITesterXMLException:
-            raise APITesterXMLException(cant_read_xml_error)
+        except (OSError, *_PARSE_ERRORS) as error:
+            raise APITesterXMLException(f"{cant_read_xml_error}: {error}") from error
         self.xml_root = self.tree.getroot()
         self.xml_from_type = "file"
         return self.xml_root
