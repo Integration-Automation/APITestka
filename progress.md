@@ -6,5 +6,4 @@ Cross-repo and workspace items live in `D:\Codes\progress.md` (relevant here: X-
 
 ## Open
 
-- **#2** `CLAUDE.md` "Architecture & Design Patterns" (≈:27-51) is outdated: it does not mention `ai/`, `cli/`, `mcp_server/`, `pytest_plugin/` or the GraphQL / SSE / WebSocket wrappers.
 - **#3** [DECIDE] The PyPI classifier still says `Development Status :: 2 - Pre-Alpha`.

@@ -32,23 +32,39 @@ pytest -x                         # Stop on first failure
 je_api_testka/
 ├── requests_wrapper/      # Facade pattern - wraps requests library
 ├── httpx_wrapper/         # Facade pattern - wraps httpx (sync + async)
+├── websocket_wrapper/     # WebSocket backend (websocket extra)
+├── sse_wrapper/           # Server-Sent Events backend
+├── graphql_wrapper/       # GraphQL backend
 ├── utils/
-│   ├── assert_result/     # Strategy pattern - response validation
+│   ├── assert_result/     # Strategy pattern - response validation (JSON Schema, JSONPath, snapshots)
 │   ├── callback/          # Observer pattern - post-request callbacks
-│   ├── executor/          # Command pattern - JSON keyword-driven actions
-│   ├── generate_report/   # Template Method - HTML/JSON/XML reports
+│   ├── executor/          # Command pattern - JSON keyword-driven actions (AT_* commands)
+│   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports
 │   ├── mock_server/       # Flask-based mock server
 │   ├── socket_server/     # TCP remote automation server
 │   ├── project/           # Factory pattern - project scaffolding
-│   ├── json/              # JSON I/O utilities
-│   ├── xml/               # XML parse/convert utilities
+│   ├── json/, xml/        # JSON and XML I/O utilities
 │   ├── test_record/       # Singleton - global test record storage
-│   ├── logging/           # Singleton - logging instance
+│   ├── logging/           # Singleton - logging instance (file in the home directory, not the cwd)
+│   ├── retry/             # RetryPolicy
+│   ├── observability/     # OpenTelemetry hooks (otel extra)
 │   ├── file_process/      # File listing utilities
 │   ├── package_manager/   # Plugin pattern - dynamic package loading
 │   └── exception/         # Custom exception hierarchy
+├── data/                  # Variable store, templates, env profiles, fake data
+├── connection/            # Connection options, DNS override, record/replay cassettes
+├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export
+├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
+├── runner/                # Parallel runner, tag filter, dependency ordering
+├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment
+├── ai/                    # Pluggable text-completion backend (no-op by default)
+├── cli/                   # Subcommand CLI (`apitestka`)
+├── mcp_server/            # MCP stdio server (`apitestka-mcp`)
+├── pytest_plugin/         # pytest fixtures via the pytest11 entry point
 └── gui/                   # Optional PySide6 GUI
 ```
+
+`architecture.md` §2 has one row per directory with what each one exports; keep the two in step.
 
 ### Key Design Principles
 
