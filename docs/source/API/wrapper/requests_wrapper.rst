@@ -27,7 +27,7 @@ api_tester_method
    def api_tester_method(
        http_method: str,
        test_url: str,
-       verify: bool = False,
+       verify: bool = True,
        timeout: int = 5,
        allow_redirects: bool = False,
        **kwargs
@@ -37,7 +37,7 @@ Execute an HTTP request.
 
 :param http_method: HTTP method to use
 :param test_url: target URL
-:param verify: SSL verification
+:param verify: SSL certificate verification (default: ``True``; pass ``False`` only for a test server with a self-signed certificate)
 :param timeout: timeout in seconds
 :param allow_redirects: allow redirects
 :param kwargs: additional request parameters

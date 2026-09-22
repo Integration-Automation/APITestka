@@ -61,7 +61,7 @@ def get_http_method(http_method: str):
     return http_method_dict[http_method]
 
 
-def send_requests(http_method: str, test_url: str, verify: bool = False, timeout: int = 5,
+def send_requests(http_method: str, test_url: str, verify: bool = True, timeout: int = 5,
                   allow_redirects: bool = False, **kwargs) -> requests.Response:
     """
     發送 HTTP 請求，支援多種方法 (GET, POST, PUT...)
@@ -104,7 +104,7 @@ def get_response(response: requests.Response,
 def test_api_method_requests(http_method: str, test_url: str,
                              soap: bool = False, record_request_info: bool = True,
                              clean_record: bool = False, result_check_dict: dict = None,
-                             verify: bool = False, timeout: int = 5, allow_redirects: bool = False,
+                             verify: bool = True, timeout: int = 5, allow_redirects: bool = False,
                              **kwargs) -> None | Response | dict[str, str] | dict[str, Response | dict[str, str]]:
     """
     測試 API 方法，記錄請求與回應，並可進行結果檢查
@@ -127,7 +127,8 @@ def test_api_method_requests(http_method: str, test_url: str,
             # SOAP 請求，設定 Content-Type / SOAP request with Content-Type header
             headers = CaseInsensitiveDict()
             headers["Content-Type"] = "application/soap+xml"
-            return test_api_method_requests(http_method, test_url=test_url, headers=headers, **kwargs)
+            return test_api_method_requests(http_method, test_url=test_url, headers=headers, verify=verify,
+                                            timeout=timeout, allow_redirects=allow_redirects, **kwargs)
 
         end_time = datetime.now()
         response_data = get_response(response, start_time, end_time)

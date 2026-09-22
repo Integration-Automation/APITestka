@@ -160,6 +160,7 @@ class APITestkaWidget(QWidget):
         options_row.addWidget(self.timeout_spin)
 
         self.verify_ssl_cb = QCheckBox(_t("verify_ssl"))
+        self.verify_ssl_cb.setChecked(True)
         options_row.addWidget(self.verify_ssl_cb)
 
         self.allow_redirects_cb = QCheckBox(_t("allow_redirects"))

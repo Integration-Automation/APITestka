@@ -43,7 +43,7 @@ class APIRequestThread(QThread):
         self.body = None
         self.auth = None
         self.timeout = 5
-        self.verify_ssl = False
+        self.verify_ssl = True
         self.allow_redirects = False
         self.soap = False
         self.result_check_dict = None
