@@ -1,3 +1,4 @@
+from html import escape
 from threading import Lock
 from typing import List, Tuple
 
@@ -5,6 +6,17 @@ from je_api_testka.utils.exception.exception_tags import html_generate_no_data_t
 from je_api_testka.utils.exception.exceptions import APIHTMLException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
+
+
+def _cell(value) -> str:
+    """Text for one report cell, HTML-escaped.
+
+    Responses come from the API under test, so a body such as ``<script>…</script>`` would
+    otherwise run in the browser of whoever opens the report.
+    """
+    if isinstance(value, (bytes, bytearray)):
+        value = bytes(value).decode("utf-8", errors="replace")
+    return escape(str(value))
 
 # 使用 Lock 確保多執行緒寫檔安全
 # Use Lock to ensure thread-safe file writing
@@ -148,20 +160,20 @@ def generate_html() -> Tuple[List, List]:
         for record_data in test_record_instance.test_record_list:
             success_list.append(
                 _success_table.format(
-                    status_code=record_data.get("status_code"),
-                    text=record_data.get("text"),
-                    content=str(record_data.get("content"), encoding="utf-8"),
-                    headers=record_data.get("headers"),
-                    history=record_data.get("history"),
-                    encoding=record_data.get("encoding"),
-                    cookies=record_data.get("cookies"),
-                    elapsed=record_data.get("elapsed"),
-                    request_time_sec=record_data.get("request_time_sec"),
-                    request_method=record_data.get("request_method"),
-                    request_url=record_data.get("request_url"),
-                    request_body=record_data.get("request_body"),
-                    start_time=record_data.get("start_time"),
-                    end_time=record_data.get("end_time"),
+                    status_code=_cell(record_data.get("status_code")),
+                    text=_cell(record_data.get("text")),
+                    content=_cell(record_data.get("content")),
+                    headers=_cell(record_data.get("headers")),
+                    history=_cell(record_data.get("history")),
+                    encoding=_cell(record_data.get("encoding")),
+                    cookies=_cell(record_data.get("cookies")),
+                    elapsed=_cell(record_data.get("elapsed")),
+                    request_time_sec=_cell(record_data.get("request_time_sec")),
+                    request_method=_cell(record_data.get("request_method")),
+                    request_url=_cell(record_data.get("request_url")),
+                    request_body=_cell(record_data.get("request_body")),
+                    start_time=_cell(record_data.get("start_time")),
+                    end_time=_cell(record_data.get("end_time")),
                 )
             )
         failure_list: list = []
@@ -169,13 +181,13 @@ def generate_html() -> Tuple[List, List]:
             for record_data in test_record_instance.error_record_list:
                 failure_list.append(
                     _failure_table.format(
-                        http_method=record_data[0].get("http_method"),
-                        test_url=record_data[0].get("test_url"),
-                        soap=record_data[0].get("soap"),
-                        record_request_info=record_data[0].get("record_request_info"),
-                        clean_record=record_data[0].get("clean_record"),
-                        result_check_dict=record_data[0].get("result_check_dict"),
-                        error=record_data[1]
+                        http_method=_cell(record_data[0].get("http_method")),
+                        test_url=_cell(record_data[0].get("test_url")),
+                        soap=_cell(record_data[0].get("soap")),
+                        record_request_info=_cell(record_data[0].get("record_request_info")),
+                        clean_record=_cell(record_data[0].get("clean_record")),
+                        result_check_dict=_cell(record_data[0].get("result_check_dict")),
+                        error=_cell(record_data[1]),
                     ),
                 )
     return success_list, failure_list

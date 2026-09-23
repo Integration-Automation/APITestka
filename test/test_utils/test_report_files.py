@@ -44,3 +44,32 @@ def test_json_report_keeps_the_text(tmp_path, one_record):
     generate_json_report(base)
     written = json.loads(Path(base + "_success.json").read_bytes().decode("utf-8"))
     assert written["Success_Test1"]["text"] == _TEXT
+
+
+_SCRIPT = "<script>alert(1)</script>"
+
+
+def test_html_report_escapes_response_and_error_text(tmp_path):
+    test_record_instance.clean_record()
+    test_record_instance.test_record_list.append(_record(text=_SCRIPT, content=_SCRIPT.encode("utf-8")))
+    test_record_instance.error_record_list.append([
+        {"http_method": "get", "test_url": f"https://example.test/?q={_SCRIPT}"}, ValueError(_SCRIPT)])
+    try:
+        base = str(tmp_path / "report")
+        generate_html_report(base)
+        written = Path(base + ".html").read_text(encoding="utf-8")
+    finally:
+        test_record_instance.clean_record()
+    assert _SCRIPT not in written
+    assert written.count("&lt;script&gt;alert(1)&lt;/script&gt;") == 4
+
+
+def test_html_report_survives_binary_content(tmp_path):
+    test_record_instance.clean_record()
+    test_record_instance.test_record_list.append(_record(text="bin", content=b"\xff\xfe\x00png"))
+    try:
+        base = str(tmp_path / "report")
+        generate_html_report(base)
+        assert "�" in Path(base + ".html").read_text(encoding="utf-8")
+    finally:
+        test_record_instance.clean_record()
