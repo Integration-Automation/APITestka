@@ -28,19 +28,14 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies (dev)
-        if: github.ref == 'refs/heads/dev' || github.base_ref == 'dev'
+      # Hash-locked, wheels-only, one file for every OS and Python in the matrix. Regenerate with
+      #   uv pip compile .github/requirements/ci.in --universal --python-version 3.10       #     --generate-hashes --only-binary :all: -o .github/requirements/ci.txt
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip wheel
-          pip install -r dev_requirements.txt
-          pip install "mcp>=1.28.1,<2"
+          pip install --require-hashes --only-binary :all: -r .github/requirements/ci.txt
 
-      - name: Install dependencies (stable)
-        if: github.ref == 'refs/heads/main' || github.base_ref == 'main'
-        run: |
-          python -m pip install --upgrade pip wheel
-          pip install -r requirements.txt
-          pip install pytest pytest-asyncio pytest-timeout "mcp>=1.28.1,<2"
-
+      # The tests import the checked-out source, not a published package.
       - name: Run tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: python -m pytest test/ -v
