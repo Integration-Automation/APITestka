@@ -51,7 +51,7 @@ schema = ["jsonschema>=4.0", "jsonpath-ng>=1.6"]
 security = ["pyjwt>=2.8", "botocore>=1.34"]
 otel = ["opentelemetry-api>=1.25", "opentelemetry-sdk>=1.25"]
 # <2: mcp 2.x removed the Server.list_tools()/call_tool() decorators mcp_server/server.py uses.
-mcp = ["mcp>=1.28.1,<2"]
+mcp = ["mcp>=1.28.1,<3"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]
