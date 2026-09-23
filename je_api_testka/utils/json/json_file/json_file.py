@@ -18,22 +18,23 @@ def read_action_json(json_file_path: str) -> Dict:
     讀取 JSON 檔案並轉換為字典
     Read JSON file and convert to dictionary
 
+    The file is read as UTF-8. A missing file, an unreadable one or invalid JSON raises
+    :class:`APITesterJsonException` (the cause is chained), instead of returning ``None`` or
+    leaking the underlying error.
+
     :param json_file_path: JSON 檔案路徑 / Path to JSON file
     :return: JSON 內容轉換成的字典 / Dictionary parsed from JSON
     """
     apitestka_logger.info("json_file.py read_action_json")
-    try:
-        lock.acquire()  # 確保多執行緒安全 / Ensure thread safety
-        file_path = Path(json_file_path)
-        if file_path.exists() and file_path.is_file():
-            with open(json_file_path) as read_file:
+    file_path = Path(json_file_path)
+    if not file_path.is_file():
+        raise APITesterJsonException(f"{cant_find_json_error}: {json_file_path}")
+    with lock:  # 確保多執行緒安全 / Ensure thread safety
+        try:
+            with open(file_path, encoding="utf-8") as read_file:
                 return json.load(read_file)
-    except APITesterJsonException:
-        # 若讀取失敗，拋出自訂例外
-        # Raise custom exception if reading fails
-        raise APITesterJsonException(cant_find_json_error)
-    finally:
-        lock.release()
+        except (OSError, ValueError) as error:
+            raise APITesterJsonException(f"{cant_find_json_error}: {json_file_path}: {error}") from error
 
 
 def write_action_json(json_save_path: str, action_json: list) -> None:
@@ -41,17 +42,17 @@ def write_action_json(json_save_path: str, action_json: list) -> None:
     將動作清單寫入 JSON 檔案
     Write action list into JSON file
 
+    The file is written as UTF-8 with non-ASCII text kept as is. A write failure or data that
+    cannot be serialised raises :class:`APITesterJsonException` with the cause chained.
+
     :param json_save_path: JSON 儲存路徑 / Path to save JSON file
     :param action_json: 包含動作的 JSON 結構 (list) / JSON structure (list) containing actions
     """
     apitestka_logger.info("json_file.py write_action_json")
-    try:
-        lock.acquire()  # 確保多執行緒安全 / Ensure thread safety
-        with open(json_save_path, "w+") as file_to_write:
-            file_to_write.write(json.dumps(action_json, indent=4))
-    except APITesterJsonException:
-        # 若寫入失敗，拋出自訂例外
-        # Raise custom exception if writing fails
-        raise APITesterJsonException(cant_save_json_error)
-    finally:
-        lock.release()
+    with lock:  # 確保多執行緒安全 / Ensure thread safety
+        try:
+            content = json.dumps(action_json, indent=4, ensure_ascii=False)
+            with open(json_save_path, "w", encoding="utf-8") as file_to_write:
+                file_to_write.write(content)
+        except (OSError, TypeError, ValueError) as error:
+            raise APITesterJsonException(f"{cant_save_json_error}: {json_save_path}: {error}") from error

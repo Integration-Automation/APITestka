@@ -22,7 +22,6 @@ class FlaskMockServer:
         :param host: 模擬伺服器的主機名稱 / Mock server host name
         :param port: 模擬伺服器的埠號 / Mock server port
         """
-        apitestka_logger.info("Init FlaskMockServer")
         # Mock server intended for local API testing only; no form auth surface,
         # no CSRF token mechanism is applicable. Not for production use.
         self.app = Flask(__name__)  # NOSONAR S4502

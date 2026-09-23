@@ -82,7 +82,6 @@ class Executor:
     def __init__(self):
         # 初始化 Executor，建立事件字典
         # Initialize Executor and build event dictionary
-        apitestka_logger.info("Init Executor")
         self.event_dict = {
             # 自動化 API / Automation API
             "AT_test_api_method": test_api_method_requests,

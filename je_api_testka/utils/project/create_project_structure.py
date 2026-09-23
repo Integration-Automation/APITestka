@@ -67,21 +67,21 @@ def create_template(parent_name: str, project_path: str = None) -> None:
     if executor_dir_path.exists() and executor_dir_path.is_dir():
         lock.acquire()
         try:
-            with open(executor_base + "/executor_one_file.py", "w+") as file:
+            with open(executor_base + "/executor_one_file.py", "w", encoding="utf-8") as file:
                 file.write(
                     executor_template_1.replace(
                         _TEMP_PLACEHOLDER,
                         keyword_base + "/keyword1.json"
                     )
                 )
-            with open(executor_base + "/executor_bad_file.py", "w+") as file:
+            with open(executor_base + "/executor_bad_file.py", "w", encoding="utf-8") as file:
                 file.write(
                     bad_executor_template_1.replace(
                         _TEMP_PLACEHOLDER,
                         keyword_base + "/bad_keyword_1.json"
                     )
                 )
-            with open(executor_base + "/executor_folder.py", "w+") as file:
+            with open(executor_base + "/executor_folder.py", "w", encoding="utf-8") as file:
                 file.write(
                     executor_template_2.replace(
                         _TEMP_PLACEHOLDER,

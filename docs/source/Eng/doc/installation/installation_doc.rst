@@ -29,7 +29,7 @@ Development Setup
 .. code-block:: bash
 
    # Clone the repository
-   git clone https://github.com/Intergration-Automation-Testing/APITestka.git
+   git clone https://github.com/Integration-Automation/APITestka.git
    cd APITestka
 
    # Install development dependencies

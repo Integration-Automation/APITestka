@@ -10,7 +10,6 @@ class LanguageWrapper:
     def __init__(
             self
     ):
-        apitestka_logger.info("Init LanguageWrapper")
         self.language: str = "English"
         self.choose_language_dict = {
             "English": english_word_dict,

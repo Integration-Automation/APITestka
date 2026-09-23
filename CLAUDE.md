@@ -32,23 +32,39 @@ pytest -x                         # Stop on first failure
 je_api_testka/
 ├── requests_wrapper/      # Facade pattern - wraps requests library
 ├── httpx_wrapper/         # Facade pattern - wraps httpx (sync + async)
+├── websocket_wrapper/     # WebSocket backend (websocket extra)
+├── sse_wrapper/           # Server-Sent Events backend
+├── graphql_wrapper/       # GraphQL backend
 ├── utils/
-│   ├── assert_result/     # Strategy pattern - response validation
+│   ├── assert_result/     # Strategy pattern - response validation (JSON Schema, JSONPath, snapshots)
 │   ├── callback/          # Observer pattern - post-request callbacks
-│   ├── executor/          # Command pattern - JSON keyword-driven actions
-│   ├── generate_report/   # Template Method - HTML/JSON/XML reports
+│   ├── executor/          # Command pattern - JSON keyword-driven actions (AT_* commands)
+│   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports
 │   ├── mock_server/       # Flask-based mock server
 │   ├── socket_server/     # TCP remote automation server
 │   ├── project/           # Factory pattern - project scaffolding
-│   ├── json/              # JSON I/O utilities
-│   ├── xml/               # XML parse/convert utilities
+│   ├── json/, xml/        # JSON and XML I/O utilities
 │   ├── test_record/       # Singleton - global test record storage
-│   ├── logging/           # Singleton - logging instance
+│   ├── logging/           # Singleton - logging instance (file in the home directory, not the cwd)
+│   ├── retry/             # RetryPolicy
+│   ├── observability/     # OpenTelemetry hooks (otel extra)
 │   ├── file_process/      # File listing utilities
 │   ├── package_manager/   # Plugin pattern - dynamic package loading
 │   └── exception/         # Custom exception hierarchy
+├── data/                  # Variable store, templates, env profiles, fake data
+├── connection/            # Connection options, DNS override, record/replay cassettes
+├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export
+├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
+├── runner/                # Parallel runner, tag filter, dependency ordering
+├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment
+├── ai/                    # Pluggable text-completion backend (no-op by default)
+├── cli/                   # Subcommand CLI (`apitestka`)
+├── mcp_server/            # MCP stdio server (`apitestka-mcp`)
+├── pytest_plugin/         # pytest fixtures via the pytest11 entry point
 └── gui/                   # Optional PySide6 GUI
 ```
+
+`architecture.md` §2 has one row per directory with what each one exports; keep the two in step.
 
 ### Key Design Principles
 
@@ -180,6 +196,18 @@ All code must pass static analysis without warnings from SonarQube, Codacy, Pyli
 - Use the existing fixtures in `test/conftest.py` (`mock_url`, `clean_test_records`, `assert_valid_response`, `run_report_suite`) rather than rolling new ones.
 - Run `pytest -x` locally before committing; CI runs the full matrix on Python 3.10–3.14.
 - A commit that introduces production code without tests is incomplete and should not be pushed.
+
+## Stage commits, `progress.md`, `docs/updates/` and `architecture.md`
+
+Workspace rule shared by every repository under `D:\Codes` (full text: `D:\Codes\CLAUDE.md`).
+
+- **Commit at every stage.** A stage is the smallest piece of work that leaves the repository consistent and passes this project's checks (definition of done, tests, lint): one finished `progress.md` item, or one self-contained step of a larger one. Commit it before starting the next stage, before switching to another repository, and before the session ends. Do not leave work uncommitted across sessions; if a stage cannot be finished, commit the consistent part and record the rest in `progress.md`.
+  - Stage only the files that stage touched (`git add <path>`, never `git add -A`), follow this file's commit-message rules, and never add AI attribution.
+  - Committing is not pushing: push or open a PR only as this project's branch flow says or when asked.
+- **`progress.md`** (repository root, tracked) holds outstanding work only: no finished items, no history, no rules.
+- **`docs/updates/`** records finished work: one batch file per month (`YYYY-MM.md`), one entry per piece of work headed `## U-YYYYMMDD-NN · date · title · #tags`, and an index with query commands in `docs/updates/README.md`. When a `progress.md` item is done, delete it and add a `#done` entry plus its index row in the same commit.
+- **`architecture.md`** (repository root) is the short architecture overview: layers, entry points, main flows, extension points, cross-project boundaries. Update it in the same commit whenever a change alters any of those.
+- **Cross-project contracts** are listed in `architecture.md` §6: what other repositories rely on here (CLI flags, import paths, constructor arguments, file layouts) and what this repository relies on elsewhere. No test here protects them, so never rename or remove one without changing its consumers in the same round, and update §6 whenever a contract is added or changes.
 
 ## Commit Guidelines
 

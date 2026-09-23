@@ -60,7 +60,7 @@ def generate_xml_report(xml_file_name: str = "default_name") -> None:
     # 儲存失敗紀錄 XML / Save failure XML
     try:
         lock.acquire()
-        with open(xml_file_name + "_failure.xml", "w+") as file_to_write:
+        with open(xml_file_name + "_failure.xml", "w", encoding="utf-8") as file_to_write:
             file_to_write.write(failure_xml)
     except Exception as error:
         apitestka_logger.error(
@@ -72,7 +72,7 @@ def generate_xml_report(xml_file_name: str = "default_name") -> None:
     # 儲存成功紀錄 XML / Save success XML
     try:
         lock.acquire()
-        with open(xml_file_name + "_success.xml", "w+") as file_to_write:
+        with open(xml_file_name + "_success.xml", "w", encoding="utf-8") as file_to_write:
             file_to_write.write(success_xml)
     except Exception as error:
         apitestka_logger.error(

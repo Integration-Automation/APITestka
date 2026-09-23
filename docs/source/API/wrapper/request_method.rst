@@ -34,7 +34,7 @@ test_api_method
        record_request_info: bool = True,
        clean_record: bool = False,
        result_check_dict: dict = None,
-       verify: bool = False,
+       verify: bool = True,
        timeout: int = 5,
        allow_redirects: bool = False,
        **kwargs
@@ -48,7 +48,7 @@ Set requests HTTP method, URL, headers and record response.
 :param record_request_info: whether to record request info
 :param clean_record: whether to clean previous records
 :param result_check_dict: dict for asserting response fields
-:param verify: SSL verification
+:param verify: SSL certificate verification (default: ``True``; pass ``False`` only for a test server with a self-signed certificate)
 :param timeout: timeout in seconds
 :param allow_redirects: allow redirects
 :param kwargs: additional request parameters

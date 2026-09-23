@@ -29,7 +29,7 @@
 .. code-block:: bash
 
    # 複製儲存庫
-   git clone https://github.com/Intergration-Automation-Testing/APITestka.git
+   git clone https://github.com/Integration-Automation/APITestka.git
    cd APITestka
 
    # 安裝開發依賴

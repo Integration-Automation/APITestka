@@ -12,7 +12,6 @@ class PackageManager:
         初始化套件管理器
         Initialize package manager
         """
-        apitestka_logger.info("Init PackageManager")
         # 已安裝套件字典，用來快取已載入的套件
         # Dictionary to cache installed packages
         self.installed_package_dict = {}

@@ -14,7 +14,6 @@ class TestRecord:
         初始化測試紀錄
         Initialize test record
         """
-        apitestka_logger.info("Init TestRecord")
         # Lock protects list reassignment in clean_record against concurrent readers;
         # append is GIL-atomic but clean_record swaps the list reference.
         self._lock = RLock()

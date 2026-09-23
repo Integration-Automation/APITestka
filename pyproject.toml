@@ -26,9 +26,9 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Intergration-Automation-Testing/APITestka"
+Homepage = "https://github.com/Integration-Automation/APITestka"
 Documentation = "https://apitestka.readthedocs.io/en/latest/"
-Code = "https://github.com/Intergration-Automation-Testing/APITestka"
+Code = "https://github.com/Integration-Automation/APITestka"
 
 [project.readme]
 file = "README.md"
@@ -45,12 +45,13 @@ apitestka-mcp = "je_api_testka.mcp_server.server:main"
 apitestka = "je_api_testka.pytest_plugin.plugin"
 
 [project.optional-dependencies]
-gui = ["PySide6==6.11.0", "qt-material"]
+gui = ["PySide6==6.11.2", "qt-material"]
 websocket = ["websockets>=12.0"]
 schema = ["jsonschema>=4.0", "jsonpath-ng>=1.6"]
 security = ["pyjwt>=2.8", "botocore>=1.34"]
 otel = ["opentelemetry-api>=1.25", "opentelemetry-sdk>=1.25"]
-mcp = ["mcp>=1.0"]
+# <2: mcp 2.x removed the Server.list_tools()/call_tool() decorators mcp_server/server.py uses.
+mcp = ["mcp>=1.28.1,<2"]
 
 [tool.pytest.ini_options]
 testpaths = ["test"]

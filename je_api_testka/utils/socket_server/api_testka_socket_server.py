@@ -1,12 +1,16 @@
+import argparse
 import json
 import socketserver
-import sys
 import threading
+import time
 
 from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 _END_MARKER = b"Return_Data_Over_JE"
+_DEFAULT_HOST = "localhost"
+_DEFAULT_PORT = 9939
+_QUIT_POLL_SECONDS = 0.2
 _NEWLINE = b"\n"
 
 
@@ -70,10 +74,12 @@ class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         self.close_flag: bool = False  # 用來標記伺服器是否關閉 / Flag to indicate server shutdown
 
 
-def start_apitestka_socket_server(host: str = "localhost", port: int = 9939) -> TCPServer:
+def start_apitestka_socket_server(host: str = _DEFAULT_HOST, port: int = _DEFAULT_PORT) -> TCPServer:
     """
     啟動 TCP Socket 伺服器
     Start TCP socket server
+
+    Binds exactly ``host`` and ``port``; the command line is read only by :func:`main`.
 
     :param host: 伺服器主機 / Server host
     :param port: 伺服器埠號 / Server port
@@ -83,13 +89,6 @@ def start_apitestka_socket_server(host: str = "localhost", port: int = 9939) -> 
         f"api_testka_socket_server.py start_apitestka_socket_server host: {host} port: {port}"
     )
 
-    # 支援從命令列參數設定 host 與 port / Support setting host and port from CLI arguments
-    if len(sys.argv) == 2:
-        host = sys.argv[1]
-    elif len(sys.argv) == 3:
-        host = sys.argv[1]
-        port = int(sys.argv[2])
-
     # 建立伺服器並啟動執行緒 / Create server and start thread
     server = TCPServer((host, port), TCPServerHandler)
     server_thread = threading.Thread(target=server.serve_forever)
@@ -97,3 +96,26 @@ def start_apitestka_socket_server(host: str = "localhost", port: int = 9939) -> 
     server_thread.start()
 
     return server
+
+
+def _parse_cli_address(argv: list[str] | None) -> tuple[str, int]:
+    """Host and port from ``[host [port]]`` command-line arguments (``None`` reads ``sys.argv``)."""
+    parser = argparse.ArgumentParser(
+        prog="python -m je_api_testka.utils.socket_server.api_testka_socket_server",
+        description="Run the APITestka socket server until a client sends quit_server.")
+    parser.add_argument("host", nargs="?", default=_DEFAULT_HOST)
+    parser.add_argument("port", nargs="?", type=int, default=_DEFAULT_PORT)
+    args = parser.parse_args(argv)
+    return args.host, args.port
+
+
+def main(argv: list[str] | None = None) -> None:
+    """Start the server from the command line and block until a client sends ``quit_server``."""
+    host, port = _parse_cli_address(argv)
+    server = start_apitestka_socket_server(host, port)
+    while not server.close_flag:
+        time.sleep(_QUIT_POLL_SECONDS)
+
+
+if __name__ == "__main__":
+    main()

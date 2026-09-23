@@ -7,11 +7,10 @@ from httpx import Response, AsyncClient
 from je_api_testka.httpx_wrapper.httpx_data import get_httpx_data
 from je_api_testka.utils.assert_result.result_check import check_result
 from je_api_testka.utils.exception.exception_tags import (
-    get_data_error_message,
     wrong_http_method_error_message,
     http_method_have_wrong_type,
 )
-from je_api_testka.utils.exception.exceptions import APITesterGetDataException, APITesterException
+from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -57,13 +56,7 @@ def get_httpx_response_async(
         "async_httpx_method.py get_httpx_response_async "
         f"response: {response} start_time: {start_time} end_time: {end_time}"
     )
-    try:
-        return get_httpx_data(response, start_time, end_time)
-    except APITesterGetDataException:
-        apitestka_logger.error(
-            f"get_httpx_response_async failed. {APITesterGetDataException(get_data_error_message)}"
-        )
-        raise APITesterGetDataException(get_data_error_message)
+    return get_httpx_data(response, start_time, end_time)
 
 
 async def send_httpx_requests_async(

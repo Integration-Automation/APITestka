@@ -15,7 +15,6 @@ class CallbackFunctionExecutor:
     def __init__(self):
         # 初始化 CallbackFunctionExecutor，建立事件字典
         # Initialize CallbackFunctionExecutor and build event dictionary
-        apitestka_logger.info("Init CallbackFunctionExecutor")
         self.event_dict = {
             # 測試 API / Test API
             "AT_test_api_method": test_api_method_requests,

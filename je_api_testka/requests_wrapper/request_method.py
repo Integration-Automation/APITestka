@@ -9,11 +9,10 @@ from requests.structures import CaseInsensitiveDict
 from je_api_testka.requests_wrapper.requests_data import get_requests_data
 from je_api_testka.utils.assert_result.result_check import check_result
 from je_api_testka.utils.exception.exception_tags import (
-    get_data_error_message,
     http_method_have_wrong_type,
     wrong_http_method_error_message,
 )
-from je_api_testka.utils.exception.exceptions import APITesterException, APITesterGetDataException
+from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -61,7 +60,7 @@ def get_http_method(http_method: str):
     return http_method_dict[http_method]
 
 
-def send_requests(http_method: str, test_url: str, verify: bool = False, timeout: int = 5,
+def send_requests(http_method: str, test_url: str, verify: bool = True, timeout: int = 5,
                   allow_redirects: bool = False, **kwargs) -> requests.Response:
     """
     發送 HTTP 請求，支援多種方法 (GET, POST, PUT...)
@@ -95,16 +94,13 @@ def get_response(response: requests.Response,
         "request_method.py get_response "
         f"response: {response} start_time: {start_time} end_time: {end_time}"
     )
-    try:
-        return get_requests_data(response, start_time, end_time)
-    except APITesterGetDataException:
-        raise APITesterGetDataException(get_data_error_message)
+    return get_requests_data(response, start_time, end_time)
 
 
 def test_api_method_requests(http_method: str, test_url: str,
                              soap: bool = False, record_request_info: bool = True,
                              clean_record: bool = False, result_check_dict: dict = None,
-                             verify: bool = False, timeout: int = 5, allow_redirects: bool = False,
+                             verify: bool = True, timeout: int = 5, allow_redirects: bool = False,
                              **kwargs) -> None | Response | dict[str, str] | dict[str, Response | dict[str, str]]:
     """
     測試 API 方法，記錄請求與回應，並可進行結果檢查
@@ -127,7 +123,8 @@ def test_api_method_requests(http_method: str, test_url: str,
             # SOAP 請求，設定 Content-Type / SOAP request with Content-Type header
             headers = CaseInsensitiveDict()
             headers["Content-Type"] = "application/soap+xml"
-            return test_api_method_requests(http_method, test_url=test_url, headers=headers, **kwargs)
+            return test_api_method_requests(http_method, test_url=test_url, headers=headers, verify=verify,
+                                            timeout=timeout, allow_redirects=allow_redirects, **kwargs)
 
         end_time = datetime.now()
         response_data = get_response(response, start_time, end_time)
