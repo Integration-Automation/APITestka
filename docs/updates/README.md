@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20260923-13 | 2026-09-23 | CI installs from a hash-locked file; dev merged into main | #done #ci #release | [2026-09](2026-09.md) |
 | U-20260923-12 | 2026-09-23 | HTML report escapes what the API under test returns | #bugfix #security | [2026-09](2026-09.md) |
 | U-20260923-11 | 2026-09-23 | Reports and project templates are written as UTF-8 | #bugfix #encoding | [2026-09](2026-09.md) |
 | U-20260923-10 | 2026-09-23 | XMLParser raises its own exception for bad input | #bugfix | [2026-09](2026-09.md) |
@@ -79,4 +80,4 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-09.md](2026-09.md) | 2026-09 | 16 |
+| [2026-09.md](2026-09.md) | 2026-09 | 17 |
