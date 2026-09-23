@@ -88,7 +88,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
     # 儲存失敗紀錄 / Save failure records
     try:
         lock.acquire()
-        with open(json_file_name + "_failure.json", "w+") as file_to_write:
+        with open(json_file_name + "_failure.json", "w", encoding="utf-8") as file_to_write:
             json.dump(dict(failure_dict), file_to_write, indent=4)
     except Exception as error:
         apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
@@ -98,7 +98,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
     # 儲存成功紀錄 / Save success records
     try:
         lock.acquire()
-        with open(json_file_name + "_success.json", "w+") as file_to_write:
+        with open(json_file_name + "_success.json", "w", encoding="utf-8") as file_to_write:
             json.dump(dict(success_dict), file_to_write, indent=4)
     except Exception as error:
         apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
