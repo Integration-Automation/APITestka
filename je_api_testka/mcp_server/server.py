@@ -2,7 +2,9 @@
 MCP server entry point.
 
 Exposes the APITestka tool catalogue over the standard input/output transport
-defined by the Model Context Protocol. Requires the optional ``mcp`` package.
+defined by the Model Context Protocol. Requires the optional ``mcp`` package; both
+SDK lines work: 1.x registers handlers with the ``list_tools`` / ``call_tool``
+decorators, 2.x takes ``on_list_tools`` / ``on_call_tool`` in the constructor.
 
 Run via:
     python -m je_api_testka.mcp_server
@@ -34,13 +36,15 @@ class _MCPSymbols:
     stdio_server: Any
     tool_cls: Any
     text_content_cls: Any
+    list_tools_result_cls: Any
+    call_tool_result_cls: Any
 
 
 def _import_mcp() -> _MCPSymbols:
     try:
         from mcp.server import Server  # type: ignore
         from mcp.server.stdio import stdio_server  # type: ignore
-        from mcp.types import TextContent, Tool  # type: ignore
+        from mcp.types import CallToolResult, ListToolsResult, TextContent, Tool  # type: ignore
     except ImportError as error:
         apitestka_logger.error(f"mcp_server import mcp failed: {repr(error)}")
         raise APITesterException(MCP_NOT_INSTALLED) from error
@@ -49,38 +53,71 @@ def _import_mcp() -> _MCPSymbols:
         stdio_server=stdio_server,
         tool_cls=Tool,
         text_content_cls=TextContent,
+        list_tools_result_cls=ListToolsResult,
+        call_tool_result_cls=CallToolResult,
     )
 
 
-def build_server():
-    """Build and return a configured ``mcp.server.Server`` instance."""
-    symbols = _import_mcp()
-    server = symbols.server_cls("apitestka")
+def _tools(symbols: _MCPSymbols) -> List[Any]:
+    return [
+        symbols.tool_cls(name=spec.name, description=spec.description, inputSchema=spec.input_schema)
+        for spec in APITESTKA_TOOLS
+    ]
+
+
+def _call(symbols: _MCPSymbols, name: str, arguments: dict | None) -> tuple[List[Any], bool]:
+    """Run one tool; returns its text content and whether it failed.
+
+    A failure is reported to the client as ``error: ...`` text rather than raised.
+    """
     text_content_cls = symbols.text_content_cls
-    tool_cls = symbols.tool_cls
+    try:
+        result = dispatch_tool(name, arguments or {})
+    except Exception as error:  # noqa: BLE001 - propagate to MCP client
+        apitestka_logger.error(f"mcp_server dispatch_tool failed: {repr(error)}")
+        return [text_content_cls(type="text", text=f"error: {error!r}")], True
+    if isinstance(result, str):
+        return [text_content_cls(type="text", text=result)], False
+    return [text_content_cls(
+        type="text",
+        text=json.dumps(result, ensure_ascii=False, default=str),
+    )], False
+
+
+def build_server():
+    """Build and return a configured ``mcp.server.Server`` instance for the installed SDK line."""
+    symbols = _import_mcp()
+    if hasattr(symbols.server_cls, "list_tools"):
+        return _build_decorated_server(symbols)
+    return _build_handler_server(symbols)
+
+
+def _build_decorated_server(symbols: _MCPSymbols):
+    """1.x SDK: handlers registered with decorators; the SDK wraps returned content."""
+    server = symbols.server_cls("apitestka")
 
     @server.list_tools()
     async def _list_tools() -> List[Any]:
-        return [
-            tool_cls(name=spec.name, description=spec.description, inputSchema=spec.input_schema)
-            for spec in APITESTKA_TOOLS
-        ]
+        return _tools(symbols)
 
     @server.call_tool()
     async def _call_tool(name: str, arguments: dict) -> List[Any]:
-        try:
-            result = dispatch_tool(name, arguments or {})
-        except Exception as error:  # noqa: BLE001 - propagate to MCP client
-            apitestka_logger.error(f"mcp_server dispatch_tool failed: {repr(error)}")
-            return [text_content_cls(type="text", text=f"error: {error!r}")]
-        if isinstance(result, str):
-            return [text_content_cls(type="text", text=result)]
-        return [text_content_cls(
-            type="text",
-            text=json.dumps(result, ensure_ascii=False, default=str),
-        )]
+        return _call(symbols, name, arguments)[0]
 
     return server
+
+
+def _build_handler_server(symbols: _MCPSymbols):
+    """2.x SDK: handlers passed to the constructor, returning full result objects."""
+
+    async def on_list_tools(_ctx: Any, _params: Any) -> Any:
+        return symbols.list_tools_result_cls(tools=_tools(symbols))
+
+    async def on_call_tool(_ctx: Any, params: Any) -> Any:
+        content, failed = _call(symbols, params.name, params.arguments)
+        return symbols.call_tool_result_cls(content=content, isError=failed)
+
+    return symbols.server_cls("apitestka", on_list_tools=on_list_tools, on_call_tool=on_call_tool)
 
 
 async def serve_stdio() -> None:
