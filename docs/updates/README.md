@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20260924-02 | 2026-09-24 | Keep checkout credentials only in the job that pushes | #ci #security | [2026-09](2026-09.md) |
 | U-20260924-01 | 2026-09-24 | Move CI to Node 24 actions pinned by commit | #ci #security #deps | [2026-09](2026-09.md) |
 | U-20260923-14 | 2026-09-23 | MCP server runs on mcp 1.x and 2.x; extra allows <3 | #done #mcp #compat | [2026-09](2026-09.md) |
 | U-20260923-13 | 2026-09-23 | CI installs from a hash-locked file; dev merged into main | #done #ci #release | [2026-09](2026-09.md) |
@@ -82,4 +83,4 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-09.md](2026-09.md) | 2026-09 | 19 |
+| [2026-09.md](2026-09.md) | 2026-09 | 20 |
