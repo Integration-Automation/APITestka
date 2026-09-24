@@ -103,7 +103,7 @@ JSON 驱动版本(`smoke.json`):
 ```json
 {
   "api_testka": [
-    ["AT_test_api_method_requests", {
+    ["AT_test_api_method", {
       "http_method": "get",
       "test_url": "https://httpbin.org/get",
       "result_check_dict": {"status_code": 200}
@@ -160,10 +160,11 @@ test_api_method_graphql(
 ### 数据层
 
 ```python
-from je_api_testka import (
-    variable_store, render_template, extract_and_store, load_env_profile,
+from je_api_testka.data import (
+    variable_store, render_template, load_env_profile,
     fake_uuid, iter_csv_rows,
 )
+from je_api_testka.data.variable_store import extract_and_store
 
 load_env_profile("envs/dev.json")
 extract_and_store({"data": {"id": 7}}, "data.id", "user_id")
@@ -183,8 +184,9 @@ Executor 命令:`AT_set_variable`、`AT_get_variable`、`AT_clear_variables`、
 ```python
 from je_api_testka import (
     check_json_schema, check_jsonpath, assert_snapshot,
-    diff_payloads, diff_openapi_specs, RetryPolicy, retry_call,
+    RetryPolicy, retry_call,
 )
+from je_api_testka.diff import diff_payloads, diff_openapi_specs
 from je_api_testka.diff.sla_check import ResponseSLA, assert_sla
 
 check_json_schema(payload, {"type": "object", "required": ["id"]})
@@ -333,8 +335,9 @@ openapi_changelog(prev_spec, current_spec)           # markdown changelog
 pip install 'je_api_testka[gui]'
 ```
 
-`je_api_testka.gui` 中的 headless model(`HistoryPanelModel`、`EnvManagerModel`、
-`render_side_by_side`)让测试与 headless 工具无需 PySide6 也能驱动面板。
+`je_api_testka.gui.*` 子模块(`history_panel`、`env_manager_model`、`diff_viewer`)中的
+headless model(`HistoryPanelModel`、`EnvManagerModel`、`render_side_by_side`)让测试与
+headless 工具无需 PySide6 也能驱动面板。
 真正的 Qt widget 在 `main_widget.py`。
 
 语种:English、繁體中文、简体中文、日本語。通过 `LanguageWrapper.reset_language(...)` 切换。

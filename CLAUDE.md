@@ -197,6 +197,12 @@ All code must pass static analysis without warnings from SonarQube, Codacy, Pyli
 - Run `pytest -x` locally before committing; CI runs the full matrix on Python 3.10–3.14.
 - A commit that introduces production code without tests is incomplete and should not be pushed.
 
+## Documentation
+
+- **README parity.** This repository ships `README.md` (English) alongside the translated `README/README_zh-CN.md` and `README/README_zh-TW.md`. All three must stay current with the code.
+- When a change alters anything user-facing — features, commands, CLI flags, install/setup steps, configuration, or requirements — update `README.md` **and both translated READMEs in the same commit**, keeping their structure and content aligned.
+- Never update one language and leave the others stale. No automated README-parity guard exists, so verify this by hand before committing.
+
 ## Stage commits, `progress.md`, `docs/updates/` and `architecture.md`
 
 Workspace rule shared by every repository under `D:\Codes` (full text: `D:\Codes\CLAUDE.md`).
