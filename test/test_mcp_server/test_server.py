@@ -41,8 +41,8 @@ def test_build_server_runs_when_dep_available():
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-def test_mcp_extra_stays_below_2():
-    """mcp 2.x removed the decorators ``build_server`` uses; the server then crashed on start."""
+def test_mcp_extra_allows_both_sdk_lines():
+    """``build_server`` supports the 1.x decorators and the 2.x constructor handlers."""
     tomllib = pytest.importorskip("tomllib")
     from packaging.requirements import Requirement
 
@@ -50,9 +50,64 @@ def test_mcp_extra_stays_below_2():
         specs = tomllib.load(handle)["project"]["optional-dependencies"]["mcp"]
     requirement = Requirement(specs[0])
     assert requirement.name == "mcp"
-    assert not requirement.specifier.contains("2.0.0")
     assert not requirement.specifier.contains("1.28.0")  # HTTP / WebSocket transport advisories
     assert requirement.specifier.contains("1.30.0")
+    assert requirement.specifier.contains("2.2.0")
+    assert not requirement.specifier.contains("3.0.0")
+
+
+class _Text:
+    def __init__(self, type, text):  # noqa: A002 - mirrors mcp.types.TextContent
+        self.type, self.text = type, text
+
+
+class _Record:
+    def __init__(self, **fields):
+        self.__dict__.update(fields)
+
+
+def _symbols(server_cls):
+    return server._MCPSymbols(server_cls=server_cls, stdio_server=None, tool_cls=_Record, text_content_cls=_Text,
+                              list_tools_result_cls=_Record, call_tool_result_cls=_Record)
+
+
+class _DecoratedServer:
+    """Stands in for the 1.x low-level Server: handlers come in through decorators."""
+
+    def __init__(self, name):
+        self.name, self.handlers = name, {}
+
+    def list_tools(self):
+        return lambda fn: self.handlers.setdefault("list", fn)
+
+    def call_tool(self):
+        return lambda fn: self.handlers.setdefault("call", fn)
+
+
+class _HandlerServer:
+    """Stands in for the 2.x low-level Server: handlers are constructor arguments."""
+
+    def __init__(self, name, on_list_tools, on_call_tool):
+        self.name, self.handlers = name, {"list": on_list_tools, "call": on_call_tool}
+
+
+async def test_decorated_server_for_the_1x_sdk(monkeypatch):
+    monkeypatch.setattr(server, "_import_mcp", lambda: _symbols(_DecoratedServer))
+    instance = server.build_server()
+    tools = await instance.handlers["list"]()
+    content = await instance.handlers["call"]("no_such_tool", {})
+    assert [tool.name for tool in tools] == [spec.name for spec in server.APITESTKA_TOOLS]
+    assert "unknown MCP tool" in content[0].text
+
+
+async def test_handler_server_for_the_2x_sdk(monkeypatch):
+    monkeypatch.setattr(server, "_import_mcp", lambda: _symbols(_HandlerServer))
+    instance = server.build_server()
+    listed = await instance.handlers["list"](None, None)
+    failed = await instance.handlers["call"](None, _Record(name="no_such_tool", arguments=None))
+    assert [tool.name for tool in listed.tools] == [spec.name for spec in server.APITESTKA_TOOLS]
+    assert failed.isError is True
+    assert "unknown MCP tool" in failed.content[0].text
 
 
 async def test_stdio_round_trip_with_the_official_client(tmp_path):

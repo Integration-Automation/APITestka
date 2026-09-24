@@ -59,8 +59,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 - **Subcommand CLI**: `apitestka` (`je_api_testka.cli.cli_main:main`) with `run`, `create`, `mock`,
   `import`, `repl`, `summary`, `scaffold`, `completion` and `mcp`.
 - **MCP**: `apitestka-mcp`, `python -m je_api_testka.mcp_server` or `apitestka mcp` (stdio, needs the
-  `mcp` extra, which stays below mcp 2.0: 2.x removed the `Server.list_tools()`/`call_tool()` decorators
-  `build_server` uses). Tools are the `apitestka_*` `MCPToolSpec` entries in `APITESTKA_TOOLS`
+  `mcp` extra, mcp 1.x or 2.x: `build_server` registers the handlers with the 1.x `list_tools()`/`call_tool()`
+  decorators or passes them to the 2.x `Server(on_list_tools=..., on_call_tool=...)`). Tools are the `apitestka_*` `MCPToolSpec` entries in `APITESTKA_TOOLS`
   (`mcp_server/tool_definitions.py`).
 - **TCP socket server**: `start_apitestka_socket_server(host="localhost", port=9939)` takes one JSON
   action list per connection. It replies with each return value, then `Return_Data_Over_JE`.
