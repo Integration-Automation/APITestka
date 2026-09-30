@@ -39,7 +39,7 @@ je_api_testka/
 │   ├── assert_result/     # Strategy pattern - response validation (JSON Schema, JSONPath, snapshots)
 │   ├── callback/          # Observer pattern - post-request callbacks
 │   ├── executor/          # Command pattern - JSON keyword-driven actions (AT_* commands)
-│   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports
+│   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports, latency trends
 │   ├── mock_server/       # Flask mock server plus WebSocket and gRPC mocks
 │   ├── socket_server/     # TCP remote automation server
 │   ├── project/           # Factory pattern - project scaffolding

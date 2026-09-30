@@ -57,7 +57,7 @@ server for Claude, and more.
 | **Connection** | mTLS, proxies, DNS override, VCR-style cassette record/replay |
 | **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy, WebSocket and gRPC endpoints |
 | **Runner** | Sequential & parallel execution, tag filters, dependency-aware ordering, retry policies |
-| **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff |
+| **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff / per-endpoint latency trends with anomaly detection |
 | **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer, LoadDensity load-test bridge |
 | **CLI / DX** | Subcommand CLI, REPL, terminal summary, shell completion, scaffold |
 | **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
@@ -311,6 +311,32 @@ generate_badge("badge.json")                # shields.io endpoint
 record_current_run("trend.sqlite")          # historical trend
 ```
 
+**Response-time trends and anomalies.** `record_endpoint_latencies` stores each run's per-endpoint
+latency (count, mean, p50, p95, max) in the trend database. An endpoint is the method plus the path
+template: the OpenAPI template when one is given, otherwise the path with identifiers generalized
+(`/items/42` → `/items/{id}`). `detect_latency_anomalies` compares every endpoint of the latest run with
+the median and MAD of its previous runs (20 by default, at least 5). It flags a slowdown of at least 20 %
+and 5 ms whose robust z-score is above 3.5; all of these are settings. `generate_trend_report` writes an
+HTML table with a sparkline per endpoint. JSON actions: `AT_record_endpoint_latencies`,
+`AT_detect_latency_anomalies`, `AT_assert_no_latency_anomalies`, `AT_generate_trend_report`.
+
+```python
+from je_api_testka.utils.generate_report.latency_trends import (
+    record_endpoint_latencies, detect_latency_anomalies, assert_no_latency_anomalies,
+)
+from je_api_testka.utils.generate_report.trend_report import generate_trend_report
+
+record_endpoint_latencies("trend.sqlite", run_label="build-128")   # after each run
+assert_no_latency_anomalies("trend.sqlite", {"metric": "p95_ms", "threshold": 3.5})
+generate_trend_report("trends.html", "trend.sqlite")
+```
+
+```bash
+apitestka trend record --report run_success.json --label build-128 --openapi openapi.json
+apitestka trend check            # exit 1 on an anomaly
+apitestka trend report -o trends.html
+```
+
 OpenTelemetry hook (no-op when `opentelemetry-api` is absent):
 
 ```python
@@ -383,6 +409,7 @@ apitestka openapi --run actions.json    # run first, print the inferred spec
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # see Contract Testing
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # see Pluggable AI Backend
 apitestka load run --actions smoke.json --users 20 --time 30                    # see Integrations
+apitestka trend check                                                           # see Reports and Observability
 ```
 
 ### Security Probes

@@ -33,6 +33,28 @@ def match_path_template(path: str, templates: Iterable[str]) -> Optional[str]:
     return max(matches, key=_literal_segments)
 
 
+_ID_SEGMENT = re.compile(
+    r"^(?:\d+|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|[0-9a-fA-F]{16,})$"
+)
+
+
+def generalize_path(path: str) -> str:
+    """
+    Replace identifier-like segments with parameters: ``/users/42/orders/7`` → ``/users/{id}/orders/{id2}``.
+
+    Numbers, UUIDs and hexadecimal runs of 16 or more characters count as identifiers.
+    """
+    count = 0
+    segments = []
+    for segment in path.split("/"):
+        if _ID_SEGMENT.match(segment):
+            count += 1
+            segments.append("{id}" if count == 1 else f"{{id{count}}}")
+        else:
+            segments.append(segment)
+    return "/".join(segments)
+
+
 def server_base_path(spec: dict) -> str:
     """Return the path part of the spec's first server URL without a trailing slash (``""`` if none)."""
     servers = spec.get("servers") or []

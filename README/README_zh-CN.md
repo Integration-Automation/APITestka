@@ -56,7 +56,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 | **连接** | mTLS、代理、DNS override、VCR-style cassette 录制/回放 |
 | **模拟服务器** | 静态、动态、stateful、故障注入、OpenAPI 驱动、Jinja 模板、Webhook 接收、record-replay 代理、WebSocket 与 gRPC 端点 |
 | **Runner** | 顺序与并行、Tag 过滤、Dependency-aware 排序、Retry 策略 |
-| **报告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趋势库 / Run diff |
+| **报告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趋势库 / Run diff / 各端点延迟趋势与异常检测 |
 | **生态集成** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 导入、OpenAPI / Postman 导入、LoadDensity 负载测试桥接 |
 | **CLI / DX** | 子命令式 CLI、REPL、终端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
@@ -307,6 +307,31 @@ generate_badge("badge.json")                # shields.io endpoint
 record_current_run("trend.sqlite")          # 历史趋势
 ```
 
+**响应时间趋势与异常检测。** `record_endpoint_latencies` 把每次运行各端点的延迟(次数、平均、p50、p95、
+最大值)存进趋势数据库。端点是 method 加上路径模板:有 OpenAPI 时用它的模板,否则把路径里的标识符泛化
+(`/items/42` → `/items/{id}`)。`detect_latency_anomalies` 拿最近一次运行的每个端点,与它之前几次运行
+(默认 20 次、至少 5 次)的中位数与 MAD 比较;变慢至少 20 % 且 5 ms、并且 robust z-score 超过 3.5 才算异常,
+这些都可以调整。`generate_trend_report` 写出每个端点附 sparkline 的 HTML 表格。JSON action:
+`AT_record_endpoint_latencies`、`AT_detect_latency_anomalies`、`AT_assert_no_latency_anomalies`、
+`AT_generate_trend_report`。
+
+```python
+from je_api_testka.utils.generate_report.latency_trends import (
+    record_endpoint_latencies, detect_latency_anomalies, assert_no_latency_anomalies,
+)
+from je_api_testka.utils.generate_report.trend_report import generate_trend_report
+
+record_endpoint_latencies("trend.sqlite", run_label="build-128")   # 每次运行后
+assert_no_latency_anomalies("trend.sqlite", {"metric": "p95_ms", "threshold": 3.5})
+generate_trend_report("trends.html", "trend.sqlite")
+```
+
+```bash
+apitestka trend record --report run_success.json --label build-128 --openapi openapi.json
+apitestka trend check            # 有异常时退出码为 1
+apitestka trend report -o trends.html
+```
+
 OpenTelemetry hook(未安装 `opentelemetry-api` 时自动 no-op):
 
 ```python
@@ -377,6 +402,7 @@ apitestka openapi --run actions.json    # 先运行再打印反推的规格
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # 见契约测试
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # 见可插拔 AI 后端
 apitestka load run --actions smoke.json --users 20 --time 30                    # 见生态集成
+apitestka trend check                                                           # 见报告与可观测性
 ```
 
 ### 安全检测

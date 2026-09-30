@@ -29,6 +29,8 @@ EXPECTED_NEW_COMMANDS = (
     "AT_render_markdown", "AT_generate_markdown_report",
     "AT_diff_runs", "AT_generate_badge",
     "AT_record_current_run", "AT_list_trend_rows",
+    "AT_record_endpoint_latencies", "AT_detect_latency_anomalies",
+    "AT_assert_no_latency_anomalies", "AT_generate_trend_report",
     "AT_generate_junit_report", "AT_generate_allure_report",
     # Integrations
     "AT_notify_via_webhook", "AT_post_pr_comment",

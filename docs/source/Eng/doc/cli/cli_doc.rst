@@ -86,6 +86,8 @@ The ``apitestka`` command (installed with the package) groups the everyday tasks
      - Write test actions for an OpenAPI document (see Pluggable AI Backend)
    * - ``load convert|run``
      - Convert or run APITestka requests as a LoadDensity load test (see Integrations)
+   * - ``trend record|check|report``
+     - Record per-endpoint latencies, check the latest run for anomalies (exit 1), write the HTML trend report
 
 Inferring an OpenAPI document
 -----------------------------

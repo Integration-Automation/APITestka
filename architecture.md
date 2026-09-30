@@ -23,7 +23,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/utils/executor/action_executor.py` | `Executor.event_dict` (the `AT_*` command map), `execute_action`, `execute_files`, `add_command_to_executor` |
 | `je_api_testka/utils/test_record/` | `test_record_instance`: shared success and error records, guarded by an `RLock` |
 | `je_api_testka/utils/assert_result/` | `check_result`, JSON Schema and JSONPath checks, snapshots |
-| `je_api_testka/utils/generate_report/` | HTML, JSON, XML, JUnit, Allure and Markdown reports; badge, run diff, trend store |
+| `je_api_testka/utils/generate_report/` | HTML, JSON, XML, JUnit, Allure and Markdown reports; badge, run diff, trend store; per-endpoint latency history and anomaly detection (`latency_trends.py`, same SQLite file) and the HTML trend report (`trend_report.py`) |
 | `je_api_testka/utils/callback/` | `callback_executor`: run a trigger command, then a callback |
 | `je_api_testka/utils/mock_server/` | `flask_mock_server_instance` with dynamic, template, proxy, webhook and OpenAPI routes, plus fault injection; `WebSocketMockServer` (`websocket_mock.py`) and `GrpcStubServer` (`grpc_stub.py`) run in background threads; `protocol_mocks.py` keeps one of each for JSON actions; `mock_config.py` reads `apitestka mock --config` |
 | `je_api_testka/utils/socket_server/` | `start_apitestka_socket_server` (TCP command server) |
@@ -62,7 +62,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   with `json.loads` twice. Errors print `repr(error)` to stderr and exit with code 1.
 - **Subcommand CLI**: `apitestka` (`je_api_testka.cli.cli_main:main`) with `run`, `create`, `mock`,
   `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi`, `contract record|verify|compare`,
-  `generate-tests` and `load convert|run` (`cli/load_cli.py`)
+  `generate-tests`, `load convert|run` (`cli/load_cli.py`) and `trend record|check|report` (`cli/trend_cli.py`)
   (`cli/contract_cli.py`); shared helpers are in `cli/cli_common.py`. `cli/completion.py`
   `SUBCOMMANDS` lists the same names (a test compares them with the parser).
 - **MCP**: `apitestka-mcp`, `python -m je_api_testka.mcp_server` or `apitestka mcp` (stdio, needs the

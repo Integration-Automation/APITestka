@@ -36,7 +36,7 @@ Features
        ordering, retry policies
    * - **Reports**
      - HTML / JSON / XML / JUnit / Allure / Markdown / shields.io badge /
-       SQLite trend store / run diff
+       SQLite trend store / run diff / per-endpoint latency trends with anomaly detection
    * - **Integrations**
      - Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR
        importers, OpenAPI / Postman importer, LoadDensity load-test bridge

@@ -1,5 +1,5 @@
 import types
-from typing import Dict, Callable, Any, List, Union
+from typing import Dict, Callable, Any, List, Optional, Union
 
 from je_api_testka import test_api_method_httpx
 from je_api_testka.ai.backend import select_ai_backend
@@ -56,7 +56,13 @@ from je_api_testka.utils.generate_report.json_report import generate_json, gener
 from je_api_testka.utils.generate_report.junit_report import generate_junit_report
 from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
 from je_api_testka.utils.generate_report.run_diff import diff_runs
-from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
+from je_api_testka.utils.generate_report.latency_trends import (
+    assert_no_latency_anomalies,
+    detect_latency_anomalies,
+    record_endpoint_latencies,
+)
+from je_api_testka.utils.generate_report.trend_report import generate_trend_report
+from je_api_testka.utils.generate_report.trend_store import DEFAULT_TREND_DB, list_trend_rows, record_current_run
 from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
@@ -88,6 +94,11 @@ def _cassette_record(file_path: str, method: str, url: str, request_body: str,
         response_status=response_status, response_body=response_body,
         response_headers=response_headers or {},
     ))
+
+
+def _detect_latency_anomalies(db_path: str = DEFAULT_TREND_DB, policy: Optional[dict] = None) -> List[dict]:
+    """JSON-ready verdicts of :func:`detect_latency_anomalies`."""
+    return [verdict.to_dict() for verdict in detect_latency_anomalies(db_path, policy)]
 
 
 class Executor:
@@ -142,6 +153,10 @@ class Executor:
             "AT_generate_badge": generate_badge,
             "AT_record_current_run": record_current_run,
             "AT_list_trend_rows": list_trend_rows,
+            "AT_record_endpoint_latencies": record_endpoint_latencies,
+            "AT_detect_latency_anomalies": _detect_latency_anomalies,
+            "AT_assert_no_latency_anomalies": assert_no_latency_anomalies,
+            "AT_generate_trend_report": generate_trend_report,
             # Integrations
             "AT_notify_via_webhook": notify_via_webhook,
             "AT_post_pr_comment": post_pr_comment,

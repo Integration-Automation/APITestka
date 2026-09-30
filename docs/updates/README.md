@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-07 | 2026-10-01 | Per-endpoint latency trends and anomaly detection | #done #trend #report | [2026-10](2026-10.md) |
 | U-20261001-06 | 2026-10-01 | Load-test bridge to LoadDensity | #done #load #cross-project | [2026-10](2026-10.md) |
 | U-20261001-05 | 2026-10-01 | Anthropic reference AI backend and backend selection | #done #ai | [2026-10](2026-10.md) |
 | U-20261001-04 | 2026-10-01 | Pact-style bidirectional contract testing | #done #contract | [2026-10](2026-10.md) |
@@ -92,5 +93,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 6 |
+| [2026-10.md](2026-10.md) | 2026-10 | 7 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

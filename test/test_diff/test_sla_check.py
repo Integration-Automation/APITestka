@@ -56,3 +56,29 @@ def test_assert_sla_via_executor_checks_recorded_run():
     test_record_instance.test_record_list.append({"request_time_sec": 1.0})
     record = execute_action([["AT_assert_sla", {"sla": {"max_ms": 500}}]])
     assert "APIAssertException" in next(iter(record.values()))
+
+
+def test_record_latency_ms_reads_numbers_and_numeric_text():
+    from datetime import timedelta
+
+    from je_api_testka.diff.sla_check import record_latency_ms
+
+    assert record_latency_ms({"elapsed": 0.25}) == 250.0
+    assert record_latency_ms({"elapsed": 1500}) == 1500.0
+    assert record_latency_ms({"elapsed": timedelta(seconds=1), "request_time_sec": "0.5"}) == 500.0
+    assert record_latency_ms({"request_time_sec": True}) is None
+    assert record_latency_ms({"request_time_sec": "n/a"}) is None
+
+
+def test_saved_report_timings_count_for_the_sla():
+    # Regression: timings stored as text (saved JSON reports) used to count as 0 ms.
+    with pytest.raises(APIAssertException):
+        assert_sla([{"request_time_sec": "2.5"}], {"max_ms": 1000})
+
+
+def test_percentile_nearest_rank():
+    from je_api_testka.diff.sla_check import percentile
+
+    assert percentile([], 95) == 0.0
+    assert percentile([1, 2, 3, 4], 50) == 2
+    assert percentile(list(range(1, 101)), 95) == 95

@@ -4,6 +4,7 @@ Persist per-run summary stats into a SQLite database for trend analysis.
 from __future__ import annotations
 
 import sqlite3
+from contextlib import closing
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -47,7 +48,8 @@ def _avg_elapsed() -> float:
 def record_current_run(db_path: str = DEFAULT_TREND_DB) -> Path:
     """Append the current global test record's summary into the trend DB."""
     target = Path(db_path)
-    with sqlite3.connect(target) as connection:
+    # closing() releases the file; the inner "with connection" only commits.
+    with closing(sqlite3.connect(target)) as connection, connection:
         connection.execute(SCHEMA_SQL)
         connection.execute(
             "INSERT INTO trend_runs (captured_at, success_count, failure_count, avg_elapsed)"
@@ -63,10 +65,11 @@ def record_current_run(db_path: str = DEFAULT_TREND_DB) -> Path:
 
 
 def list_trend_rows(db_path: str = DEFAULT_TREND_DB, limit: int = 50) -> List[TrendRow]:
+    """Return the latest ``limit`` run summaries, newest first (empty when the database does not exist)."""
     target = Path(db_path)
     if not target.exists():
         return []
-    with sqlite3.connect(target) as connection:
+    with closing(sqlite3.connect(target)) as connection:
         connection.execute(SCHEMA_SQL)
         cursor = connection.execute(
             "SELECT captured_at, success_count, failure_count, avg_elapsed"

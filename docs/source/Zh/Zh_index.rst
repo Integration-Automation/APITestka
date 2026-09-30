@@ -34,7 +34,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
      - 順序 & 平行執行、Tag 過濾、Dependency-aware 排序、Retry 策略
    * - **報告**
      - HTML / JSON / XML / JUnit / Allure / Markdown / shields.io badge /
-       SQLite 趨勢資料庫 / Run diff
+       SQLite 趨勢資料庫 / Run diff / 各端點延遲趨勢與異常偵測
    * - **生態整合**
      - Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR
        匯入、OpenAPI / Postman 匯入、LoadDensity 負載測試橋接

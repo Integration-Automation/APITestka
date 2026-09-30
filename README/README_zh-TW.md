@@ -56,7 +56,7 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
 | **連線** | mTLS、Proxy、DNS override、VCR-style cassette 錄製/回放 |
 | **模擬伺服器** | 靜態、動態、stateful、故障注入、OpenAPI 驅動、Jinja 模板、Webhook 接收、record-replay proxy、WebSocket 與 gRPC 端點 |
 | **Runner** | 順序與平行執行、Tag 過濾、Dependency-aware 排序、Retry 策略 |
-| **報告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趨勢資料庫 / Run diff |
+| **報告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趨勢資料庫 / Run diff / 各端點延遲趨勢與異常偵測 |
 | **生態整合** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 匯入、OpenAPI / Postman 匯入、LoadDensity 負載測試橋接 |
 | **CLI / DX** | 子命令式 CLI、REPL、終端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
@@ -307,6 +307,31 @@ generate_badge("badge.json")                # shields.io endpoint
 record_current_run("trend.sqlite")          # 歷史趨勢
 ```
 
+**回應時間趨勢與異常偵測。** `record_endpoint_latencies` 把每次執行各端點的延遲(次數、平均、p50、p95、
+最大值)存進趨勢資料庫。端點是 method 加上路徑樣板:有 OpenAPI 時用它的樣板,否則把路徑裡的識別碼一般化
+(`/items/42` → `/items/{id}`)。`detect_latency_anomalies` 拿最近一次執行的每個端點,和它先前幾次執行
+(預設 20 次、至少 5 次)的中位數與 MAD 比較;變慢至少 20 % 且 5 ms、而且 robust z-score 超過 3.5 才算異常,
+這些都可以調整。`generate_trend_report` 寫出每個端點附 sparkline 的 HTML 表格。JSON action:
+`AT_record_endpoint_latencies`、`AT_detect_latency_anomalies`、`AT_assert_no_latency_anomalies`、
+`AT_generate_trend_report`。
+
+```python
+from je_api_testka.utils.generate_report.latency_trends import (
+    record_endpoint_latencies, detect_latency_anomalies, assert_no_latency_anomalies,
+)
+from je_api_testka.utils.generate_report.trend_report import generate_trend_report
+
+record_endpoint_latencies("trend.sqlite", run_label="build-128")   # 每次執行後
+assert_no_latency_anomalies("trend.sqlite", {"metric": "p95_ms", "threshold": 3.5})
+generate_trend_report("trends.html", "trend.sqlite")
+```
+
+```bash
+apitestka trend record --report run_success.json --label build-128 --openapi openapi.json
+apitestka trend check            # 有異常時結束碼為 1
+apitestka trend report -o trends.html
+```
+
 OpenTelemetry hook(沒裝 `opentelemetry-api` 時自動 no-op):
 
 ```python
@@ -377,6 +402,7 @@ apitestka openapi --run actions.json    # 先執行再印出反推的規格
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # 見契約測試
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # 見可插拔 AI 後端
 apitestka load run --actions smoke.json --users 20 --time 30                    # 見生態整合
+apitestka trend check                                                           # 見報告與可觀測性
 ```
 
 ### 安全檢測

@@ -86,6 +86,8 @@ CLI 參數
      - 為 OpenAPI 文件產生測試 action（見可插拔 AI 後端一章）
    * - ``load convert|run``
      - 把 APITestka 的請求轉成或跑成 LoadDensity 負載測試（見生態整合一章）
+   * - ``trend record|check|report``
+     - 記錄各端點延遲、檢查最近一次執行是否異常（異常時結束碼 1）、寫出 HTML 趨勢報告
 
 反推 OpenAPI 文件
 ----------------------
