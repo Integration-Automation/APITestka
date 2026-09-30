@@ -71,6 +71,41 @@ OpenAPI / Postman 匯入
 
 也可以直接用 ``apitestka import`` CLI 子命令。
 
+用 LoadDensity 做負載測試
+------------------------------
+
+同一批請求可以在 LoadDensity（``je_load_density``，Locust）上跑負載測試。請求 action
+（``AT_test_api_method``、``AT_test_api_method_httpx``）或錄到的流量會變成 LoadDensity 的 HTTP task：
+URL、method、``params``、``headers``、``cookies``、``json``、``data``、``timeout``、``allow_redirects``
+與 ``verify`` 原樣帶過去，``result_check_dict["status_code"]`` 變成 ``status_code`` 斷言。其他 action
+與相對網址會被略過，列在 ``LoadPlan.skipped``。
+
+.. code-block:: python
+
+   from je_api_testka.integrations.load_density import LoadProfile, actions_to_load_plan, build_load_test
+   from je_api_testka.integrations.load_density_runner import LoadThresholds, run_load_test
+
+   plan = actions_to_load_plan(actions)
+   load_test = build_load_test(plan.tasks, LoadProfile(user_count=20, spawn_rate=5, test_time=30))
+   result = run_load_test(load_test, LoadThresholds(max_failure_rate=0.01, max_p95_ms=500))
+   result.ok, result.problems, result.summary
+
+``run_load_test`` 寫出 action 檔，並在獨立行程啟動 ``python -m je_load_density --execute_file``，
+所以 LoadDensity 的 gevent patch 不會影響 APITestka。該直譯器（``python=``，預設是目前這個）必須裝有
+``je_load_density``。LoadDensity 即使 action 失敗也以 0 結束，所以結果依它寫出的摘要判斷：沒有摘要、
+請求少於 ``min_requests``、失敗率超過 ``max_failure_rate`` 或 p95 超過 ``max_p95_ms`` 都算失敗。
+
+.. code-block:: bash
+
+   apitestka load convert --actions smoke.json -o load.json --users 20 --time 30
+   apitestka load run --actions smoke.json --time 30 --max-failure-rate 0.01 --max-p95-ms 500
+   apitestka load run --report run_success.json --python /opt/ld/bin/python --json
+
+.. code-block:: json
+
+   ["AT_run_load_test", {"action_file": "smoke.json", "profile": {"user_count": 20, "test_time": 30},
+                         "thresholds": {"max_failure_rate": 0.01, "max_p95_ms": 500}}]
+
 Executor 命令
 -------------
 
@@ -78,3 +113,5 @@ Executor 命令
 * ``AT_post_pr_comment``
 * ``AT_curl_to_action``
 * ``AT_convert_har``
+* ``AT_write_load_test``
+* ``AT_run_load_test``

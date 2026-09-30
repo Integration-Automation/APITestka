@@ -8,7 +8,7 @@ from __future__ import annotations
 
 SUBCOMMANDS = (
     "run", "create", "mock", "import", "repl", "summary", "scaffold", "completion", "mcp", "openapi",
-    "contract", "generate-tests",
+    "contract", "generate-tests", "load",
 )
 SUPPORTED_SHELLS = ("bash", "zsh", "fish", "powershell")
 

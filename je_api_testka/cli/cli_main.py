@@ -14,6 +14,7 @@ Subcommands:
     openapi     Infer an OpenAPI document from recorded traffic.
     contract    Record, verify and compare Pact-style consumer contracts.
     generate-tests  Write test actions for an OpenAPI document (AI backend or deterministic).
+    load        Convert or run APITestka requests as a LoadDensity load test.
 """
 from __future__ import annotations
 
@@ -27,6 +28,7 @@ from je_api_testka.ai.backend import BACKEND_NAMES, select_ai_backend
 from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.cli.cli_common import run_action_path
 from je_api_testka.cli.contract_cli import configure_contract_parser
+from je_api_testka.cli.load_cli import configure_load_parser
 from je_api_testka.contract.commands import read_openapi
 from je_api_testka.spec.openapi_export import build_openapi
 from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
@@ -217,6 +219,7 @@ def build_parser() -> argparse.ArgumentParser:
     configure_contract_parser(sub.add_parser("contract", help="Record, verify and compare consumer contracts"))
     _configure_generate_tests_parser(
         sub.add_parser("generate-tests", help="Write test actions for an OpenAPI document"))
+    configure_load_parser(sub.add_parser("load", help="Convert or run requests as a LoadDensity load test"))
     return parser
 
 

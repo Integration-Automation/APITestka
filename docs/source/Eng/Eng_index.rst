@@ -39,7 +39,7 @@ Features
        SQLite trend store / run diff
    * - **Integrations**
      - Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR
-       importers, OpenAPI / Postman importer
+       importers, OpenAPI / Postman importer, LoadDensity load-test bridge
    * - **CLI / DX**
      - Subcommand CLI, REPL, terminal summary, shell completion, scaffold
    * - **Security**

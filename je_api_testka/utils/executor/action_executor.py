@@ -20,6 +20,7 @@ from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.github_pr_comment import post_pr_comment
 from je_api_testka.integrations.har_import import convert_har
+from je_api_testka.integrations.load_density_commands import run_load_test_from, write_load_test
 from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.runner.dependency_runner import order_actions
@@ -146,6 +147,9 @@ class Executor:
             "AT_post_pr_comment": post_pr_comment,
             "AT_curl_to_action": curl_to_action,
             "AT_convert_har": convert_har,
+            # LoadDensity bridge
+            "AT_write_load_test": write_load_test,
+            "AT_run_load_test": run_load_test_from,
             # Security checks
             "AT_cors_preflight": cors_preflight,
             "AT_probe_rate_limit": probe_rate_limit,

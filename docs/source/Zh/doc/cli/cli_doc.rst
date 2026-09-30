@@ -84,6 +84,8 @@ CLI 參數
      - 產生、驗證與比對 Pact 風格消費者契約（見契約測試一章）
    * - ``generate-tests SPEC [-o OUT] [--ai noop|anthropic] [--model] [--effort]``
      - 為 OpenAPI 文件產生測試 action（見可插拔 AI 後端一章）
+   * - ``load convert|run``
+     - 把 APITestka 的請求轉成或跑成 LoadDensity 負載測試（見生態整合一章）
 
 反推 OpenAPI 文件
 ----------------------

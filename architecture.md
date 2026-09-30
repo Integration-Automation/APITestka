@@ -36,7 +36,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/contract/` | Pact v2 consumer contracts from records (`pact.py`), matching rules (`matching.py`), provider verification (`verifier.py`), bidirectional check against an OpenAPI document (`openapi_compat.py`, `openapi_schema.py`), file-level steps for the executor and CLI (`commands.py`) |
 | `je_api_testka/security/` | Auth header helpers, CORS/SSRF/rate-limit probes, header scan, fuzzing, `pip-audit` wrapper |
 | `je_api_testka/runner/` | Parallel runner, tag filter, dependency ordering of actions |
-| `je_api_testka/integrations/` | cURL and HAR import, webhook notify, GitHub PR comment |
+| `je_api_testka/integrations/` | cURL and HAR import, webhook notify, GitHub PR comment; LoadDensity bridge (`load_density.py` converts requests to LoadDensity tasks, `load_density_runner.py` runs them out of process and judges the summary, `load_density_commands.py` for the executor and CLI) |
 | `je_api_testka/ai/` | Pluggable text-completion backend (no-op by default) used by test generation, failure classification and fake payloads; `AnthropicAIBackend` (`ai` extra) is the reference implementation; selection by `set_ai_backend` / `select_ai_backend` / `AT_select_ai_backend` or `APITESTKA_AI_BACKEND` on first use |
 | `je_api_testka/cli/` | Subcommand CLI (`apitestka`): import, REPL, scaffold, completion, terminal summary |
 | `je_api_testka/mcp_server/` | MCP stdio server and its tool catalogue |
@@ -61,8 +61,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   `-c/--create_project` and `--execute_str`. On `win32`/`cygwin`/`msys`, `--execute_str` is decoded
   with `json.loads` twice. Errors print `repr(error)` to stderr and exit with code 1.
 - **Subcommand CLI**: `apitestka` (`je_api_testka.cli.cli_main:main`) with `run`, `create`, `mock`,
-  `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi`, `contract record|verify|compare` and
-  `generate-tests`
+  `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi`, `contract record|verify|compare`,
+  `generate-tests` and `load convert|run` (`cli/load_cli.py`)
   (`cli/contract_cli.py`); shared helpers are in `cli/cli_common.py`. `cli/completion.py`
   `SUBCOMMANDS` lists the same names (a test compares them with the parser).
 - **MCP**: `apitestka-mcp`, `python -m je_api_testka.mcp_server` or `apitestka mcp` (stdio, needs the
@@ -134,6 +134,18 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - **TestPioneer**: `with: api-runner` imports `je_api_testka.execute_action` in-process
   (`test_pioneer/executor/run/utils.py`). `parallel_run` spawns
   `python -m je_api_testka --execute_file <script>` (`test_pioneer/executor/run/parallel_run.py`).
+- **LoadDensity (subprocess, this repo depends on it)**: `apitestka load run` / `AT_run_load_test`
+  (`integrations/load_density_runner.py`) run `python -m je_load_density --execute_file <file>` (LoadDensity's
+  hidden legacy flag, guarded by its `test/test_legacy_cli_contract.py`) with `PYTHONIOENCODING=utf-8` and the
+  action file's folder as cwd. The file is `{"load_density": [["LD_start_test", {...}],
+  ["LD_generate_summary_report", {"report_name": <absolute path without .json>}]]}`. `LD_start_test` gets
+  `user_detail_dict.user` (`fast_http_user` / `http_user`), `tasks: {"mode": "sequence"|"weighted", "tasks": [...]}`,
+  `user_count`, `spawn_rate`, `test_time`; each task uses `method`, `request_url` (absolute: the HTTP users have
+  no base host), `name`, `params`, `headers`, `cookies`, `json`, `data`, `timeout`, `allow_redirects`, `verify`
+  and `assertions: [{"type": "status_code", "value": N}]` (`integrations/load_density.py`). The run is judged
+  from `<report_name>.json`: `totals.requests`, `totals.failure_rate`, `latency_overall.p95_ms`, because
+  LoadDensity exits with 0 even when an action fails. `test/test_integrations/test_load_density.py` checks this
+  side against a stand-in package that follows the contract; LoadDensity lists APITestka in its own §6.
 - **Sibling executors** share the action-list shape and the `Return_Data_Over_JE` socket terminator,
   but differ in command prefix (`AT_` here, `LD_` LoadDensity, `MT_` MailThunder, `FA_` FileAutomation),
   dict key (`api_testka` here) and builtins policy: APITestka registers no Python builtins (explicit

@@ -57,7 +57,7 @@ je_api_testka/
 ├── contract/              # Pact-style consumer contracts, provider verification, OpenAPI check
 ├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
 ├── runner/                # Parallel runner, tag filter, dependency ordering
-├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment
+├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment, LoadDensity bridge
 ├── ai/                    # Pluggable text-completion backend (no-op by default; Anthropic reference backend)
 ├── cli/                   # Subcommand CLI (`apitestka`)
 ├── mcp_server/            # MCP stdio server (`apitestka-mcp`)

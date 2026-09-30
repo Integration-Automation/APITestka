@@ -58,7 +58,7 @@ server for Claude, and more.
 | **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy, WebSocket and gRPC endpoints |
 | **Runner** | Sequential & parallel execution, tag filters, dependency-aware ordering, retry policies |
 | **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff |
-| **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer |
+| **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer, LoadDensity load-test bridge |
 | **CLI / DX** | Subcommand CLI, REPL, terminal summary, shell completion, scaffold |
 | **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
 | **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog |
@@ -341,6 +341,31 @@ Each importer returns `["AT_test_api_method", {...}]` actions that `execute_acti
 as they are. Runner metadata (`id`, `depends_on`, `tags`) may stay in the kwargs; the
 executor strips it before the call.
 
+**Load testing with LoadDensity.** The same requests can run as a load test on
+[LoadDensity](https://github.com/Integration-Automation/LoadDensity) (Locust). `AT_test_api_method` and
+`AT_test_api_method_httpx` actions, or recorded traffic from saved reports, become LoadDensity HTTP tasks:
+URL, method, `params`, `headers`, `cookies`, `json`, `data`, `timeout`, `allow_redirects` and `verify` carry
+over, and `result_check_dict["status_code"]` becomes a status assertion. Other actions, and relative URLs,
+are left out and listed. `load run` starts LoadDensity in its own process
+(`python -m je_load_density --execute_file`) and judges the run from its summary: no requests, a
+failure rate above `--max-failure-rate` or a p95 above `--max-p95-ms` exits with 1.
+
+```bash
+pip install je_load_density            # in this interpreter, or point --python at another one
+apitestka load convert --actions smoke.json -o load.json --users 20 --time 30
+apitestka load run --actions smoke.json --users 20 --spawn-rate 5 --time 30 \
+    --max-failure-rate 0.01 --max-p95-ms 500
+apitestka load run --report run_success.json --time 60 --python /opt/ld/bin/python
+```
+
+JSON actions: `AT_write_load_test` writes the LoadDensity file; `AT_run_load_test` runs it and fails the
+action when a threshold is broken.
+
+```json
+["AT_run_load_test", {"action_file": "smoke.json", "profile": {"user_count": 20, "test_time": 30},
+                      "thresholds": {"max_failure_rate": 0.01, "max_p95_ms": 500}}]
+```
+
 ### CLI / Developer Experience
 
 ```bash
@@ -357,6 +382,7 @@ apitestka openapi --report run_success.json -o openapi.json   # infer a spec fro
 apitestka openapi --run actions.json    # run first, print the inferred spec
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # see Contract Testing
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # see Pluggable AI Backend
+apitestka load run --actions smoke.json --users 20 --time 30                    # see Integrations
 ```
 
 ### Security Probes

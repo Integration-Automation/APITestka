@@ -57,7 +57,7 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
 | **模擬伺服器** | 靜態、動態、stateful、故障注入、OpenAPI 驅動、Jinja 模板、Webhook 接收、record-replay proxy、WebSocket 與 gRPC 端點 |
 | **Runner** | 順序與平行執行、Tag 過濾、Dependency-aware 排序、Retry 策略 |
 | **報告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趨勢資料庫 / Run diff |
-| **生態整合** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 匯入、OpenAPI / Postman 匯入 |
+| **生態整合** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 匯入、OpenAPI / Postman 匯入、LoadDensity 負載測試橋接 |
 | **CLI / DX** | 子命令式 CLI、REPL、終端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
 | **Spec 反推** | 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog |
@@ -337,6 +337,29 @@ actions = convert_spec_file("openapi.json", spec_format="openapi")
 可以直接執行。runner 的中繼資料(`id`、`depends_on`、`tags`)可以留在 kwargs 裡,
 executor 呼叫前會先拿掉。
 
+**用 LoadDensity 做負載測試。** 同一批請求可以在
+[LoadDensity](https://github.com/Integration-Automation/LoadDensity)(Locust)上跑負載測試。
+`AT_test_api_method` 與 `AT_test_api_method_httpx` action,或存下報告裡錄到的流量,會變成 LoadDensity 的
+HTTP task:URL、method、`params`、`headers`、`cookies`、`json`、`data`、`timeout`、`allow_redirects` 與
+`verify` 原樣帶過去,`result_check_dict["status_code"]` 變成狀態碼斷言。其他 action 與相對網址會被略過並列出。
+`load run` 在獨立行程啟動 LoadDensity(`python -m je_load_density --execute_file`),並依它的摘要判斷結果:
+沒有任何請求、失敗率超過 `--max-failure-rate` 或 p95 超過 `--max-p95-ms` 時結束碼為 1。
+
+```bash
+pip install je_load_density            # 裝在這個直譯器,或用 --python 指定另一個
+apitestka load convert --actions smoke.json -o load.json --users 20 --time 30
+apitestka load run --actions smoke.json --users 20 --spawn-rate 5 --time 30 \
+    --max-failure-rate 0.01 --max-p95-ms 500
+apitestka load run --report run_success.json --time 60 --python /opt/ld/bin/python
+```
+
+JSON action:`AT_write_load_test` 寫出 LoadDensity 檔案;`AT_run_load_test` 執行它,超過門檻時該 action 失敗。
+
+```json
+["AT_run_load_test", {"action_file": "smoke.json", "profile": {"user_count": 20, "test_time": 30},
+                      "thresholds": {"max_failure_rate": 0.01, "max_p95_ms": 500}}]
+```
+
 ### CLI / 開發體驗
 
 ```bash
@@ -353,6 +376,7 @@ apitestka openapi --report run_success.json -o openapi.json   # 從存下的執�
 apitestka openapi --run actions.json    # 先執行再印出反推的規格
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # 見契約測試
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # 見可插拔 AI 後端
+apitestka load run --actions smoke.json --users 20 --time 30                    # 見生態整合
 ```
 
 ### 安全檢測

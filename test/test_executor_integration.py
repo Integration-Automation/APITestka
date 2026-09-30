@@ -33,6 +33,7 @@ EXPECTED_NEW_COMMANDS = (
     # Integrations
     "AT_notify_via_webhook", "AT_post_pr_comment",
     "AT_curl_to_action", "AT_convert_har",
+    "AT_write_load_test", "AT_run_load_test",
     # Security
     "AT_cors_preflight", "AT_probe_rate_limit", "AT_probe_ssrf",
     "AT_scan_security_headers", "AT_fuzz_string_inputs",

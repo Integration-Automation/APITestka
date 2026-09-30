@@ -84,6 +84,8 @@ The ``apitestka`` command (installed with the package) groups the everyday tasks
      - Record, verify and compare Pact-style consumer contracts (see Contract Testing)
    * - ``generate-tests SPEC [-o OUT] [--ai noop|anthropic] [--model] [--effort]``
      - Write test actions for an OpenAPI document (see Pluggable AI Backend)
+   * - ``load convert|run``
+     - Convert or run APITestka requests as a LoadDensity load test (see Integrations)
 
 Inferring an OpenAPI document
 -----------------------------

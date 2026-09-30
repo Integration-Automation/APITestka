@@ -37,7 +37,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
        SQLite 趨勢資料庫 / Run diff
    * - **生態整合**
      - Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR
-       匯入、OpenAPI / Postman 匯入
+       匯入、OpenAPI / Postman 匯入、LoadDensity 負載測試橋接
    * - **CLI / DX**
      - 子命令式 CLI、REPL、終端摘要、Shell completion、Scaffold
    * - **安全**
