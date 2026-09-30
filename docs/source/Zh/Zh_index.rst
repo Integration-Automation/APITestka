@@ -52,7 +52,8 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    * - **MCP**
      - 一級支援 Claude Code,將框架曝露為 MCP 工具
    * - **GUI**
-     - 可選 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI
+     - 可選 PySide6 GUI：每個功能一頁的側邊欄、附歷史與環境的請求建構器、淺色與深色主題、
+       英 / 繁中 / 简中 / 日、嵌入 Swagger UI
    * - **跨平台**
      - Windows、macOS、Linux,Python 3.10–3.14
 

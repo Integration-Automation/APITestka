@@ -12,4 +12,3 @@ pytest
 pytest-asyncio
 pytest-timeout
 PySide6==6.11.2
-qt_material

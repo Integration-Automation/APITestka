@@ -7,4 +7,3 @@ Cross-repo and workspace items live in `D:\Codes\progress.md` (relevant here: X-
 ## Open
 
 - **#3** [DECIDE] The PyPI classifier still says `Development Status :: 2 - Pre-Alpha`.
-- **#6** GUI redesign: restructure and restyle. `gui/main_widget.py` is one 605-line widget (over the 500-line limit) with six flat tabs. It should become a sidebar-navigated window with a request/response split view, and history and environment panels docked (`gui/history_panel.py`, `gui/env_manager_model.py` exist but are not wired in). It needs a refreshed theme (`gui/main_window.py:21` hard-codes `dark_amber.xml`), pages for the newer features (#8–#13), and all four language wrappers (English, Traditional Chinese, Simplified Chinese, Japanese). `APITestkaWidget` stays the embeddable entry point (PyBreeze contract, `architecture.md` §6).

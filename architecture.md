@@ -41,7 +41,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/cli/` | Subcommand CLI (`apitestka`): import, REPL, scaffold, completion, terminal summary |
 | `je_api_testka/mcp_server/` | MCP stdio server and its tool catalogue |
 | `je_api_testka/pytest_plugin/` | pytest fixtures, registered through the `pytest11` entry point |
-| `je_api_testka/gui/` | Optional PySide6 GUI (`gui` extra) with language wrappers |
+| `je_api_testka/gui/` | Optional PySide6 GUI (`gui` extra): `main_widget.APITestkaWidget` (sidebar + one page per feature in `gui/pages/`, console), `main_window.APITestkaUI` (Language and Theme menus), `theme.py` (light/dark style sheets), `widgets.py` (shared helpers, `TaskThread`), Qt-free models (`request_model`, `history_panel`, `env_manager_model`), four language wrappers |
 | `apitestka_driver/` | Prebuilt socket-server driver (script plus Windows and Linux binaries) |
 | `test/` | pytest suite with one `test_<area>/` per package. Shared fixtures are in `test/conftest.py`. The root `conftest.py` keeps source files out of collection |
 | `docs/source/` | Sphinx docs (`Eng/`, `Zh/`, `API/`) |
@@ -76,7 +76,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 - **pytest plugin**: `pytest11` entry `apitestka = je_api_testka.pytest_plugin.plugin` provides
   `apitestka_record`, `apitestka_clean_record` and `apitestka_mock_server`.
 - **GUI**: `je_api_testka.gui.main_window.APITestkaUI` (`python -m je_api_testka.gui.main_window`). The
-  embeddable widget is `je_api_testka.gui.main_widget.APITestkaWidget`.
+  embeddable widget is `je_api_testka.gui.main_widget.APITestkaWidget`, constructed with no arguments; it
+  applies no style sheet, so an embedding application keeps its own look.
 - **Packaging**: `pyproject.toml` and `dev.toml` (`je_api_testka_dev`) declare the same console scripts,
   `pytest11` entry point and extras; `test/test_utils/test_dev_toml_parity.py` keeps them equal.
 

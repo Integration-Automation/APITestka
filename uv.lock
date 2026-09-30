@@ -664,7 +664,6 @@ grpc = [
 ]
 gui = [
     { name = "pyside6" },
-    { name = "qt-material" },
 ]
 mcp = [
     { name = "mcp" },
@@ -701,7 +700,6 @@ requires-dist = [
     { name = "opentelemetry-sdk", marker = "extra == 'otel'", specifier = ">=1.25" },
     { name = "pyjwt", marker = "extra == 'security'", specifier = ">=2.8" },
     { name = "pyside6", marker = "extra == 'gui'", specifier = "==6.11.2" },
-    { name = "qt-material", marker = "extra == 'gui'" },
     { name = "requests" },
     { name = "websockets", marker = "extra == 'websocket'", specifier = ">=12.0" },
 ]
@@ -1303,18 +1301,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/61/caa39686032d2ebdd04ff0ab5cbe163126c0066d98e00c9018646e42393b/pywin32-312-cp315-cp315-win32.whl", hash = "sha256:5c1fbe4a937a73ae9297384a3da38518cbc694c68ad8a809b2e19acd350f03ed", size = 6471159, upload-time = "2026-06-04T07:49:50.035Z" },
     { url = "https://files.pythonhosted.org/packages/0f/cd/7e1de64a4a6f69c04214169657ccab0d93a670ea50e35eb8f489d7378249/pywin32-312-cp315-cp315-win_amd64.whl", hash = "sha256:c2f03a0f73f804a13c2735b99392b0cd426bb4f2c4d0178e5ac966a0f21618d5", size = 7025293, upload-time = "2026-06-04T07:49:54.857Z" },
     { url = "https://files.pythonhosted.org/packages/23/ed/4532e9388e65fa16b46776ef47ad631a64eda1631884488af707666350ed/pywin32-312-cp315-cp315-win_arm64.whl", hash = "sha256:a8597d28f267b39074aef51fa593530082b39cbe5a074226096857b1fed2dfb9", size = 6840337, upload-time = "2026-06-04T07:49:57.531Z" },
-]
-
-[[package]]
-name = "qt-material"
-version = "2.17"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "jinja2" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/3a/57/d6473fc7f9b1a81f6bddea555119270818c54be7717f38d0977bb6161408/qt_material-2.17.tar.gz", hash = "sha256:b500a0c1f5ef8f46a8cf037d1aa5bdf9ea4eb618180b6332539dfbdd0647ad0d", size = 1668475, upload-time = "2025-04-21T17:00:25.783Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/63/e1085fd76bfea103b6c93d133d849f80a5a94b924f31897eb936cabe8459/qt_material-2.17-py3-none-any.whl", hash = "sha256:660523341ae45b79d222bf15e202ec76ba3bf5e7e82170b66759738d7bb4873d", size = 1687312, upload-time = "2025-04-21T17:00:23.761Z" },
 ]
 
 [[package]]

@@ -6,7 +6,7 @@ APITestka (`je_api_testka`) is a lightweight, cross-platform Python framework fo
 
 - **Python**: 3.10+
 - **Dependencies**: `requests`, `Flask`, `httpx`
-- **Optional GUI**: `PySide6==6.11.0`, `qt-material`
+- **Optional GUI**: `PySide6==6.11.2`
 
 ## Build & Test Commands
 

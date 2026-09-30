@@ -57,7 +57,8 @@ Features
    * - **MCP**
      - First-class Claude Code / MCP server exposing the framework as tools
    * - **GUI**
-     - Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed
+     - Optional PySide6 GUI: a sidebar page per feature, request builder with history and
+       environments, light and dark themes, English / 繁中 / 简中 / 日本語, Swagger UI embed
    * - **Cross-Platform**
      - Windows, macOS, Linux. Python 3.10–3.14
 

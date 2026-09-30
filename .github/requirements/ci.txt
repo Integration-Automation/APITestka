@@ -502,9 +502,7 @@ itsdangerous==2.2.0 \
 jinja2==3.1.6 \
     --hash=sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d \
     --hash=sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67
-    # via
-    #   flask
-    #   qt-material
+    # via flask
 jiter==0.17.0 \
     --hash=sha256:00b5a98df3e3a3e8cf7b619f4ac2f8bf975bbf3d95d02c5d17b8dbfe5c8b8245 \
     --hash=sha256:00d783a779c5664e16dbad5e3a3c3a75e128b07dd5f4765159658d9210a50ca5 \
@@ -954,10 +952,6 @@ pywin32==312 ; sys_platform == 'win32' \
     --hash=sha256:dab4f65ac9c4e48400a2a0530c46c3c579cd5905ecd11b80692373915269208b \
     --hash=sha256:dc90147579a905b8635e1b0ec6514967dcb07e6e0d9c42f1477feef14cac23bb
     # via mcp
-qt-material==2.17 \
-    --hash=sha256:660523341ae45b79d222bf15e202ec76ba3bf5e7e82170b66759738d7bb4873d \
-    --hash=sha256:b500a0c1f5ef8f46a8cf037d1aa5bdf9ea4eb618180b6332539dfbdd0647ad0d
-    # via -r .github/requirements/ci.in
 referencing==0.37.0 \
     --hash=sha256:381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231 \
     --hash=sha256:44aefc3142c5b842538163acb373e24cce6632bd54bdb01b21ad5863489f50d8

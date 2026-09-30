@@ -49,7 +49,7 @@ apitestka-mcp = "je_api_testka.mcp_server.server:main"
 apitestka = "je_api_testka.pytest_plugin.plugin"
 
 [project.optional-dependencies]
-gui = ["PySide6==6.11.2", "qt-material"]
+gui = ["PySide6==6.11.2"]
 websocket = ["websockets>=12.0"]
 grpc = ["grpcio>=1.60"]
 # ai/anthropic_backend.py (AnthropicAIBackend); anthropic 1.x is the httpx2-based SDK.

@@ -65,7 +65,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 | **契约测试** | 从测试运行生成 Pact v2 消费者契约、提供端验证、与 OpenAPI 双向比较 |
 | **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback;附 Anthropic 参考实现 |
 | **MCP** | 一级支持 Claude Code,将框架作为 MCP 工具暴露 |
-| **GUI** | 可选 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI |
+| **GUI** | 可选 PySide6 GUI:每个功能一页的侧边栏、附历史与环境的请求构建器、浅色与深色主题、英 / 繁中 / 简中 / 日、嵌入 Swagger UI |
 | **跨平台** | Windows、macOS、Linux,Python 3.10–3.14 |
 
 ---
@@ -508,14 +508,22 @@ apitestka contract compare pacts/web-shop.json openapi.json
 
 ```bash
 pip install 'je_api_testka[gui]'
+python -m je_api_testka.gui.main_window
 ```
 
-`je_api_testka.gui.*` 子模块(`history_panel`、`env_manager_model`、`diff_viewer`)中的
-headless model(`HistoryPanelModel`、`EnvManagerModel`、`render_side_by_side`)让测试与
-headless 工具无需 PySide6 也能驱动面板。
-真正的 Qt widget 在 `main_widget.py`。
+侧边栏通往各功能的页面,下方是控制台:
 
-语种:English、繁體中文、简体中文、日本語。通过 `LanguageWrapper.reset_language(...)` 切换。
+- **请求**:method、URL、后端与环境在同一行;参数、请求头、请求体、认证与选项放在响应(状态、耗时、大小、格式化后的
+  响应体、响应头)旁边,左侧是请求历史。`{{name}}` 占位符会套用启用中环境的值,**复制为 action** 会把请求转成 executor JSON。
+- **环境**:具名的变量组,可启用、导入与导出。
+- **执行器**:执行输入的 action JSON、文件或文件夹。
+- **记录与报告**:以表格展示测试记录与明细、失败列表,并生成 HTML、JSON、XML、JUnit、Markdown 与 Allure 报告。
+- **模拟服务器**、**契约**、**OpenAPI**(推导、测试即规格检查、用 AI 后端生成测试)、**负载测试**(LoadDensity)、
+  **趋势**(延迟异常与 HTML 报告)与 **工具**(JSON、XML、创建项目)。
+
+窗口有浅色与深色主题(纯 Qt style sheet;**主题** 默认跟随系统),以及 English、繁體中文、简体中文、日本語四种语言。
+`je_api_testka.gui.main_widget.APITestkaWidget` 是可嵌入的 widget,PyBreeze 就是嵌入它。页面背后的逻辑
+(`request_model`、`history_panel`、`env_manager_model`)不依赖 Qt。
 
 ### 可插拔 AI 后端
 

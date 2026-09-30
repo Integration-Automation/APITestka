@@ -66,7 +66,7 @@ server for Claude, and more.
 | **Contract testing** | Pact v2 consumer contracts from test runs, provider verification, bidirectional check against OpenAPI |
 | **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification; Anthropic reference backend |
 | **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
-| **GUI** | Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed |
+| **GUI** | Optional PySide6 GUI: sidebar pages for every feature, request builder with history and environments, light and dark themes, English / 繁中 / 简中 / 日本語, Swagger UI embed |
 | **Cross-platform** | Windows, macOS, Linux. Python 3.10–3.14 |
 
 ---
@@ -522,14 +522,27 @@ hold. JSON actions: `AT_write_contract`, `AT_verify_contract`, `AT_check_contrac
 
 ```bash
 pip install 'je_api_testka[gui]'
+python -m je_api_testka.gui.main_window
 ```
 
-Headless models (`HistoryPanelModel`, `EnvManagerModel`, `render_side_by_side`) live in
-the `je_api_testka.gui.*` submodules (`history_panel`, `env_manager_model`, `diff_viewer`),
-allowing tests and headless tooling to drive panels without PySide6. The actual Qt widgets
-live in `main_widget.py`.
+A sidebar leads to one page per feature, with a console underneath:
 
-Locales: English, 繁體中文, 简体中文, 日本語. Switch via `LanguageWrapper.reset_language(...)`.
+- **Request**: method, URL, backend and environment in one bar. Params, headers, body, auth and options
+  sit next to the response (status, time, size, pretty-printed body, headers), with the request history
+  on the left. `{{name}}` placeholders take the active environment's values, and **Copy as action**
+  turns the request into executor JSON.
+- **Environments**: named variable sets; activate, import and export them.
+- **Executor**: run typed action JSON, a file or a folder.
+- **Records & Reports**: the test record as a table with details and failures, and HTML, JSON, XML,
+  JUnit, Markdown and Allure reports.
+- **Mock Servers**, **Contracts**, **OpenAPI** (inference, the test-as-spec check, test generation with
+  an AI backend), **Load Test** (LoadDensity), **Trends** (latency anomalies and the HTML report) and
+  **Tools** (JSON, XML, project scaffolding).
+
+The window has light and dark themes (plain Qt style sheets; **Theme** follows the system by default) and
+four languages: English, 繁體中文, 简体中文 and 日本語. `je_api_testka.gui.main_widget.APITestkaWidget` is
+the embeddable widget, and PyBreeze embeds it. The logic behind the pages (`request_model`,
+`history_panel`, `env_manager_model`) has no Qt dependency.
 
 ### Pluggable AI Backend
 
