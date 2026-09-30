@@ -8,7 +8,8 @@ import time
 import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-QtWidgets = pytest.importorskip("PySide6.QtWidgets")
+# On Linux without libEGL, importing QtWidgets raises a plain ImportError; skip rather than fail.
+QtWidgets = pytest.importorskip("PySide6.QtWidgets", exc_type=ImportError)
 
 from je_api_testka.data.variable_store import variable_store  # noqa: E402
 from je_api_testka.gui.language_wrapper.multi_language_wrapper import language_wrapper  # noqa: E402
