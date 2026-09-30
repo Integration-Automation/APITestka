@@ -9,7 +9,7 @@ check never rejects what a full validator would accept for those keywords.
 """
 from __future__ import annotations
 
-from typing import Any, List, Mapping
+from typing import Any, Dict, List, Mapping
 
 from je_api_testka.contract.matching import json_type
 
@@ -25,6 +25,16 @@ def resolve_ref(schema: Mapping[str, Any], spec: Mapping[str, Any], depth: int =
     for part in ref[2:].split("/"):
         node = node.get(part.replace("~1", "/").replace("~0", "~"), {}) if isinstance(node, Mapping) else {}
     return resolve_ref(node, spec, depth + 1) if isinstance(node, Mapping) else {}
+
+
+def operation_parameters(path_item: Mapping[str, Any], operation: Mapping[str, Any],
+                         spec: Mapping[str, Any]) -> List[dict]:
+    """Return the path-level and operation-level parameters (``$ref`` resolved); the operation's win."""
+    merged: Dict[tuple, dict] = {}
+    for parameter in [*path_item.get("parameters", []), *operation.get("parameters", [])]:
+        resolved = resolve_ref(parameter, spec)
+        merged[(resolved.get("name"), resolved.get("in"))] = dict(resolved)
+    return list(merged.values())
 
 
 def _type_matches(value: Any, schema: Mapping[str, Any]) -> bool:

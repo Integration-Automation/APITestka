@@ -44,7 +44,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
      - Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS /
        Rate limit / SSRF probe、pip-audit、Fuzz
    * - **Spec 反推**
-     - 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog
+     - 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog、測試即規格迴路
    * - **契約測試**
      - 從測試執行產生 Pact v2 消費者契約、提供端驗證、與 OpenAPI 雙向比對
    * - **AI**
@@ -68,6 +68,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    doc/assertion/assertion_doc
    doc/diff/diff_doc
    doc/contract/contract_doc
+   doc/spec_loop/spec_loop_doc
    doc/connection/connection_doc
    doc/runner/runner_doc
    doc/report/report_doc

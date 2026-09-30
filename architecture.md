@@ -32,7 +32,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/utils/{json,xml,file_process,logging,exception,retry,observability}/` | JSON and XML I/O, directory listing, `apitestka_logger` (file at `$APITESTKA_LOG_FILE` or `~/.je_api_testka/logs/APITestka.log`, opened on first use; the root logger is left alone), exception hierarchy, `RetryPolicy`, OpenTelemetry hooks |
 | `je_api_testka/data/` | Variable store, template rendering, env profiles, fake-data helpers, data rows |
 | `je_api_testka/connection/` | Connection options, DNS override, record/replay cassettes |
-| `je_api_testka/diff/`, `spec/` | Response and contract diff, SLA checks; schema inference, records → OpenAPI (`records_to_openapi`; `openapi_export` reads saved JSON reports and writes the spec), OpenAPI changelog, path-template matching (`path_templates`) |
+| `je_api_testka/diff/`, `spec/` | Response and contract diff, SLA checks; schema inference, records → OpenAPI (`records_to_openapi`; `openapi_export` reads saved JSON reports and writes the spec), OpenAPI changelog, path-template matching (`path_templates`), deterministic examples (`examples`), test-as-spec loop (`spec_loop`: drift, coverage, missing tests, inferred document) |
 | `je_api_testka/contract/` | Pact v2 consumer contracts from records (`pact.py`), matching rules (`matching.py`), provider verification (`verifier.py`), bidirectional check against an OpenAPI document (`openapi_compat.py`, `openapi_schema.py`), file-level steps for the executor and CLI (`commands.py`) |
 | `je_api_testka/security/` | Auth header helpers, CORS/SSRF/rate-limit probes, header scan, fuzzing, `pip-audit` wrapper |
 | `je_api_testka/runner/` | Parallel runner, tag filter, dependency ordering of actions |
@@ -62,7 +62,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   with `json.loads` twice. Errors print `repr(error)` to stderr and exit with code 1.
 - **Subcommand CLI**: `apitestka` (`je_api_testka.cli.cli_main:main`) with `run`, `create`, `mock`,
   `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi`, `contract record|verify|compare`,
-  `generate-tests`, `load convert|run` (`cli/load_cli.py`) and `trend record|check|report` (`cli/trend_cli.py`)
+  `generate-tests`, `load convert|run` (`cli/load_cli.py`), `trend record|check|report` (`cli/trend_cli.py`) and
+  `spec check` (`cli/spec_cli.py`)
   (`cli/contract_cli.py`); shared helpers are in `cli/cli_common.py`. `cli/completion.py`
   `SUBCOMMANDS` lists the same names (a test compares them with the parser).
 - **MCP**: `apitestka-mcp`, `python -m je_api_testka.mcp_server` or `apitestka mcp` (stdio, needs the
@@ -88,6 +89,15 @@ JSON file / --execute_str → __main__ (Windows double json.loads) → execute_a
   → Executor._execute_event → event_dict["AT_*"] → test_api_method_requests | httpx | ws | sse | graphql
   → optional check_result(result_check_dict) → test_record_instance (test_record_list / error_record_list)
   → AT_generate_*_report → report file   (a failed action is stored as repr(error); the batch continues)
+```
+
+**Test-as-spec loop**
+
+```
+apitestka spec check / AT_check_spec_against_tests → run actions or read reports → collect_records
+  → each record as a contract interaction → interaction_problems(committed spec)   (drift, undocumented)
+  → documented operations − exercised ones → uncovered → generate_tests_from_openapi(only uncovered)
+  → records with paths mapped to committed templates → records_to_openapi   (inferred document)
 ```
 
 **Remote execution**

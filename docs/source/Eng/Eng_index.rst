@@ -46,7 +46,8 @@ Features
      - Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS /
        rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs
    * - **Spec inference**
-     - Test record → OpenAPI, JSON Schema inference, OpenAPI changelog
+     - Test record → OpenAPI, JSON Schema inference, OpenAPI changelog,
+       test-as-spec loop
    * - **Contract testing**
      - Pact v2 consumer contracts from test runs, provider verification,
        bidirectional check against OpenAPI
@@ -72,6 +73,7 @@ Features
    doc/assertion/assertion_doc
    doc/diff/diff_doc
    doc/contract/contract_doc
+   doc/spec_loop/spec_loop_doc
    doc/connection/connection_doc
    doc/runner/runner_doc
    doc/report/report_doc

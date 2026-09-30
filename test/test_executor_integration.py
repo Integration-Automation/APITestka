@@ -44,6 +44,7 @@ EXPECTED_NEW_COMMANDS = (
     "AT_build_jwt", "AT_aws_sigv4_headers",
     # Spec
     "AT_infer_schema", "AT_records_to_openapi", "AT_export_openapi", "AT_openapi_changelog",
+    "AT_check_spec_against_tests",
     # Contracts
     "AT_write_contract", "AT_verify_contract", "AT_check_contract_against_openapi",
     # AI

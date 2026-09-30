@@ -3,7 +3,9 @@ Generate executor action JSON from an OpenAPI spec via the active AI backend.
 
 If the backend is :class:`NoOpAIBackend`, or its reply is empty, not JSON or
 not a list of well-formed ``AT_*`` actions, we fall back to a deterministic
-approach: one happy-path action per operation.
+approach: one happy-path action per operation, with path parameters, required
+query parameters and a JSON body filled from the document's examples (or the
+schema types) and the operation's lowest declared 2xx status expected.
 """
 from __future__ import annotations
 
@@ -12,6 +14,8 @@ from typing import Any, List
 
 from je_api_testka.ai.backend import NoOpAIBackend, ai_backend
 from je_api_testka.ai.reply import parse_json_reply
+from je_api_testka.contract.openapi_schema import operation_parameters
+from je_api_testka.spec.examples import fill_path, parameter_example, request_body_example, success_status
 from je_api_testka.utils.executor.request_action import REQUEST_COMMAND, build_request_action
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
@@ -30,6 +34,19 @@ TEST_GENERATION_PROMPT: str = (
 )
 
 
+def _operation_action(base: str, path: str, verb: str, path_item: dict, spec: dict) -> list:
+    operation = path_item[verb]
+    parameters = operation_parameters(path_item, operation, spec)
+    path_values = {item["name"]: parameter_example(item, spec) for item in parameters if item.get("in") == "path"}
+    options: dict = {"result_check_dict": {"status_code": success_status(operation)}}
+    query = {item["name"]: parameter_example(item, spec) for item in parameters
+             if item.get("in") == "query" and item.get("required")}
+    if query:
+        options["params"] = query
+    return build_request_action(verb, f"{base}{fill_path(path, path_values)}",
+                                body=request_body_example(operation, spec), **options)
+
+
 def _deterministic_actions(spec: dict) -> List[list]:
     actions: List[list] = []
     base = ""
@@ -40,7 +57,7 @@ def _deterministic_actions(spec: dict) -> List[list]:
         for verb in HTTP_VERBS:
             if not (item or {}).get(verb):
                 continue
-            actions.append(build_request_action(verb, f"{base}{path}", result_check_dict={"status_code": 200}))
+            actions.append(_operation_action(base, path, verb, item, spec))
     return actions
 
 

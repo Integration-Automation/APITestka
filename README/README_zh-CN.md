@@ -33,6 +33,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
   - [CLI / 开发体验](#cli--开发体验)
   - [安全检测](#安全检测)
   - [OpenAPI 反推](#openapi-反推)
+  - [测试即规格回路](#测试即规格回路)
   - [契约测试](#契约测试)
   - [GUI](#gui)
   - [可插拔 AI 后端](#可插拔-ai-后端)
@@ -60,7 +61,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 | **生态集成** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 导入、OpenAPI / Postman 导入、LoadDensity 负载测试桥接 |
 | **CLI / DX** | 子命令式 CLI、REPL、终端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
-| **Spec 反推** | 测试记录 → OpenAPI、JSON Schema 推断、OpenAPI changelog |
+| **Spec 反推** | 测试记录 → OpenAPI、JSON Schema 推断、OpenAPI changelog、测试即规格回路(偏移、覆盖率、为缺口生成测试) |
 | **契约测试** | 从测试运行生成 Pact v2 消费者契约、提供端验证、与 OpenAPI 双向比较 |
 | **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback;附 Anthropic 参考实现 |
 | **MCP** | 一级支持 Claude Code,将框架作为 MCP 工具暴露 |
@@ -403,6 +404,7 @@ apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000  
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # 见可插拔 AI 后端
 apitestka load run --actions smoke.json --users 20 --time 30                    # 见生态集成
 apitestka trend check                                                           # 见报告与可观测性
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8               # 见测试即规格回路
 ```
 
 ### 安全检测
@@ -438,6 +440,33 @@ openapi_changelog(prev_spec, current_spec)           # markdown changelog
 查询参数名称变成 `in: query` 参数,JSON 或文本内容变成响应与请求体的 schema。
 保存的报告是 `generate_json_report` 生成的 `<name>_success.json`;`AT_export_openapi`
 命令与 `apitestka openapi` 也能读取它。
+
+### 测试即规格回路
+
+`apitestka spec check` 让已提交的 OpenAPI 文档与测试保持一致。它先运行测试(或读取保存的报告),再做三件事:
+
+- **偏移**:每个录下的请求都按契约交互的方式与文档比较(operation、查询参数、请求体、声明的状态码、响应 schema);
+  请求了文档没声明的 operation 会列为未文档化。
+- **覆盖率**:列出没有任何测试访问到的已文档化 operation;`--min-coverage` 在低于比例时让运行失败。
+- **补上缺口**:`--missing-actions` 为没测到的 operation 写出 action(设置了 AI backend 时用它,否则用文档里的示例
+  生成确定性的请求)。`--inferred-spec` 写出测试描述出来的文档,路径会归到已提交的模板下
+  (`/items/7` → `/items/{id}`)。
+
+有未文档化的 operation、偏移问题或覆盖率不足时退出码为 1。JSON action:`AT_check_spec_against_tests`
+(失败时该 action 会带着报告失败)。
+
+```bash
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8 \
+    --missing-actions tests/generated.json --inferred-spec build/openapi.inferred.json
+```
+
+```python
+from je_api_testka.spec.spec_loop import check_records_against_spec, missing_test_actions, infer_spec_from_tests
+
+report = check_records_against_spec(records, committed_spec)   # records:本次运行的成功记录
+report.coverage, report.uncovered, report.undocumented, report.problems
+actions = missing_test_actions(committed_spec, report)
+```
 
 ### 契约测试
 

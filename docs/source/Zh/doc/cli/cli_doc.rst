@@ -88,6 +88,8 @@ CLI 參數
      - 把 APITestka 的請求轉成或跑成 LoadDensity 負載測試（見生態整合一章）
    * - ``trend record|check|report``
      - 記錄各端點延遲、檢查最近一次執行是否異常（異常時結束碼 1）、寫出 HTML 趨勢報告
+   * - ``spec check SPEC``
+     - 拿已提交的 OpenAPI 文件和測試比對：偏移、覆蓋率、缺少的測試（見測試即規格迴路一章）
 
 反推 OpenAPI 文件
 ----------------------

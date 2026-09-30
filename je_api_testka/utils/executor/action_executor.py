@@ -43,6 +43,7 @@ from je_api_testka.spec.openapi_changelog import openapi_changelog
 from je_api_testka.spec.openapi_export import export_openapi
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.spec.schema_inference import infer_schema
+from je_api_testka.spec.spec_loop import check_spec_against_tests
 from je_api_testka.sse_wrapper.sse_method import test_api_method_sse
 from je_api_testka.utils.assert_result.schema_check import check_json_schema, check_jsonpath
 from je_api_testka.utils.assert_result.snapshot import assert_snapshot
@@ -174,6 +175,7 @@ class Executor:
             "AT_records_to_openapi": records_to_openapi,
             "AT_export_openapi": export_openapi,
             "AT_openapi_changelog": openapi_changelog,
+            "AT_check_spec_against_tests": check_spec_against_tests,
             # Consumer contracts (Pact v2 files)
             "AT_write_contract": write_contract,
             "AT_verify_contract": verify_contract,

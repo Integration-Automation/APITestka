@@ -33,6 +33,7 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
   - [CLI / 開發體驗](#cli--開發體驗)
   - [安全檢測](#安全檢測)
   - [OpenAPI 反推](#openapi-反推)
+  - [測試即規格迴路](#測試即規格迴路)
   - [契約測試](#契約測試)
   - [GUI](#gui)
   - [可插拔 AI 後端](#可插拔-ai-後端)
@@ -60,7 +61,7 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
 | **生態整合** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 匯入、OpenAPI / Postman 匯入、LoadDensity 負載測試橋接 |
 | **CLI / DX** | 子命令式 CLI、REPL、終端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
-| **Spec 反推** | 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog |
+| **Spec 反推** | 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog、測試即規格迴路(偏移、覆蓋率、替缺口產生測試) |
 | **契約測試** | 從測試執行產生 Pact v2 消費者契約、提供端驗證、與 OpenAPI 雙向比對 |
 | **AI** | 可插拔後端,LLM 不可用時自動退回確定性 fallback;附 Anthropic 參考實作 |
 | **MCP** | 一級支援 Claude Code,將框架曝露為 MCP 工具 |
@@ -403,6 +404,7 @@ apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000  
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # 見可插拔 AI 後端
 apitestka load run --actions smoke.json --users 20 --time 30                    # 見生態整合
 apitestka trend check                                                           # 見報告與可觀測性
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8               # 見測試即規格迴路
 ```
 
 ### 安全檢測
@@ -438,6 +440,33 @@ openapi_changelog(prev_spec, current_spec)           # markdown changelog
 查詢參數名稱變成 `in: query` 參數,JSON 或文字內容變成回應與請求內容的 schema。
 存下的報告是 `generate_json_report` 產生的 `<name>_success.json`;`AT_export_openapi`
 指令與 `apitestka openapi` 也讀得到它。
+
+### 測試即規格迴路
+
+`apitestka spec check` 讓已提交的 OpenAPI 文件與測試保持一致。它先執行測試(或讀存下的報告),再做三件事:
+
+- **偏移**:每個錄下的請求都用契約互動的方式和文件比對(operation、查詢參數、請求內容、宣告的狀態碼、回應 schema);
+  打到文件沒宣告的 operation 會列為未文件化。
+- **覆蓋率**:列出沒有任何測試碰到的已文件化 operation;`--min-coverage` 在低於比例時讓執行失敗。
+- **補上缺口**:`--missing-actions` 為沒測到的 operation 寫出 action(有設 AI backend 時用它,否則用文件裡的範例
+  產生確定性的請求)。`--inferred-spec` 寫出測試描述出來的文件,路徑會歸到已提交的樣板底下
+  (`/items/7` → `/items/{id}`)。
+
+有未文件化的 operation、偏移問題或覆蓋率不足時結束碼為 1。JSON action:`AT_check_spec_against_tests`
+(失敗時該 action 會帶著報告失敗)。
+
+```bash
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8 \
+    --missing-actions tests/generated.json --inferred-spec build/openapi.inferred.json
+```
+
+```python
+from je_api_testka.spec.spec_loop import check_records_against_spec, missing_test_actions, infer_spec_from_tests
+
+report = check_records_against_spec(records, committed_spec)   # records:這次執行的成功紀錄
+report.coverage, report.uncovered, report.undocumented, report.problems
+actions = missing_test_actions(committed_spec, report)
+```
 
 ### 契約測試
 

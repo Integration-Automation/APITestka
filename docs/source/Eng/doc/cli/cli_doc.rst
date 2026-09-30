@@ -88,6 +88,8 @@ The ``apitestka`` command (installed with the package) groups the everyday tasks
      - Convert or run APITestka requests as a LoadDensity load test (see Integrations)
    * - ``trend record|check|report``
      - Record per-endpoint latencies, check the latest run for anomalies (exit 1), write the HTML trend report
+   * - ``spec check SPEC``
+     - Check the committed OpenAPI document against the tests: drift, coverage, missing tests (see Test-as-Spec Loop)
 
 Inferring an OpenAPI document
 -----------------------------

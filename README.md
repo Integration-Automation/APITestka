@@ -34,6 +34,7 @@ server for Claude, and more.
   - [CLI / Developer Experience](#cli--developer-experience)
   - [Security Probes](#security-probes)
   - [OpenAPI Inference](#openapi-inference)
+  - [Test-as-Spec Loop](#test-as-spec-loop)
   - [Contract Testing](#contract-testing)
   - [GUI](#gui)
   - [Pluggable AI Backend](#pluggable-ai-backend)
@@ -61,7 +62,7 @@ server for Claude, and more.
 | **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer, LoadDensity load-test bridge |
 | **CLI / DX** | Subcommand CLI, REPL, terminal summary, shell completion, scaffold |
 | **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
-| **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog |
+| **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog, test-as-spec loop (drift, coverage, generated tests for gaps) |
 | **Contract testing** | Pact v2 consumer contracts from test runs, provider verification, bidirectional check against OpenAPI |
 | **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification; Anthropic reference backend |
 | **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
@@ -410,6 +411,7 @@ apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000  
 apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # see Pluggable AI Backend
 apitestka load run --actions smoke.json --users 20 --time 30                    # see Integrations
 apitestka trend check                                                           # see Reports and Observability
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8               # see Test-as-Spec Loop
 ```
 
 ### Security Probes
@@ -446,6 +448,36 @@ a response entry, query parameter names become `in: query` parameters, and JSON 
 bodies become response and request-body schemas. A saved report is the
 `<name>_success.json` file from `generate_json_report`; the `AT_export_openapi` command and
 `apitestka openapi` read it too.
+
+### Test-as-Spec Loop
+
+`apitestka spec check` keeps the committed OpenAPI document and the tests in step. It runs the tests (or
+reads saved reports) and then does three things:
+
+- **Drift**: every recorded request is checked against the document the way a contract interaction is
+  (operation, query parameters, request body, declared status, response schema). A request to an operation
+  the document does not declare is reported as undocumented.
+- **Coverage**: lists the documented operations no test exercised; `--min-coverage` fails the run below a share.
+- **Closing the gap**: `--missing-actions` writes actions for the untested operations (the AI backend when
+  one is set, otherwise deterministic requests built from the document's examples). `--inferred-spec` writes
+  the document the tests describe, with paths grouped under the committed templates (`/items/7` →
+  `/items/{id}`).
+
+The command exits with 1 on an undocumented operation, a drift problem or low coverage. JSON action:
+`AT_check_spec_against_tests` (fails the action with the report).
+
+```bash
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8 \
+    --missing-actions tests/generated.json --inferred-spec build/openapi.inferred.json
+```
+
+```python
+from je_api_testka.spec.spec_loop import check_records_against_spec, missing_test_actions, infer_spec_from_tests
+
+report = check_records_against_spec(records, committed_spec)   # records: success records of the run
+report.coverage, report.uncovered, report.undocumented, report.problems
+actions = missing_test_actions(committed_spec, report)
+```
 
 ### Contract Testing
 

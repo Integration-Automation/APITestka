@@ -53,7 +53,7 @@ je_api_testka/
 │   └── exception/         # Custom exception hierarchy
 ├── data/                  # Variable store, templates, env profiles, fake data
 ├── connection/            # Connection options, DNS override, record/replay cassettes
-├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export
+├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export, test-as-spec loop
 ├── contract/              # Pact-style consumer contracts, provider verification, OpenAPI check
 ├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
 ├── runner/                # Parallel runner, tag filter, dependency ordering

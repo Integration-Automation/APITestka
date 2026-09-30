@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from typing import Any, List, Mapping, Optional, Tuple
 from urllib.parse import parse_qsl
 
-from je_api_testka.contract.openapi_schema import resolve_ref, schema_errors
+from je_api_testka.contract.openapi_schema import operation_parameters, resolve_ref, schema_errors
 from je_api_testka.spec.path_templates import match_path_template, server_base_path, strip_base_path
 from je_api_testka.utils.exception.exceptions import APIContractException
 
@@ -71,14 +71,6 @@ def _declared_response(operation: Mapping[str, Any], status: int) -> Optional[Ma
     return None
 
 
-def _parameters(path_item: Mapping[str, Any], operation: Mapping[str, Any], spec: Mapping[str, Any]) -> List[dict]:
-    merged = {}
-    for parameter in [*path_item.get("parameters", []), *operation.get("parameters", [])]:
-        resolved = resolve_ref(parameter, spec)
-        merged[(resolved.get("name"), resolved.get("in"))] = dict(resolved)
-    return list(merged.values())
-
-
 def _query_problems(request: Mapping[str, Any], parameters: List[dict]) -> List[str]:
     sent = {name for name, _value in parse_qsl(str(request.get("query") or ""), keep_blank_values=True)}
     declared = {parameter["name"] for parameter in parameters if parameter.get("in") == "query"}
@@ -124,7 +116,7 @@ def interaction_problems(interaction: Mapping[str, Any], spec: Mapping[str, Any]
         return [f"no operation for {method.upper()} {path}"]
     path_item = paths[template]
     operation = path_item[method]
-    problems = _query_problems(request, _parameters(path_item, operation, spec))
+    problems = _query_problems(request, operation_parameters(path_item, operation, spec))
     problems.extend(_body_problems(request, operation, spec))
     problems.extend(_response_problems(interaction["response"], operation, spec))
     return problems
