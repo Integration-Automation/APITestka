@@ -64,8 +64,8 @@ The ``apitestka`` command (installed with the package) groups the everyday tasks
      - Execute an action JSON file or every JSON file in a directory
    * - ``create PATH``
      - Scaffold a project directory
-   * - ``mock [--host] [--port]``
-     - Start the Flask mock server
+   * - ``mock [--host] [--port] [--config]``
+     - Start the Flask mock server; ``--config`` adds WebSocket and gRPC endpoints (see Mock Server)
    * - ``import INPUT OUTPUT [--format openapi|postman]``
      - Convert an OpenAPI document or Postman collection into action JSON
    * - ``repl``

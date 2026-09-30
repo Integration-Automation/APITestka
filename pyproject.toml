@@ -51,6 +51,7 @@ apitestka = "je_api_testka.pytest_plugin.plugin"
 [project.optional-dependencies]
 gui = ["PySide6==6.11.2", "qt-material"]
 websocket = ["websockets>=12.0"]
+grpc = ["grpcio>=1.60"]
 schema = ["jsonschema>=4.0", "jsonpath-ng>=1.6"]
 security = ["pyjwt>=2.8", "botocore>=1.34"]
 otel = ["opentelemetry-api>=1.25", "opentelemetry-sdk>=1.25"]

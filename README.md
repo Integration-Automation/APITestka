@@ -234,7 +234,48 @@ The bundled `FlaskMockServer` now supports several layered features:
 
 ```bash
 apitestka mock --host 0.0.0.0 --port 9000
+apitestka mock --config mock.json       # HTTP routes plus WebSocket and gRPC endpoints
 ```
+
+**WebSocket and gRPC endpoints.** `WebSocketMockServer` (`websocket` extra) serves scripted
+routes: a greeting on connect, a reply map for known messages, and a fallback for the rest
+(`{{message}}` echoes, `null` stays silent). `GrpcStubServer` (`grpc` extra) serves methods by
+full path without compiled stubs: fixed unary responses, server streams, or a status-code
+error. Payloads are raw bytes, so serialized protobuf works with generated clients; `str` is
+sent as UTF-8 and other JSON values as compact JSON. Both keep what they received for
+assertions, and an unknown WebSocket path is refused with HTTP 404.
+
+```python
+from je_api_testka.utils.mock_server.websocket_mock import WebSocketMockServer, WebSocketRoute
+from je_api_testka.utils.mock_server.grpc_stub import GrpcStubServer
+
+with WebSocketMockServer(port=0) as ws:          # port 0 picks a free port
+    ws.add_route("/chat", WebSocketRoute(replies={"ping": "pong"}))
+    ...                                          # connect to f"{ws.url}/chat"
+    ws.received("/chat")                         # frames the route got
+
+with GrpcStubServer(port=0) as grpc_mock:        # needs the grpc extra
+    grpc_mock.add_unary_response("/shop.Catalog/Get", {"id": 1})
+    ...                                          # grpc.insecure_channel(grpc_mock.address)
+```
+
+A `--config` file describes all three kinds; every section is optional:
+
+```json
+{
+  "http": {"routes": [{"rule": "/health", "body": {"ok": true}}], "openapi": "spec.json"},
+  "websocket": {"port": 8765, "routes": {"/chat": {"greeting": "hi", "replies": {"ping": "pong"}}}},
+  "grpc": {"port": 50051, "methods": {
+    "/shop.Catalog/Get": {"response": {"id": 1}},
+    "/shop.Catalog/List": {"stream": [{"id": 1}, {"id": 2}]},
+    "/shop.Catalog/Delete": {"error": {"code": "PERMISSION_DENIED", "details": "read only"}}
+  }}
+}
+```
+
+JSON actions reach the same mocks with `AT_mock_start_websocket_server` / `AT_mock_start_grpc_server`
+(`routes` / `methods` in the config form above), `AT_mock_websocket_received` /
+`AT_mock_grpc_received`, and `AT_mock_stop_websocket_server` / `AT_mock_stop_grpc_server`.
 
 ### Runner
 
@@ -452,6 +493,7 @@ je_api_testka/
 
 ```bash
 pip install 'je_api_testka[websocket]'
+pip install 'je_api_testka[grpc]'
 pip install 'je_api_testka[schema]'
 pip install 'je_api_testka[security]'
 pip install 'je_api_testka[otel]'

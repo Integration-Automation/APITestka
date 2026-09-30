@@ -55,9 +55,18 @@ def _cmd_create(args: argparse.Namespace) -> int:
 
 def _cmd_mock(args: argparse.Namespace) -> int:
     from je_api_testka.utils.mock_server.flask_mock_server import FlaskMockServer
+    from je_api_testka.utils.mock_server.mock_config import apply_mock_config, read_mock_config, stop_protocol_mocks
 
     server = FlaskMockServer(args.host, args.port)
-    server.start_mock_server()
+    if args.config:
+        endpoints = apply_mock_config(read_mock_config(args.config), server,
+                                      base_dir=str(Path(args.config).resolve().parent))
+        for kind, address in endpoints.items():
+            apitestka_logger.info(f"cli mock: {kind} mock at {address}")
+    try:
+        server.start_mock_server()
+    finally:
+        stop_protocol_mocks()
     return 0
 
 
@@ -150,6 +159,7 @@ def build_parser() -> argparse.ArgumentParser:
     mock_parser = sub.add_parser("mock", help="Start the Flask mock server")
     mock_parser.add_argument("--host", default=DEFAULT_MOCK_HOST)
     mock_parser.add_argument("--port", type=int, default=DEFAULT_MOCK_PORT)
+    mock_parser.add_argument("--config", help="JSON file with http, websocket and grpc mock endpoints")
     mock_parser.set_defaults(func=_cmd_mock)
 
     import_parser = sub.add_parser("import", help="Convert specs to action JSON")

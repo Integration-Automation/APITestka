@@ -25,7 +25,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/utils/assert_result/` | `check_result`, JSON Schema and JSONPath checks, snapshots |
 | `je_api_testka/utils/generate_report/` | HTML, JSON, XML, JUnit, Allure and Markdown reports; badge, run diff, trend store |
 | `je_api_testka/utils/callback/` | `callback_executor`: run a trigger command, then a callback |
-| `je_api_testka/utils/mock_server/` | `flask_mock_server_instance` with dynamic, template, proxy, webhook and OpenAPI routes, plus fault injection |
+| `je_api_testka/utils/mock_server/` | `flask_mock_server_instance` with dynamic, template, proxy, webhook and OpenAPI routes, plus fault injection; `WebSocketMockServer` (`websocket_mock.py`) and `GrpcStubServer` (`grpc_stub.py`) run in background threads; `protocol_mocks.py` keeps one of each for JSON actions; `mock_config.py` reads `apitestka mock --config` |
 | `je_api_testka/utils/socket_server/` | `start_apitestka_socket_server` (TCP command server) |
 | `je_api_testka/utils/package_manager/` | `package_manager`: loads an installed package's members into the executor |
 | `je_api_testka/utils/project/` | `create_project_dir` scaffolding (keyword and executor templates) |
@@ -73,8 +73,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   `apitestka_record`, `apitestka_clean_record` and `apitestka_mock_server`.
 - **GUI**: `je_api_testka.gui.main_window.APITestkaUI` (`python -m je_api_testka.gui.main_window`). The
   embeddable widget is `je_api_testka.gui.main_widget.APITestkaWidget`.
-- **Packaging gap**: only `pyproject.toml` declares the console scripts, the `pytest11` entry point
-  and the extras other than `gui`. `dev.toml` (`je_api_testka_dev`) currently declares none of them.
+- **Packaging**: `pyproject.toml` and `dev.toml` (`je_api_testka_dev`) declare the same console scripts,
+  `pytest11` entry point and extras; `test/test_utils/test_dev_toml_parity.py` keeps them equal.
 
 ## 4. Main flows
 
@@ -107,13 +107,16 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - **New report format**: module in `utils/generate_report/` that reads `test_record_instance` →
   `AT_generate_*` command → export from `__init__.py` → tests.
 - **New protocol backend**: `<proto>_wrapper/` package that records into `test_record_instance`, with
-  a lazy import → extra under `[project.optional-dependencies]` in `pyproject.toml` (`dev.toml` mirrors
-  only `gui`) → executor registration → tests with `pytest.importorskip` plus the missing-dependency path.
+  a lazy import → extra under `[project.optional-dependencies]` in `pyproject.toml` and `dev.toml`, and the
+  package in `.github/requirements/ci.in` (regenerate `ci.txt`) so CI runs its tests → executor registration →
+  tests with `pytest.importorskip` plus the missing-dependency path.
 - **MCP tool**: add an `MCPToolSpec` and handler to `APITESTKA_TOOLS`, then tests in `test/test_mcp_server/`.
 - **CLI subcommand**: add `_cmd_<name>` and a subparser in `build_parser()` (`cli/cli_main.py`), then
   tests in `test/test_cli/`.
 - **Mock routes / runtime plugins**: `flask_mock_server_instance.add_router()` (or `add_dynamic_route()`,
-  `add_template_route()`); `AT_add_package_to_executor` registers an installed package's members.
+  `add_template_route()`); `WebSocketRoute` (reply map, fallback or `handler`) and `GrpcStubServer.register()` /
+  `register_server_stream()` for scripted protocol endpoints; `AT_add_package_to_executor` registers an installed
+  package's members.
 
 ## 6. Cross-project boundaries
 
@@ -142,7 +145,7 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
   justification comment. No `shell=True` (§ Security (Mandatory); § Static Analysis Compliance › Security).
 - Extend through `add_command_to_executor` or new `AT_` commands rather than reshaping the core map
   (§ Software Engineering Practices; § Common Development Workflows › Adding a New Executor Command).
-- Import heavy optional dependencies lazily (PySide6, websockets, jsonschema, mcp).
+- Import heavy optional dependencies lazily (PySide6, websockets, grpcio, jsonschema, mcp).
   `test_record_instance` must stay thread-safe (§ Performance Best Practices).
 - Limits: cognitive complexity ≤ 15, cyclomatic complexity ≤ 10, ≤ 7 parameters, functions ≤ 50
   lines, files ≤ 500 lines, lines ≤ 120 characters (§ Static Analysis Compliance › Maintainability & Complexity).

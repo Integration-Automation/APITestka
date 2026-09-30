@@ -231,7 +231,47 @@ cassette = Cassette("tape.json")  # 离线 replay-or-record
 
 ```bash
 apitestka mock --host 0.0.0.0 --port 9000
+apitestka mock --config mock.json       # HTTP routes 再加上 WebSocket 与 gRPC 端点
 ```
+
+**WebSocket 与 gRPC 端点。** `WebSocketMockServer`(`websocket` extra)提供按脚本响应的路由:
+连接时发送问候、已知消息查回复表、其他消息走 fallback(`{{message}}` 会回声,`null` 不响应)。
+`GrpcStubServer`(`grpc` extra)不需要编译 stub,直接用完整路径提供方法:固定的 unary 响应、
+server stream,或返回某个状态码的错误。payload 是原始 bytes,所以序列化好的 protobuf 可以给
+生成出来的 client 使用;`str` 以 UTF-8 发送,其他 JSON 值以紧凑 JSON 发送。两者都会保留收到的内容
+供断言使用,未知的 WebSocket 路径会以 HTTP 404 拒绝。
+
+```python
+from je_api_testka.utils.mock_server.websocket_mock import WebSocketMockServer, WebSocketRoute
+from je_api_testka.utils.mock_server.grpc_stub import GrpcStubServer
+
+with WebSocketMockServer(port=0) as ws:          # port 0 picks a free port
+    ws.add_route("/chat", WebSocketRoute(replies={"ping": "pong"}))
+    ...                                          # connect to f"{ws.url}/chat"
+    ws.received("/chat")                         # frames the route got
+
+with GrpcStubServer(port=0) as grpc_mock:        # needs the grpc extra
+    grpc_mock.add_unary_response("/shop.Catalog/Get", {"id": 1})
+    ...                                          # grpc.insecure_channel(grpc_mock.address)
+```
+
+`--config` 文件可以描述三种端点,每一段都可以省略:
+
+```json
+{
+  "http": {"routes": [{"rule": "/health", "body": {"ok": true}}], "openapi": "spec.json"},
+  "websocket": {"port": 8765, "routes": {"/chat": {"greeting": "hi", "replies": {"ping": "pong"}}}},
+  "grpc": {"port": 50051, "methods": {
+    "/shop.Catalog/Get": {"response": {"id": 1}},
+    "/shop.Catalog/List": {"stream": [{"id": 1}, {"id": 2}]},
+    "/shop.Catalog/Delete": {"error": {"code": "PERMISSION_DENIED", "details": "read only"}}
+  }}
+}
+```
+
+JSON action 也能操作同样的 mock:`AT_mock_start_websocket_server` / `AT_mock_start_grpc_server`
+(`routes` / `methods` 使用上面的配置格式)、`AT_mock_websocket_received` / `AT_mock_grpc_received`,
+以及 `AT_mock_stop_websocket_server` / `AT_mock_stop_grpc_server`。
 
 ### Runner
 
@@ -446,6 +486,7 @@ je_api_testka/
 
 ```bash
 pip install 'je_api_testka[websocket]'
+pip install 'je_api_testka[grpc]'
 pip install 'je_api_testka[schema]'
 pip install 'je_api_testka[security]'
 pip install 'je_api_testka[otel]'

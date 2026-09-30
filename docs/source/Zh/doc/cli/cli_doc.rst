@@ -64,8 +64,8 @@ CLI 參數
      - 執行一個動作 JSON 檔，或目錄裡每個 JSON 檔
    * - ``create PATH``
      - 建立專案目錄
-   * - ``mock [--host] [--port]``
-     - 啟動 Flask 模擬伺服器
+   * - ``mock [--host] [--port] [--config]``
+     - 啟動 Flask 模擬伺服器；``--config`` 另外加上 WebSocket 與 gRPC 端點（見模擬伺服器一章）
    * - ``import INPUT OUTPUT [--format openapi|postman]``
      - 把 OpenAPI 文件或 Postman collection 轉成動作 JSON
    * - ``repl``

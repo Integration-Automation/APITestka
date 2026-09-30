@@ -1,5 +1,5 @@
 # What the CI test job installs; ci.txt is generated from this file (the command is in ci.yml).
-# Runtime dependencies (pyproject.toml), the gui and mcp extras, and the test tools.
+# Runtime dependencies (pyproject.toml), the gui, mcp, websocket and grpc extras, and the test tools.
 requests
 Flask
 httpx
@@ -7,6 +7,8 @@ defusedxml
 PySide6==6.11.2
 qt-material
 mcp>=1.28.1,<3
+websockets>=12.0
+grpcio>=1.60
 pytest
 pytest-asyncio
 pytest-timeout

@@ -58,6 +58,14 @@ from je_api_testka.utils.generate_report.xml_report import generate_xml, generat
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
+from je_api_testka.utils.mock_server.protocol_mocks import (
+    grpc_mock_received,
+    start_grpc_mock,
+    start_websocket_mock,
+    stop_grpc_mock,
+    stop_websocket_mock,
+    websocket_mock_received,
+)
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 from je_api_testka.websocket_wrapper.websocket_method import test_api_method_websocket
 
@@ -174,6 +182,13 @@ class Executor:
             "AT_mock_add_webhook": flask_mock_server_instance.add_webhook,
             "AT_mock_add_proxy": flask_mock_server_instance.add_proxy,
             "AT_mock_load_openapi": flask_mock_server_instance.load_openapi,
+            # WebSocket and gRPC mocks (one of each, running in background threads)
+            "AT_mock_start_websocket_server": start_websocket_mock,
+            "AT_mock_stop_websocket_server": stop_websocket_mock,
+            "AT_mock_websocket_received": websocket_mock_received,
+            "AT_mock_start_grpc_server": start_grpc_mock,
+            "AT_mock_stop_grpc_server": stop_grpc_mock,
+            "AT_mock_grpc_received": grpc_mock_received,
             # Runner
             "AT_run_actions_parallel": run_actions_parallel,
             "AT_filter_actions_by_tag": filter_actions_by_tag,

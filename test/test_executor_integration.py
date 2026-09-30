@@ -53,6 +53,8 @@ EXPECTED_NEW_COMMANDS = (
     # Mock server advanced
     "AT_mock_add_dynamic_route", "AT_mock_add_template_route",
     "AT_mock_add_webhook", "AT_mock_add_proxy", "AT_mock_load_openapi",
+    "AT_mock_start_websocket_server", "AT_mock_stop_websocket_server", "AT_mock_websocket_received",
+    "AT_mock_start_grpc_server", "AT_mock_stop_grpc_server", "AT_mock_grpc_received",
     # Runner
     "AT_run_actions_parallel", "AT_filter_actions_by_tag", "AT_order_actions",
 )
