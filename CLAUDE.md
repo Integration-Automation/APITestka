@@ -58,7 +58,7 @@ je_api_testka/
 ├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
 ├── runner/                # Parallel runner, tag filter, dependency ordering
 ├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment
-├── ai/                    # Pluggable text-completion backend (no-op by default)
+├── ai/                    # Pluggable text-completion backend (no-op by default; Anthropic reference backend)
 ├── cli/                   # Subcommand CLI (`apitestka`)
 ├── mcp_server/            # MCP stdio server (`apitestka-mcp`)
 ├── pytest_plugin/         # pytest fixtures via the pytest11 entry point

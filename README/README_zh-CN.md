@@ -62,7 +62,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
 | **Spec 反推** | 测试记录 → OpenAPI、JSON Schema 推断、OpenAPI changelog |
 | **契约测试** | 从测试运行生成 Pact v2 消费者契约、提供端验证、与 OpenAPI 双向比较 |
-| **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback |
+| **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback;附 Anthropic 参考实现 |
 | **MCP** | 一级支持 Claude Code,将框架作为 MCP 工具暴露 |
 | **GUI** | 可选 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI |
 | **跨平台** | Windows、macOS、Linux,Python 3.10–3.14 |
@@ -352,6 +352,7 @@ apitestka mcp                           # 走 stdio 启动 MCP server
 apitestka openapi --report run_success.json -o openapi.json   # 从保存的运行结果反推规格
 apitestka openapi --run actions.json    # 先运行再打印反推的规格
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # 见契约测试
+apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # 见可插拔 AI 后端
 ```
 
 ### 安全检测
@@ -439,20 +440,37 @@ headless 工具无需 PySide6 也能驱动面板。
 
 ### 可插拔 AI 后端
 
-默认 `NoOpAIBackend` 不会触网。要启用 LLM 驱动的测试生成,自行挂载:
+有三个工具会询问语言模型:`generate_tests_from_openapi`(为每个 operation 生成 action)、
+`generate_fake_payload`(生成符合 JSON Schema 的值)与 `classify_failures`(给规则分不出来的错误打标签)。
+默认 `NoOpAIBackend` 不会访问网络,各工具会改用确定性的 fallback;回复为空或无法使用时也一样
+(生成的 action 必须是 `["AT_...", {...}]` 组成的 JSON list)。
+
+`AnthropicAIBackend`(`ai` extra)是基于 Anthropic API 的参考实现。凭据取自 `anthropic` SDK 读取的环境
+(`ANTHROPIC_API_KEY` 或 `ant auth login` 配置文件),不会保存密钥。默认模型是 `claude-opus-5-5`,并显式发送
+effort `medium`。服务器端的拒答 fallback 默认开启(`fallbacks="default"`),传 `fallbacks=None` 可关闭。
+遇到拒答、回复被截断、速率限制、服务器错误或网络失败时会改用确定性 fallback;请求被拒(密钥错误、
+未知模型)则抛出 `APIAIBackendException`。
 
 ```python
-from je_api_testka.ai import AIBackend, set_ai_backend, generate_tests_from_openapi
+from je_api_testka.ai import AnthropicAIBackend, set_ai_backend, generate_tests_from_openapi
 
-class AnthropicBackend(AIBackend):
-    def complete(self, prompt, *, context=None):
-        ...  # 调用你的 LLM provider
-        return llm_response_text
-
-set_ai_backend(AnthropicBackend())
-actions = generate_tests_from_openapi(my_openapi_spec)  # LLM 回应不是合法 JSON 时
-                                                        # 自动降级为确定性 happy path
+set_ai_backend(AnthropicAIBackend())                   # claude-opus-5-5, effort "medium"
+set_ai_backend(AnthropicAIBackend(model="claude-sonnet-5-5", effort="low", timeout=60))
+actions = generate_tests_from_openapi(my_openapi_spec)
 ```
+
+选择 backend 的方式:`set_ai_backend(...)`、`select_ai_backend("anthropic", model=..., effort=...)`、
+`AT_select_ai_backend` action,或环境变量:没有显式选择时,第一次使用会读取 `APITESTKA_AI_BACKEND`
+(`noop` 或 `anthropic`)、`APITESTKA_AI_MODEL` 与 `APITESTKA_AI_EFFORT`。
+
+```bash
+pip install 'je_api_testka[ai]'
+export ANTHROPIC_API_KEY=...                            # or an `ant auth login` profile
+apitestka generate-tests openapi.json -o actions.json --ai anthropic --effort high
+APITESTKA_AI_BACKEND=anthropic apitestka mcp            # any entry point, no code changes
+```
+
+其他 provider 也用同样方式接入:继承 `AIBackend` 并实现 `complete(prompt, *, context)`。
 
 ---
 
@@ -527,6 +545,7 @@ je_api_testka/
 ```bash
 pip install 'je_api_testka[websocket]'
 pip install 'je_api_testka[grpc]'
+pip install 'je_api_testka[ai]'
 pip install 'je_api_testka[schema]'
 pip install 'je_api_testka[security]'
 pip install 'je_api_testka[otel]'

@@ -13,6 +13,7 @@ Subcommands:
     mcp         Run the MCP server over stdio.
     openapi     Infer an OpenAPI document from recorded traffic.
     contract    Record, verify and compare Pact-style consumer contracts.
+    generate-tests  Write test actions for an OpenAPI document (AI backend or deterministic).
 """
 from __future__ import annotations
 
@@ -22,10 +23,14 @@ import sys
 from pathlib import Path
 from typing import Optional, Sequence
 
+from je_api_testka.ai.backend import BACKEND_NAMES, select_ai_backend
+from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.cli.cli_common import run_action_path
 from je_api_testka.cli.contract_cli import configure_contract_parser
+from je_api_testka.contract.commands import read_openapi
 from je_api_testka.spec.openapi_export import build_openapi
 from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
+from je_api_testka.utils.exception.exceptions import APIAIBackendException, APIContractException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.project.create_project_structure import create_project_dir
 
@@ -122,6 +127,33 @@ def _cmd_openapi(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_generate_tests(args: argparse.Namespace) -> int:
+    try:
+        spec = read_openapi(args.spec)
+        if args.ai:
+            select_ai_backend(args.ai, model=args.model, effort=args.effort)
+    except (APIContractException, APIAIBackendException) as error:
+        apitestka_logger.error(f"cli generate-tests: {error}")
+        return 2
+    text = json.dumps(generate_tests_from_openapi(spec), indent=2, ensure_ascii=False)
+    if args.output:
+        Path(args.output).write_text(text, encoding="utf-8")
+    else:
+        print(text)
+    return 0
+
+
+def _configure_generate_tests_parser(generate_parser: argparse.ArgumentParser) -> None:
+    generate_parser.add_argument("spec", help="OpenAPI document (JSON)")
+    generate_parser.add_argument("-o", "--output", help="Destination action JSON file (default: stdout)")
+    generate_parser.add_argument("--ai", choices=BACKEND_NAMES,
+                                 help="AI backend to use (default: APITESTKA_AI_BACKEND, else noop)")
+    generate_parser.add_argument("--model", help="Model for the anthropic backend")
+    generate_parser.add_argument("--effort", choices=("low", "medium", "high", "xhigh", "max"),
+                                 help="Effort for the anthropic backend")
+    generate_parser.set_defaults(func=_cmd_generate_tests)
+
+
 def _configure_openapi_parser(openapi_parser: argparse.ArgumentParser) -> None:
     openapi_parser.add_argument("--report", action="append", default=[], metavar="FILE",
                                 help="Saved JSON success report (<name>_success.json); repeatable")
@@ -183,6 +215,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     _configure_openapi_parser(sub.add_parser("openapi", help="Infer an OpenAPI document from recorded traffic"))
     configure_contract_parser(sub.add_parser("contract", help="Record, verify and compare consumer contracts"))
+    _configure_generate_tests_parser(
+        sub.add_parser("generate-tests", help="Write test actions for an OpenAPI document"))
     return parser
 
 

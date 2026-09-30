@@ -160,3 +160,7 @@ class MockServerException(APITesterException):
 
 class APIContractException(APITesterException):
     """A consumer contract is malformed, or it does not hold against a provider or its OpenAPI document."""
+
+
+class APIAIBackendException(APITesterException):
+    """An AI backend is misconfigured or the provider rejected the request."""

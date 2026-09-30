@@ -82,6 +82,8 @@ The ``apitestka`` command (installed with the package) groups the everyday tasks
      - Infer an OpenAPI document from recorded traffic (below)
    * - ``contract record|verify|compare``
      - Record, verify and compare Pact-style consumer contracts (see Contract Testing)
+   * - ``generate-tests SPEC [-o OUT] [--ai noop|anthropic] [--model] [--effort]``
+     - Write test actions for an OpenAPI document (see Pluggable AI Backend)
 
 Inferring an OpenAPI document
 -----------------------------

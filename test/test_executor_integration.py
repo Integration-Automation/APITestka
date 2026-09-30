@@ -45,7 +45,7 @@ EXPECTED_NEW_COMMANDS = (
     "AT_write_contract", "AT_verify_contract", "AT_check_contract_against_openapi",
     # AI
     "AT_classify_failures", "AT_generate_fake_payload",
-    "AT_generate_tests_from_openapi",
+    "AT_generate_tests_from_openapi", "AT_select_ai_backend",
     # Extra protocols
     "AT_test_api_method_websocket",
     "AT_test_api_method_sse",

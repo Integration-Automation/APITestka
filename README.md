@@ -63,7 +63,7 @@ server for Claude, and more.
 | **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
 | **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog |
 | **Contract testing** | Pact v2 consumer contracts from test runs, provider verification, bidirectional check against OpenAPI |
-| **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification |
+| **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification; Anthropic reference backend |
 | **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
 | **GUI** | Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed |
 | **Cross-platform** | Windows, macOS, Linux. Python 3.10–3.14 |
@@ -356,6 +356,7 @@ apitestka mcp                           # MCP server over stdio
 apitestka openapi --report run_success.json -o openapi.json   # infer a spec from a saved run
 apitestka openapi --run actions.json    # run first, print the inferred spec
 apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # see Contract Testing
+apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # see Pluggable AI Backend
 ```
 
 ### Security Probes
@@ -447,22 +448,39 @@ Locales: English, 繁體中文, 简体中文, 日本語. Switch via `LanguageWra
 
 ### Pluggable AI Backend
 
-Default backend (`NoOpAIBackend`) never calls a network. Plug in your own to enable
-LLM-driven test generation:
+Three helpers can ask a language model: `generate_tests_from_openapi` (actions for every
+operation), `generate_fake_payload` (a value for a JSON Schema) and `classify_failures` (labels for the
+errors its rules cannot place). The default backend (`NoOpAIBackend`) never calls a network, and every
+helper then uses its deterministic fallback, as it also does when a reply is empty or unusable
+(generated actions must be a JSON list of `["AT_...", {...}]`).
+
+`AnthropicAIBackend` (`ai` extra) is the reference implementation on the Anthropic API. It takes
+credentials from the environment the `anthropic` SDK reads (`ANTHROPIC_API_KEY`, or an `ant auth login`
+profile) and never stores a key. The default model is `claude-opus-5-5`, with effort `medium` sent
+explicitly. Server-side refusal fallbacks are on (`fallbacks="default"`); pass `fallbacks=None` to
+turn them off. A refusal, a truncated reply, a rate limit, a server error or a network failure gives
+the deterministic fallback, and a rejected request (bad key, unknown model) raises `APIAIBackendException`.
 
 ```python
-from je_api_testka.ai import AIBackend, set_ai_backend, generate_tests_from_openapi
+from je_api_testka.ai import AnthropicAIBackend, set_ai_backend, generate_tests_from_openapi
 
-class AnthropicBackend(AIBackend):
-    def complete(self, prompt, *, context=None):
-        ...  # call your provider
-        return llm_response_text
-
-set_ai_backend(AnthropicBackend())
-actions = generate_tests_from_openapi(my_openapi_spec)  # falls back to a deterministic
-                                                        # happy path if the LLM reply is
-                                                        # not valid JSON
+set_ai_backend(AnthropicAIBackend())                   # claude-opus-5-5, effort "medium"
+set_ai_backend(AnthropicAIBackend(model="claude-sonnet-5-5", effort="low", timeout=60))
+actions = generate_tests_from_openapi(my_openapi_spec)
 ```
+
+Select a backend with `set_ai_backend(...)`, `select_ai_backend("anthropic", model=..., effort=...)`,
+the `AT_select_ai_backend` action, or the environment: without a selection, the first use reads
+`APITESTKA_AI_BACKEND` (`noop` or `anthropic`), `APITESTKA_AI_MODEL` and `APITESTKA_AI_EFFORT`.
+
+```bash
+pip install 'je_api_testka[ai]'
+export ANTHROPIC_API_KEY=...                            # or an `ant auth login` profile
+apitestka generate-tests openapi.json -o actions.json --ai anthropic --effort high
+APITESTKA_AI_BACKEND=anthropic apitestka mcp            # any entry point, no code changes
+```
+
+Any other provider plugs in the same way: subclass `AIBackend` and implement `complete(prompt, *, context)`.
 
 ---
 
@@ -537,6 +555,7 @@ je_api_testka/
 ```bash
 pip install 'je_api_testka[websocket]'
 pip install 'je_api_testka[grpc]'
+pip install 'je_api_testka[ai]'
 pip install 'je_api_testka[schema]'
 pip install 'je_api_testka[security]'
 pip install 'je_api_testka[otel]'

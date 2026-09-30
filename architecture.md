@@ -37,7 +37,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/security/` | Auth header helpers, CORS/SSRF/rate-limit probes, header scan, fuzzing, `pip-audit` wrapper |
 | `je_api_testka/runner/` | Parallel runner, tag filter, dependency ordering of actions |
 | `je_api_testka/integrations/` | cURL and HAR import, webhook notify, GitHub PR comment |
-| `je_api_testka/ai/` | Pluggable text-completion backend (no-op by default) used by test generation, failure classification and fake payloads |
+| `je_api_testka/ai/` | Pluggable text-completion backend (no-op by default) used by test generation, failure classification and fake payloads; `AnthropicAIBackend` (`ai` extra) is the reference implementation; selection by `set_ai_backend` / `select_ai_backend` / `AT_select_ai_backend` or `APITESTKA_AI_BACKEND` on first use |
 | `je_api_testka/cli/` | Subcommand CLI (`apitestka`): import, REPL, scaffold, completion, terminal summary |
 | `je_api_testka/mcp_server/` | MCP stdio server and its tool catalogue |
 | `je_api_testka/pytest_plugin/` | pytest fixtures, registered through the `pytest11` entry point |
@@ -61,7 +61,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   `-c/--create_project` and `--execute_str`. On `win32`/`cygwin`/`msys`, `--execute_str` is decoded
   with `json.loads` twice. Errors print `repr(error)` to stderr and exit with code 1.
 - **Subcommand CLI**: `apitestka` (`je_api_testka.cli.cli_main:main`) with `run`, `create`, `mock`,
-  `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi` and `contract record|verify|compare`
+  `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi`, `contract record|verify|compare` and
+  `generate-tests`
   (`cli/contract_cli.py`); shared helpers are in `cli/cli_common.py`. `cli/completion.py`
   `SUBCOMMANDS` lists the same names (a test compares them with the parser).
 - **MCP**: `apitestka-mcp`, `python -m je_api_testka.mcp_server` or `apitestka mcp` (stdio, needs the
@@ -147,7 +148,7 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
   justification comment. No `shell=True` (§ Security (Mandatory); § Static Analysis Compliance › Security).
 - Extend through `add_command_to_executor` or new `AT_` commands rather than reshaping the core map
   (§ Software Engineering Practices; § Common Development Workflows › Adding a New Executor Command).
-- Import heavy optional dependencies lazily (PySide6, websockets, grpcio, jsonschema, mcp).
+- Import heavy optional dependencies lazily (PySide6, websockets, grpcio, anthropic, jsonschema, mcp).
   `test_record_instance` must stay thread-safe (§ Performance Best Practices).
 - Limits: cognitive complexity ≤ 15, cyclomatic complexity ≤ 10, ≤ 7 parameters, functions ≤ 50
   lines, files ≤ 500 lines, lines ≤ 120 characters (§ Static Analysis Compliance › Maintainability & Complexity).

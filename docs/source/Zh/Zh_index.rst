@@ -48,7 +48,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    * - **契約測試**
      - 從測試執行產生 Pact v2 消費者契約、提供端驗證、與 OpenAPI 雙向比對
    * - **AI**
-     - 可插拔後端,LLM 不可用時自動退回確定性 fallback
+     - 可插拔後端,LLM 不可用時自動退回確定性 fallback;附 Anthropic 參考實作
    * - **MCP**
      - 一級支援 Claude Code,將框架曝露為 MCP 工具
    * - **GUI**
@@ -81,3 +81,4 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    doc/project/project_doc
    doc/test_record/test_record_doc
    doc/mcp/mcp_doc
+   doc/ai/ai_doc

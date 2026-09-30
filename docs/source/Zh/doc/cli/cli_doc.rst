@@ -82,6 +82,8 @@ CLI 參數
      - 從錄下的流量反推 OpenAPI 文件（見下節）
    * - ``contract record|verify|compare``
      - 產生、驗證與比對 Pact 風格消費者契約（見契約測試一章）
+   * - ``generate-tests SPEC [-o OUT] [--ai noop|anthropic] [--model] [--effort]``
+     - 為 OpenAPI 文件產生測試 action（見可插拔 AI 後端一章）
 
 反推 OpenAPI 文件
 ----------------------

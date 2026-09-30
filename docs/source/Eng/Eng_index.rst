@@ -52,7 +52,7 @@ Features
        bidirectional check against OpenAPI
    * - **AI**
      - Pluggable backend with deterministic fallback for test generation,
-       fake data, failure classification
+       fake data, failure classification; Anthropic reference backend
    * - **MCP**
      - First-class Claude Code / MCP server exposing the framework as tools
    * - **GUI**
@@ -85,3 +85,4 @@ Features
    doc/project/project_doc
    doc/test_record/test_record_doc
    doc/mcp/mcp_doc
+   doc/ai/ai_doc
