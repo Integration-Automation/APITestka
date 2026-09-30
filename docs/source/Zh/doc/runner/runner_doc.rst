@@ -3,8 +3,9 @@ Runner
 ======
 
 三個正交的工具,專門處理大型 action list。它們都吃 ``execute_action`` 同樣
-的 action 格式,並會在呼叫底層 ``AT_`` 函式前自動拿掉 runner 專用的
-metadata(``id``、``depends_on``、``tags``)。
+的 action 格式。runner 專用的 metadata(``id``、``depends_on``、``tags``)可以留在
+kwargs 裡:executor 在呼叫底層 ``AT_`` 函式前會自動拿掉,所以過濾或排序後的 list
+可以直接執行。
 
 平行 Runner
 -----------
@@ -13,8 +14,8 @@ metadata(``id``、``depends_on``、``tags``)。
 
    from je_api_testka.runner import run_actions_parallel
 
-   actions = [["AT_test_api_method_requests", {"http_method": "get",
-                                                "test_url": f"https://x.invalid/{i}"}]
+   actions = [["AT_test_api_method", {"http_method": "get",
+                                       "test_url": f"https://x.invalid/{i}"}]
               for i in range(20)]
    results = run_actions_parallel(actions, max_workers=8)
 

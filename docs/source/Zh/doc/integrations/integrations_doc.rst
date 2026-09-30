@@ -42,6 +42,11 @@ cURL → action
    action = curl_to_action(
        "curl -X POST https://api/x -H 'Content-Type: application/json' -d '{\"a\":1}'"
    )
+   # ["AT_test_api_method", {"http_method": "post", "test_url": "https://api/x",
+   #                         "headers": {...}, "json": {"a": 1}}]
+
+本頁每個匯入工具都回傳 ``[command, kwargs]`` 形式的 action，``execute_action`` 可以直接執行。
+JSON 內容（物件或陣列）以 ``json`` 送出，其他內容以 ``data`` 送出。
 
 HAR 匯入
 --------

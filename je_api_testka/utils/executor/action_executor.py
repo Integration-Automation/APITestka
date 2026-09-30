@@ -21,6 +21,7 @@ from je_api_testka.integrations.har_import import convert_har
 from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.runner.dependency_runner import order_actions
+from je_api_testka.runner.metadata import strip_runner_metadata
 from je_api_testka.runner.parallel_runner import run_actions_parallel
 from je_api_testka.runner.tag_filter import filter_actions_by_tag
 from je_api_testka.security.auth_helpers import (
@@ -192,6 +193,8 @@ class Executor:
         :return: 事件回傳值 / Event return value
         """
         apitestka_logger.info(f"Executor _execute_event action: {action}")
+        # Runner metadata (id, depends_on, tags) orders and filters actions; the command never sees it.
+        action = strip_runner_metadata(action)
         event: Callable = self.event_dict.get(action[0])
         if len(action) == 2:
             if isinstance(action[1], dict):

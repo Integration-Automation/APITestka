@@ -69,7 +69,9 @@ Response time SLA
 -----------------
 
 ``ResponseSLA`` carries ``max_ms`` and ``p95_ms`` thresholds; ``assert_sla``
-walks a list of records and raises ``APIAssertException`` on breach.
+walks a list of records and raises ``APIAssertException`` on breach. Without
+``records`` it checks the successes in the shared test record, and ``sla`` may also
+be a plain mapping, which is the form JSON actions use.
 
 .. code-block:: python
 
@@ -77,6 +79,11 @@ walks a list of records and raises ``APIAssertException`` on breach.
 
    sla = ResponseSLA(max_ms=2000, p95_ms=1500)
    assert_sla(records, sla)
+   assert_sla(sla={"max_ms": 2000})       # the run recorded so far
+
+.. code-block:: json
+
+   [["AT_assert_sla", {"sla": {"max_ms": 2000, "p95_ms": 1500}}]]
 
 Executor commands
 -----------------

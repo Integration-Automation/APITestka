@@ -67,7 +67,8 @@ operation：每個出現過的狀態碼各有一筆 response，查詢參數名�
 ------------
 
 ``ResponseSLA`` 帶 ``max_ms`` 與 ``p95_ms`` 兩個門檻;``assert_sla`` 走過
-records,超過就丟 ``APIAssertException``。
+records,超過就丟 ``APIAssertException``。沒給 ``records`` 時檢查共用測試紀錄裡的成功紀錄;
+``sla`` 也可以是一般的 mapping,也就是 JSON action 用的形式。
 
 .. code-block:: python
 
@@ -75,6 +76,11 @@ records,超過就丟 ``APIAssertException``。
 
    sla = ResponseSLA(max_ms=2000, p95_ms=1500)
    assert_sla(records, sla)
+   assert_sla(sla={"max_ms": 2000})       # 目前為止錄下的執行
+
+.. code-block:: json
+
+   [["AT_assert_sla", {"sla": {"max_ms": 2000, "p95_ms": 1500}}]]
 
 Executor 命令
 -------------

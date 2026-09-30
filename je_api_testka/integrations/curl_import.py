@@ -1,5 +1,5 @@
 """
-Convert a ``curl`` command line into an executor action dict.
+Convert a ``curl`` command line into an executor action.
 
 Supports the most common flags: ``-X``, ``-H``, ``-d`` / ``--data``, and the
 implicit GET / POST behaviour. Bash quoting is parsed via ``shlex``.
@@ -11,6 +11,7 @@ import shlex
 from typing import Dict, Optional, Tuple
 
 from je_api_testka.utils.exception.exceptions import APITesterException
+from je_api_testka.utils.executor.request_action import build_request_action
 
 CURL_TOKEN: str = "curl"
 _METHOD_FLAGS = ("-X", "--request")
@@ -65,15 +66,10 @@ def _parse_tokens(tokens: list) -> Tuple[str, str, Dict[str, str], Optional[obje
     return method, state["url"], state["headers"], state["body"]
 
 
-def curl_to_action(curl_command: str) -> dict:
-    """Return ``{"AT_test_api_method_requests": {...}}`` for the given curl line."""
+def curl_to_action(curl_command: str) -> list:
+    """Return ``["AT_test_api_method", {...}]`` for the given curl line."""
     tokens = shlex.split(curl_command)
     if not tokens or tokens[0] != CURL_TOKEN:
         raise APITesterException("input does not start with 'curl'")
     method, url, headers, body = _parse_tokens(tokens)
-    payload: dict = {"http_method": method.lower(), "test_url": url}
-    if headers:
-        payload["headers"] = headers
-    if body is not None:
-        payload["json" if isinstance(body, (dict, list)) else "data"] = body
-    return {"AT_test_api_method_requests": payload}
+    return build_request_action(method, url, headers=headers, body=body)

@@ -90,7 +90,7 @@ def test_curl_import_then_dispatch(tmp_path):
         ["AT_curl_to_action", {"curl_command": "curl https://api.invalid/v1/health"}],
     ])
     action = next(iter(record.values()))
-    body = action["AT_test_api_method_requests"]
+    body = action[1]
     assert body["http_method"] == "get"
     assert body["test_url"] == "https://api.invalid/v1/health"
 

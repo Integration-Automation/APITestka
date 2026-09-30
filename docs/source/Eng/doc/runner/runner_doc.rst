@@ -3,9 +3,10 @@ Runner
 ======
 
 Three orthogonal helpers for organising large action lists. They all expect
-the same action-list shape used by ``execute_action`` and strip
-runner-specific metadata (``id``, ``depends_on``, ``tags``) before invoking
-the underlying ``AT_`` function.
+the same action-list shape used by ``execute_action``. Runner-specific metadata
+(``id``, ``depends_on``, ``tags``) may stay in the kwargs: the executor strips it
+before invoking the underlying ``AT_`` function, so filtered or ordered lists run
+as they are.
 
 Parallel runner
 ---------------
@@ -14,8 +15,8 @@ Parallel runner
 
    from je_api_testka.runner import run_actions_parallel
 
-   actions = [["AT_test_api_method_requests", {"http_method": "get",
-                                                "test_url": f"https://x.invalid/{i}"}]
+   actions = [["AT_test_api_method", {"http_method": "get",
+                                       "test_url": f"https://x.invalid/{i}"}]
               for i in range(20)]
    results = run_actions_parallel(actions, max_workers=8)
 

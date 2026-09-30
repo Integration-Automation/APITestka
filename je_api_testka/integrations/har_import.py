@@ -10,6 +10,8 @@ import json
 from pathlib import Path
 from typing import List, Optional
 
+from je_api_testka.utils.executor.request_action import build_request_action
+
 
 def _decode_text_body(text: Optional[str]) -> Optional[object]:
     if not text:
@@ -20,18 +22,7 @@ def _decode_text_body(text: Optional[str]) -> Optional[object]:
         return text
 
 
-def _build_payload(method: str, url: str, headers: dict, body_value: object) -> dict:
-    payload: dict = {"http_method": method.lower(), "test_url": url}
-    if headers:
-        payload["headers"] = headers
-    if isinstance(body_value, (dict, list)):
-        payload["json"] = body_value
-    elif body_value is not None:
-        payload["data"] = body_value
-    return payload
-
-
-def _entry_to_action(entry: dict) -> Optional[dict]:
+def _entry_to_action(entry: dict) -> Optional[list]:
     request = entry.get("request") or {}
     url = request.get("url")
     if not url:
@@ -41,11 +32,11 @@ def _entry_to_action(entry: dict) -> Optional[dict]:
                for item in request.get("headers", [])
                if "name" in item and "value" in item}
     body_value = _decode_text_body((request.get("postData") or {}).get("text"))
-    return {"AT_test_api_method_requests": _build_payload(method, url, headers, body_value)}
+    return build_request_action(method, url, headers=headers, body=body_value)
 
 
-def convert_har(file_path: str) -> List[dict]:
-    """Return a list of action dicts parsed from a HAR JSON document."""
+def convert_har(file_path: str) -> List[list]:
+    """Return a list of executor actions parsed from a HAR JSON document."""
     document = json.loads(Path(file_path).read_text(encoding="utf-8"))
     entries = (document.get("log") or {}).get("entries") or []
     actions = [action for action in (_entry_to_action(entry) for entry in entries)

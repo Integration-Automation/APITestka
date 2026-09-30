@@ -25,9 +25,9 @@ def test_convert_openapi_extracts_path_methods():
         },
     }
     actions = convert_openapi(spec)
-    methods = sorted(a["AT_test_api_method_requests"]["http_method"] for a in actions)
+    methods = sorted(a[1]["http_method"] for a in actions)
     assert methods == ["delete", "get", "post"]
-    urls = {a["AT_test_api_method_requests"]["test_url"] for a in actions}
+    urls = {a[1]["test_url"] for a in actions}
     assert "https://api.example.invalid/users" in urls
 
 
@@ -51,7 +51,7 @@ def test_convert_postman_handles_nested_folders():
     }
     actions = convert_postman(collection)
     assert len(actions) == 1
-    body = actions[0]["AT_test_api_method_requests"]
+    body = actions[0][1]
     assert body["http_method"] == "get"
     assert body["headers"] == {"X-Test": "1"}
 

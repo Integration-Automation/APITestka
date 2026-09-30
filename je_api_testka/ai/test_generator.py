@@ -10,13 +10,14 @@ import json
 from typing import Any, List
 
 from je_api_testka.ai.backend import NoOpAIBackend, ai_backend
+from je_api_testka.utils.executor.request_action import build_request_action
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 HTTP_VERBS = ("get", "put", "post", "patch", "delete", "options", "head")
 
 
-def _deterministic_actions(spec: dict) -> List[dict]:
-    actions: List[dict] = []
+def _deterministic_actions(spec: dict) -> List[list]:
+    actions: List[list] = []
     base = ""
     servers = spec.get("servers") or []
     if servers:
@@ -25,18 +26,17 @@ def _deterministic_actions(spec: dict) -> List[dict]:
         for verb in HTTP_VERBS:
             if not (item or {}).get(verb):
                 continue
-            actions.append({
-                "AT_test_api_method_requests": {
-                    "http_method": verb,
-                    "test_url": f"{base}{path}",
-                    "result_check_dict": {"status_code": 200},
-                },
-            })
+            actions.append(build_request_action(verb, f"{base}{path}", result_check_dict={"status_code": 200}))
     return actions
 
 
-def generate_tests_from_openapi(spec: dict) -> List[dict]:
-    """Return action dicts via the AI backend if configured, otherwise deterministic fallback."""
+def generate_tests_from_openapi(spec: dict) -> List[Any]:
+    """
+    Return executor actions via the AI backend if configured, otherwise a deterministic fallback.
+
+    The fallback is one ``["AT_test_api_method", {...}]`` happy-path action per operation.
+    A backend reply that is a JSON list is returned as it is.
+    """
     backend = ai_backend()
     if isinstance(backend, NoOpAIBackend):
         return _deterministic_actions(spec)

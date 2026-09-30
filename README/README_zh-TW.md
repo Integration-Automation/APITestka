@@ -194,6 +194,7 @@ check_jsonpath(payload, "$.data.id", expected=7)
 assert_snapshot("user-by-id", payload, ignore_keys=["timestamp"])
 diff = diff_payloads(prod_response, staging_response, ignore_paths=["server_time"])
 assert_sla(records, ResponseSLA(max_ms=2000, p95_ms=1500))
+assert_sla(sla={"max_ms": 2000})   # 目前錄下的執行;JSON:["AT_assert_sla", {"sla": {...}}]
 ```
 
 ### 連線層
@@ -289,6 +290,10 @@ action = curl_to_action("curl -X POST https://api/x -d '{\"a\":1}'")
 actions = convert_har("traffic.har")
 actions = convert_spec_file("openapi.json", spec_format="openapi")
 ```
+
+每個匯入工具都回傳 `["AT_test_api_method", {...}]` 形式的 action,`execute_action`
+可以直接執行。runner 的中繼資料(`id`、`depends_on`、`tags`)可以留在 kwargs 裡,
+executor 呼叫前會先拿掉。
 
 ### CLI / 開發體驗
 

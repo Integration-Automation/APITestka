@@ -32,10 +32,10 @@ def test_convert_har_basic(tmp_path):
     path.write_text(json.dumps(har), encoding="utf-8")
     actions = convert_har(str(path))
     assert len(actions) == 2
-    first = actions[0]["AT_test_api_method_requests"]
+    first = actions[0][1]
     assert first["http_method"] == "get"
     assert first["headers"]["Accept"] == "application/json"
-    second = actions[1]["AT_test_api_method_requests"]
+    second = actions[1][1]
     assert second["json"] == {"name": "alice"}
 
 

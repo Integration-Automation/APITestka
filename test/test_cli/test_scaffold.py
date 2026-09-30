@@ -8,7 +8,7 @@ from je_api_testka.cli.scaffold_test import scaffold_action_list, write_scaffold
 
 def test_scaffold_action_list_includes_smoke_check():
     actions = scaffold_action_list("https://x.invalid", method="POST")
-    assert actions[0][0] == "AT_test_api_method_requests"
+    assert actions[0][0] == "AT_test_api_method"
     assert actions[0][1]["http_method"] == "post"
     assert actions[0][1]["tags"] == ["smoke"]
 

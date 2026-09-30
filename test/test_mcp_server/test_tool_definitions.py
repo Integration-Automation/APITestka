@@ -42,7 +42,7 @@ def test_get_records_tool_returns_lists():
 
 def test_curl_to_action_tool():
     result = dispatch_tool("apitestka_curl_to_action", {"curl_command": "curl https://x.invalid"})
-    assert "AT_test_api_method_requests" in result
+    assert result[0] == "AT_test_api_method"
 
 
 def test_render_markdown_tool_returns_string():

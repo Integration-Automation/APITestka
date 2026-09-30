@@ -52,7 +52,10 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   `generate_{html,json,xml}_report`, `flask_mock_server_instance`, `start_apitestka_socket_server`,
   `callback_executor`, `create_project_dir`.
 - **Action format**: an action is `[name]`, `[name, {kwargs}]` or `[name, [args]]`. A file holds a
-  list of actions or `{"api_testka": [...]}`.
+  list of actions or `{"api_testka": [...]}`. The executor drops runner metadata (`id`, `depends_on`, `tags`) from the
+  kwargs before the call. Converters (OpenAPI/Postman/cURL/HAR import, AI test generation, scaffold,
+  the `apitestka_test_api` MCP tool) build request actions with
+  `utils/executor/request_action.build_request_action` → `["AT_test_api_method", {...}]`.
 - **Legacy CLI**: `python -m je_api_testka` with `-e/--execute_file`, `-d/--execute_dir`,
   `-c/--create_project` and `--execute_str`. On `win32`/`cygwin`/`msys`, `--execute_str` is decoded
   with `json.loads` twice. Errors print `repr(error)` to stderr and exit with code 1.

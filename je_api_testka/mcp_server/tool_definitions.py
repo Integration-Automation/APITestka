@@ -23,6 +23,7 @@ from je_api_testka.spec.openapi_export import build_openapi
 from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
 from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.exception.exceptions import APITesterException
+from je_api_testka.utils.executor.request_action import build_request_action
 from je_api_testka.utils.generate_report.markdown_report import render_markdown
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -46,17 +47,11 @@ def _handle_run_action(arguments: Dict[str, Any]) -> Any:
 
 
 def _handle_test_api(arguments: Dict[str, Any]) -> Any:
-    method = arguments.get("method", "GET")
-    url = arguments["url"]
-    timeout = arguments.get("timeout", 30)
-    body = arguments.get("body")
-    headers = arguments.get("headers")
-    payload: dict = {"http_method": method.lower(), "test_url": url, "timeout": timeout}
-    if headers:
-        payload["headers"] = headers
-    if body is not None:
-        payload["json"] = body
-    record = execute_action([["AT_test_api_method_requests", payload]])
+    action = build_request_action(
+        arguments.get("method", "GET"), arguments["url"], headers=arguments.get("headers"),
+        body=arguments.get("body"), timeout=arguments.get("timeout", 30),
+    )
+    record = execute_action([action])
     return {key: _jsonable(value) for key, value in record.items()}
 
 

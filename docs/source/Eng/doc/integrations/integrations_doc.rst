@@ -42,6 +42,12 @@ Shell-quote-aware parser for ``-X``, ``-H``, ``-d`` / ``--data``.
    action = curl_to_action(
        "curl -X POST https://api/x -H 'Content-Type: application/json' -d '{\"a\":1}'"
    )
+   # ["AT_test_api_method", {"http_method": "post", "test_url": "https://api/x",
+   #                         "headers": {...}, "json": {"a": 1}}]
+
+Every importer on this page returns actions in the ``[command, kwargs]`` form, so
+``execute_action`` runs the result as it is. A JSON body (object or array) is sent as
+``json``; any other body as ``data``.
 
 HAR import
 ----------
