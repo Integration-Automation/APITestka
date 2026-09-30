@@ -6,4 +6,3 @@ Cross-repo and workspace items live in `D:\Codes\progress.md` (relevant here: X-
 
 ## Open
 
-- **#3** [DECIDE] The PyPI classifier still says `Development Status :: 2 - Pre-Alpha`.

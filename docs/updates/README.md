@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-10 | 2026-10-01 | Development status classifier moves to Beta | #done #packaging | [2026-10](2026-10.md) |
 | U-20261001-09 | 2026-10-01 | GUI redesign: sidebar pages, request workspace, themes | #done #gui | [2026-10](2026-10.md) |
 | U-20261001-08 | 2026-10-01 | Test-as-spec loop: drift, coverage and generated tests | #done #openapi #spec | [2026-10](2026-10.md) |
 | U-20261001-07 | 2026-10-01 | Per-endpoint latency trends and anomaly detection | #done #trend #report | [2026-10](2026-10.md) |
@@ -95,5 +96,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 9 |
+| [2026-10.md](2026-10.md) | 2026-10 | 10 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |
