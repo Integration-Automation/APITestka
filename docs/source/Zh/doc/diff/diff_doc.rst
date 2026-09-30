@@ -47,6 +47,22 @@ OpenAPI contract drift
 
    print(openapi_changelog(prev_spec, current_spec))
 
+從錄下的流量反推 OpenAPI
+------------------------------
+
+``records_to_openapi`` 把測試紀錄轉成 OpenAPI 3.1 文件。同一個 method 與路徑的紀錄會合併成一個
+operation：每個出現過的狀態碼各有一筆 response，查詢參數名稱變成 ``in: query`` 參數，JSON 或文字
+內容變成回應與請求內容的 schema。``build_openapi`` 再加上從存下的 JSON 報告讀回的紀錄，
+``export_openapi`` 把結果寫成 UTF-8 JSON。
+
+.. code-block:: python
+
+   from je_api_testka.spec import build_openapi, export_openapi, load_report_records
+
+   records = load_report_records("run_success.json")      # generate_json_report 的輸出
+   spec = build_openapi(["run_success.json"], title="Shop API")
+   export_openapi("openapi.json", ["run_success.json"])
+
 回應時間 SLA
 ------------
 
@@ -67,3 +83,5 @@ Executor 命令
 * ``AT_diff_openapi_specs``
 * ``AT_assert_sla``
 * ``AT_openapi_changelog``
+* ``AT_records_to_openapi``
+* ``AT_export_openapi``

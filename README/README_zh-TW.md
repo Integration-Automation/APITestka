@@ -302,6 +302,8 @@ apitestka summary                       # ANSI 彩色摘要
 apitestka scaffold https://api/x out.json
 apitestka completion bash               # source >> ~/.bashrc
 apitestka mcp                           # 走 stdio 啟動 MCP server
+apitestka openapi --report run_success.json -o openapi.json   # 從存下的執行結果反推規格
+apitestka openapi --run actions.json    # 先執行再印出反推的規格
 ```
 
 ### 安全檢測
@@ -323,11 +325,20 @@ run_pip_audit()
 ### OpenAPI 反推
 
 ```python
-from je_api_testka.spec import infer_schema, records_to_openapi, openapi_changelog
+from je_api_testka.spec import (
+    infer_schema, records_to_openapi, build_openapi, export_openapi, load_report_records, openapi_changelog,
+)
 
-records_to_openapi(title="Recovered", version="0.1.0")
+records_to_openapi(title="Recovered", version="0.1.0")   # 從記憶體中的測試紀錄
+build_openapi(["run_success.json"])                  # 測試紀錄加上存下的 JSON 報告
+export_openapi("openapi.json", ["run_success.json"]) # 同上,並寫成 UTF-8 JSON
 openapi_changelog(prev_spec, current_spec)           # markdown changelog
 ```
+
+同一個 method 與路徑的紀錄會合併成一個 operation:每個出現過的狀態碼各有一筆 response,
+查詢參數名稱變成 `in: query` 參數,JSON 或文字內容變成回應與請求內容的 schema。
+存下的報告是 `generate_json_report` 產生的 `<name>_success.json`;`AT_export_openapi`
+指令與 `apitestka openapi` 也讀得到它。
 
 ### GUI
 
@@ -373,7 +384,7 @@ MCP-compatible client 可以直接驅動本框架。共曝露八個工具:
 | `apitestka_curl_to_action` | cURL → action JSON |
 | `apitestka_har_import` | HAR 檔 → action list |
 | `apitestka_render_markdown` | 從目前紀錄產 Markdown 報告 |
-| `apitestka_records_to_openapi` | 反推 OpenAPI 文件 |
+| `apitestka_records_to_openapi` | 從測試紀錄或存下的報告(`report_paths`)反推 OpenAPI 文件 |
 | `apitestka_clear_records` | 清空測試紀錄 |
 | `apitestka_get_records` | 拿目前的成功 / 失敗紀錄 |
 

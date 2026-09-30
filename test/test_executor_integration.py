@@ -40,7 +40,7 @@ EXPECTED_NEW_COMMANDS = (
     "AT_basic_auth_header", "AT_bearer_token_header",
     "AT_build_jwt", "AT_aws_sigv4_headers",
     # Spec
-    "AT_infer_schema", "AT_records_to_openapi", "AT_openapi_changelog",
+    "AT_infer_schema", "AT_records_to_openapi", "AT_export_openapi", "AT_openapi_changelog",
     # AI
     "AT_classify_failures", "AT_generate_fake_payload",
     "AT_generate_tests_from_openapi",

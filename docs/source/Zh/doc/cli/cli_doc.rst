@@ -48,3 +48,49 @@ CLI 參數
      - 直接執行 JSON 字串
    * - ``-c``, ``--create_project``
      - 建立專案目錄及範本檔案
+
+子命令 CLI
+--------------
+
+安裝套件後會有 ``apitestka`` 指令，把常用工作集中在一起：
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - 子命令
+     - 說明
+   * - ``run PATH``
+     - 執行一個動作 JSON 檔，或目錄裡每個 JSON 檔
+   * - ``create PATH``
+     - 建立專案目錄
+   * - ``mock [--host] [--port]``
+     - 啟動 Flask 模擬伺服器
+   * - ``import INPUT OUTPUT [--format openapi|postman]``
+     - 把 OpenAPI 文件或 Postman collection 轉成動作 JSON
+   * - ``repl``
+     - 互動式 JSON 動作 REPL
+   * - ``summary``
+     - 在終端機印出最近一次執行的摘要
+   * - ``scaffold URL OUTPUT [--method]``
+     - 為一個 URL 寫出起始的動作 JSON
+   * - ``completion SHELL``
+     - 印出 bash、zsh、fish 或 PowerShell 的補全腳本
+   * - ``mcp``
+     - 以 stdio 啟動 MCP server
+   * - ``openapi``
+     - 從錄下的流量反推 OpenAPI 文件（見下節）
+
+反推 OpenAPI 文件
+----------------------
+
+``apitestka openapi`` 用成功的請求建出 OpenAPI 3.1 文件。來源可以是存下的 JSON 成功報告
+（``generate_json_report`` 產生的 ``<name>_success.json``）、先執行的動作檔，或兩者都給；每個選項都可以重複。
+
+.. code-block:: bash
+
+   apitestka openapi --report run_success.json -o openapi.json
+   apitestka openapi --run tests/ --title "Shop API" --api-version 2.0
+
+沒有 ``-o`` 時文件印到 stdout。沒給任何來源、或 ``--run`` 的路徑不存在時結束碼是 2；
+找不到任何成功紀錄時結束碼是 1，而且不寫檔。

@@ -66,6 +66,22 @@ def test_records_to_openapi_tool():
     test_record_instance.clean_record()
 
 
+def test_records_to_openapi_tool_reads_saved_reports(tmp_path):
+    # A fresh MCP process has an empty record; report_paths lets it use an earlier run.
+    report = tmp_path / "run_success.json"
+    report.write_text(json.dumps({"Success_Test1": {
+        "request_url": "https://x.invalid/saved", "request_method": "GET", "status_code": "200", "text": "",
+    }}), encoding="utf-8")
+    result = dispatch_tool("apitestka_records_to_openapi", {"report_paths": [str(report)]})
+    assert "/saved" in result["paths"]
+
+
+@pytest.mark.parametrize("report_paths", ["one.json", [1]])
+def test_records_to_openapi_tool_validates_report_paths(report_paths):
+    with pytest.raises(APITesterException):
+        dispatch_tool("apitestka_records_to_openapi", {"report_paths": report_paths})
+
+
 def test_run_action_tool_dispatches():
     test_record_instance.clean_record()
     result = dispatch_tool("apitestka_run_action", {"actions": [["AT_fake_uuid"]]})

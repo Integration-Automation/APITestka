@@ -18,7 +18,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    * - 類別
      - 內容
    * - **後端**
-     - ``requests``(同步、session)、``httpx``(同步 + 非同步、HTTP/2)、
+     - ``requests``\ (同步、session)、``httpx``\ (同步 + 非同步、HTTP/2)、
        WebSocket、SSE、GraphQL
    * - **資料層**
      - 變數儲存、``{{var}}`` 模板、CSV/JSON 資料驅動、環境設定檔、假資料

@@ -1,6 +1,6 @@
-=================
+===================
 MCP Server (Claude)
-=================
+===================
 
 APITestka ships a Model Context Protocol server so Claude Code (or any other
 MCP-compatible client) can drive the framework as a tool. The implementation
@@ -48,7 +48,7 @@ Tools exposed
    * - ``apitestka_render_markdown``
      - Markdown report of the current test record
    * - ``apitestka_records_to_openapi``
-     - Reconstruct an OpenAPI 3.x document
+     - Reconstruct an OpenAPI 3.x document from the record or saved JSON reports (``report_paths``)
    * - ``apitestka_clear_records``
      - Wipe success / failure records
    * - ``apitestka_get_records``

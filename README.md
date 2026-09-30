@@ -305,6 +305,8 @@ apitestka summary                       # ANSI-coloured summary
 apitestka scaffold https://api/x out.json
 apitestka completion bash               # source >> ~/.bashrc
 apitestka mcp                           # MCP server over stdio
+apitestka openapi --report run_success.json -o openapi.json   # infer a spec from a saved run
+apitestka openapi --run actions.json    # run first, print the inferred spec
 ```
 
 ### Security Probes
@@ -326,11 +328,21 @@ run_pip_audit()                                      # delegates to pip-audit
 ### OpenAPI Inference
 
 ```python
-from je_api_testka.spec import infer_schema, records_to_openapi, openapi_changelog
+from je_api_testka.spec import (
+    infer_schema, records_to_openapi, build_openapi, export_openapi, load_report_records, openapi_changelog,
+)
 
-records_to_openapi(title="Recovered", version="0.1.0")
+records_to_openapi(title="Recovered", version="0.1.0")   # from the in-memory test record
+build_openapi(["run_success.json"])                  # record plus saved JSON reports
+export_openapi("openapi.json", ["run_success.json"]) # same, written as UTF-8 JSON
 openapi_changelog(prev_spec, current_spec)           # markdown diff
 ```
+
+Records with the same method and path merge into one operation: every status code seen gets
+a response entry, query parameter names become `in: query` parameters, and JSON or text
+bodies become response and request-body schemas. A saved report is the
+`<name>_success.json` file from `generate_json_report`; the `AT_export_openapi` command and
+`apitestka openapi` read it too.
 
 ### GUI
 
@@ -378,7 +390,7 @@ MCP-compatible client) can drive the framework. Eight tools are exposed:
 | `apitestka_curl_to_action` | cURL → action JSON |
 | `apitestka_har_import` | HAR file → action list |
 | `apitestka_render_markdown` | Markdown report from current records |
-| `apitestka_records_to_openapi` | Reconstruct an OpenAPI document |
+| `apitestka_records_to_openapi` | Reconstruct an OpenAPI document from the record or saved reports (`report_paths`) |
 | `apitestka_clear_records` | Wipe the test record |
 | `apitestka_get_records` | Return successes / failures |
 

@@ -48,6 +48,23 @@ Render the same drift as a markdown changelog:
 
    print(openapi_changelog(prev_spec, current_spec))
 
+Inferring OpenAPI from recorded traffic
+---------------------------------------
+
+``records_to_openapi`` turns test records into an OpenAPI 3.1 document. Records with the same
+method and path merge into one operation: every status code seen gets a response entry, query
+parameter names become ``in: query`` parameters, and JSON or text bodies become response and
+request-body schemas. ``build_openapi`` adds records read back from saved JSON reports, and
+``export_openapi`` writes the result as UTF-8 JSON.
+
+.. code-block:: python
+
+   from je_api_testka.spec import build_openapi, export_openapi, load_report_records
+
+   records = load_report_records("run_success.json")      # from generate_json_report
+   spec = build_openapi(["run_success.json"], title="Shop API")
+   export_openapi("openapi.json", ["run_success.json"])
+
 Response time SLA
 -----------------
 
@@ -68,3 +85,5 @@ Executor commands
 * ``AT_diff_openapi_specs``
 * ``AT_assert_sla``
 * ``AT_openapi_changelog``
+* ``AT_records_to_openapi``
+* ``AT_export_openapi``

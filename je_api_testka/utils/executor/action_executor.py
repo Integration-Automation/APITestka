@@ -36,6 +36,7 @@ from je_api_testka.security.header_scan import scan_security_headers
 from je_api_testka.security.rate_limit_probe import probe_rate_limit
 from je_api_testka.security.ssrf_check import probe_ssrf
 from je_api_testka.spec.openapi_changelog import openapi_changelog
+from je_api_testka.spec.openapi_export import export_openapi
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.spec.schema_inference import infer_schema
 from je_api_testka.sse_wrapper.sse_method import test_api_method_sse
@@ -141,6 +142,7 @@ class Executor:
             # Spec inference
             "AT_infer_schema": infer_schema,
             "AT_records_to_openapi": records_to_openapi,
+            "AT_export_openapi": export_openapi,
             "AT_openapi_changelog": openapi_changelog,
             # AI integrations
             "AT_classify_failures": classify_failures,

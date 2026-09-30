@@ -19,7 +19,8 @@ from typing import Any, Callable, Dict, List
 
 from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.har_import import convert_har
-from je_api_testka.spec.records_to_openapi import records_to_openapi
+from je_api_testka.spec.openapi_export import build_openapi
+from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
 from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.generate_report.markdown_report import render_markdown
@@ -72,9 +73,13 @@ def _handle_render_markdown(_arguments: Dict[str, Any]) -> str:
 
 
 def _handle_records_to_openapi(arguments: Dict[str, Any]) -> Any:
-    return records_to_openapi(
-        title=arguments.get("title", "APITestka Inferred"),
-        version=arguments.get("version", "0.1.0"),
+    report_paths = arguments.get("report_paths") or []
+    if not isinstance(report_paths, list) or not all(isinstance(path, str) for path in report_paths):
+        raise APITesterException("'report_paths' must be a list of file paths")
+    return build_openapi(
+        report_paths,
+        title=arguments.get("title", DEFAULT_SPEC_TITLE),
+        version=arguments.get("version", DEFAULT_SPEC_VERSION),
     )
 
 
@@ -166,12 +171,20 @@ APITESTKA_TOOLS: List[MCPToolSpec] = [
     ),
     MCPToolSpec(
         name="apitestka_records_to_openapi",
-        description="Reconstruct an OpenAPI 3.x document from the current test record.",
+        description=(
+            "Reconstruct an OpenAPI 3.x document from the current test record "
+            "plus any saved JSON reports (<name>_success.json)."
+        ),
         input_schema={
             "type": "object",
             "properties": {
                 "title": {"type": "string"},
                 "version": {"type": "string"},
+                "report_paths": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "Saved JSON success reports to read records from.",
+                },
             },
         },
         handler=_handle_records_to_openapi,

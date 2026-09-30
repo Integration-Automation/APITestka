@@ -10,6 +10,8 @@ Subcommands:
     summary     Print a terminal summary of the latest run.
     scaffold    Generate a starter action JSON for a URL.
     completion  Print a shell completion script.
+    mcp         Run the MCP server over stdio.
+    openapi     Infer an OpenAPI document from recorded traffic.
 """
 from __future__ import annotations
 
@@ -19,6 +21,8 @@ import sys
 from pathlib import Path
 from typing import Optional, Sequence
 
+from je_api_testka.spec.openapi_export import build_openapi
+from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
 from je_api_testka.utils.executor.action_executor import execute_action, execute_files
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
 from je_api_testka.utils.json.json_file.json_file import read_action_json
@@ -29,8 +33,7 @@ DEFAULT_MOCK_HOST: str = "127.0.0.1"
 DEFAULT_MOCK_PORT: int = 8090
 
 
-def _cmd_run(args: argparse.Namespace) -> int:
-    target = Path(args.path)
+def _run_path(target: Path) -> int:
     if target.is_dir():
         execute_files(get_dir_files_as_list(str(target)))
     elif target.is_file():
@@ -39,6 +42,10 @@ def _cmd_run(args: argparse.Namespace) -> int:
         apitestka_logger.error(f"cli run: path not found: {target}")
         return 2
     return 0
+
+
+def _cmd_run(args: argparse.Namespace) -> int:
+    return _run_path(Path(args.path))
 
 
 def _cmd_create(args: argparse.Namespace) -> int:
@@ -97,6 +104,37 @@ def _cmd_mcp(_args: argparse.Namespace) -> int:
     return mcp_main()
 
 
+def _cmd_openapi(args: argparse.Namespace) -> int:
+    if not args.report and not args.run:
+        apitestka_logger.error("cli openapi: give at least one --report or --run")
+        return 2
+    for path in args.run:
+        status = _run_path(Path(path))
+        if status:
+            return status
+    spec = build_openapi(args.report, title=args.title, version=args.api_version)
+    if not spec["paths"]:
+        apitestka_logger.error("cli openapi: no successful records to infer from")
+        return 1
+    text = json.dumps(spec, indent=2, ensure_ascii=False)
+    if args.output:
+        Path(args.output).write_text(text, encoding="utf-8")
+    else:
+        print(text)
+    return 0
+
+
+def _configure_openapi_parser(openapi_parser: argparse.ArgumentParser) -> None:
+    openapi_parser.add_argument("--report", action="append", default=[], metavar="FILE",
+                                help="Saved JSON success report (<name>_success.json); repeatable")
+    openapi_parser.add_argument("--run", action="append", default=[], metavar="PATH",
+                                help="Action JSON file or directory to execute first; repeatable")
+    openapi_parser.add_argument("-o", "--output", help="Destination file (default: stdout)")
+    openapi_parser.add_argument("--title", default=DEFAULT_SPEC_TITLE)
+    openapi_parser.add_argument("--api-version", default=DEFAULT_SPEC_VERSION, help="info.version of the spec")
+    openapi_parser.set_defaults(func=_cmd_openapi)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="apitestka", description="APITestka command line")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -143,6 +181,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     mcp_parser = sub.add_parser("mcp", help="Run the APITestka MCP server (stdio transport)")
     mcp_parser.set_defaults(func=_cmd_mcp)
+
+    _configure_openapi_parser(sub.add_parser("openapi", help="Infer an OpenAPI document from recorded traffic"))
     return parser
 
 
