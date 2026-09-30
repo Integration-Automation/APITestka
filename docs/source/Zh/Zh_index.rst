@@ -29,7 +29,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
      - mTLS、Proxy、DNS override、VCR-style cassette 錄製/回放
    * - **模擬伺服器**
      - 靜態、動態、stateful、故障注入、OpenAPI 驅動、Jinja 模板、Webhook
-       接收、record-replay proxy
+       接收、record-replay proxy、WebSocket 與 gRPC 端點
    * - **Runner**
      - 順序 & 平行執行、Tag 過濾、Dependency-aware 排序、Retry 策略
    * - **報告**
@@ -45,6 +45,8 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
        Rate limit / SSRF probe、pip-audit、Fuzz
    * - **Spec 反推**
      - 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog
+   * - **契約測試**
+     - 從測試執行產生 Pact v2 消費者契約、提供端驗證、與 OpenAPI 雙向比對
    * - **AI**
      - 可插拔後端,LLM 不可用時自動退回確定性 fallback
    * - **MCP**
@@ -65,6 +67,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    doc/data_layer/data_layer_doc
    doc/assertion/assertion_doc
    doc/diff/diff_doc
+   doc/contract/contract_doc
    doc/connection/connection_doc
    doc/runner/runner_doc
    doc/report/report_doc

@@ -6,6 +6,7 @@ from je_api_testka.ai.failure_classifier import classify_failures
 from je_api_testka.ai.fake_data_generator import generate_fake_payload
 from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.connection.cassette import Cassette, CassetteRecord
+from je_api_testka.contract.commands import check_contract_against_openapi, verify_contract, write_contract
 from je_api_testka.data.env_profile import load_env_profile
 from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
 from je_api_testka.data.template_render import render_template
@@ -153,6 +154,10 @@ class Executor:
             "AT_records_to_openapi": records_to_openapi,
             "AT_export_openapi": export_openapi,
             "AT_openapi_changelog": openapi_changelog,
+            # Consumer contracts (Pact v2 files)
+            "AT_write_contract": write_contract,
+            "AT_verify_contract": verify_contract,
+            "AT_check_contract_against_openapi": check_contract_against_openapi,
             # AI integrations
             "AT_classify_failures": classify_failures,
             "AT_generate_fake_payload": generate_fake_payload,

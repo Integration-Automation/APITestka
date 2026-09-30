@@ -67,13 +67,18 @@ def load_report_records(path: str) -> List[dict]:
     return records
 
 
-def build_openapi(report_paths: Optional[Sequence[str]] = None, title: str = DEFAULT_SPEC_TITLE,
-                  version: str = DEFAULT_SPEC_VERSION) -> dict:
-    """Return an OpenAPI document inferred from the current test record plus each saved report."""
+def collect_records(report_paths: Optional[Sequence[str]] = None) -> List[dict]:
+    """Return the current test record's successes followed by the records of each saved report."""
     records = list(test_record_instance.test_record_list)
     for path in report_paths or ():
         records.extend(load_report_records(path))
-    return records_to_openapi(records, title=title, version=version)
+    return records
+
+
+def build_openapi(report_paths: Optional[Sequence[str]] = None, title: str = DEFAULT_SPEC_TITLE,
+                  version: str = DEFAULT_SPEC_VERSION) -> dict:
+    """Return an OpenAPI document inferred from the current test record plus each saved report."""
+    return records_to_openapi(collect_records(report_paths), title=title, version=version)
 
 
 def export_openapi(output_path: str, report_paths: Optional[Sequence[str]] = None,

@@ -12,6 +12,7 @@ Subcommands:
     completion  Print a shell completion script.
     mcp         Run the MCP server over stdio.
     openapi     Infer an OpenAPI document from recorded traffic.
+    contract    Record, verify and compare Pact-style consumer contracts.
 """
 from __future__ import annotations
 
@@ -21,11 +22,10 @@ import sys
 from pathlib import Path
 from typing import Optional, Sequence
 
+from je_api_testka.cli.cli_common import run_action_path
+from je_api_testka.cli.contract_cli import configure_contract_parser
 from je_api_testka.spec.openapi_export import build_openapi
 from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
-from je_api_testka.utils.executor.action_executor import execute_action, execute_files
-from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
-from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.project.create_project_structure import create_project_dir
 
@@ -33,19 +33,8 @@ DEFAULT_MOCK_HOST: str = "127.0.0.1"
 DEFAULT_MOCK_PORT: int = 8090
 
 
-def _run_path(target: Path) -> int:
-    if target.is_dir():
-        execute_files(get_dir_files_as_list(str(target)))
-    elif target.is_file():
-        execute_action(read_action_json(str(target)))
-    else:
-        apitestka_logger.error(f"cli run: path not found: {target}")
-        return 2
-    return 0
-
-
 def _cmd_run(args: argparse.Namespace) -> int:
-    return _run_path(Path(args.path))
+    return run_action_path(Path(args.path))
 
 
 def _cmd_create(args: argparse.Namespace) -> int:
@@ -118,7 +107,7 @@ def _cmd_openapi(args: argparse.Namespace) -> int:
         apitestka_logger.error("cli openapi: give at least one --report or --run")
         return 2
     for path in args.run:
-        status = _run_path(Path(path))
+        status = run_action_path(Path(path))
         if status:
             return status
     spec = build_openapi(args.report, title=args.title, version=args.api_version)
@@ -193,6 +182,7 @@ def build_parser() -> argparse.ArgumentParser:
     mcp_parser.set_defaults(func=_cmd_mcp)
 
     _configure_openapi_parser(sub.add_parser("openapi", help="Infer an OpenAPI document from recorded traffic"))
+    configure_contract_parser(sub.add_parser("contract", help="Record, verify and compare consumer contracts"))
     return parser
 
 

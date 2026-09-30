@@ -32,7 +32,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/utils/{json,xml,file_process,logging,exception,retry,observability}/` | JSON and XML I/O, directory listing, `apitestka_logger` (file at `$APITESTKA_LOG_FILE` or `~/.je_api_testka/logs/APITestka.log`, opened on first use; the root logger is left alone), exception hierarchy, `RetryPolicy`, OpenTelemetry hooks |
 | `je_api_testka/data/` | Variable store, template rendering, env profiles, fake-data helpers, data rows |
 | `je_api_testka/connection/` | Connection options, DNS override, record/replay cassettes |
-| `je_api_testka/diff/`, `spec/` | Response and contract diff, SLA checks; schema inference, records → OpenAPI (`records_to_openapi`; `openapi_export` reads saved JSON reports and writes the spec), OpenAPI changelog |
+| `je_api_testka/diff/`, `spec/` | Response and contract diff, SLA checks; schema inference, records → OpenAPI (`records_to_openapi`; `openapi_export` reads saved JSON reports and writes the spec), OpenAPI changelog, path-template matching (`path_templates`) |
+| `je_api_testka/contract/` | Pact v2 consumer contracts from records (`pact.py`), matching rules (`matching.py`), provider verification (`verifier.py`), bidirectional check against an OpenAPI document (`openapi_compat.py`, `openapi_schema.py`), file-level steps for the executor and CLI (`commands.py`) |
 | `je_api_testka/security/` | Auth header helpers, CORS/SSRF/rate-limit probes, header scan, fuzzing, `pip-audit` wrapper |
 | `je_api_testka/runner/` | Parallel runner, tag filter, dependency ordering of actions |
 | `je_api_testka/integrations/` | cURL and HAR import, webhook notify, GitHub PR comment |
@@ -60,7 +61,8 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   `-c/--create_project` and `--execute_str`. On `win32`/`cygwin`/`msys`, `--execute_str` is decoded
   with `json.loads` twice. Errors print `repr(error)` to stderr and exit with code 1.
 - **Subcommand CLI**: `apitestka` (`je_api_testka.cli.cli_main:main`) with `run`, `create`, `mock`,
-  `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp` and `openapi`. `cli/completion.py`
+  `import`, `repl`, `summary`, `scaffold`, `completion`, `mcp`, `openapi` and `contract record|verify|compare`
+  (`cli/contract_cli.py`); shared helpers are in `cli/cli_common.py`. `cli/completion.py`
   `SUBCOMMANDS` lists the same names (a test compares them with the parser).
 - **MCP**: `apitestka-mcp`, `python -m je_api_testka.mcp_server` or `apitestka mcp` (stdio, needs the
   `mcp` extra, mcp 1.x or 2.x: `build_server` registers the handlers with the 1.x `list_tools()`/`call_tool()`

@@ -80,6 +80,8 @@ CLI 參數
      - 以 stdio 啟動 MCP server
    * - ``openapi``
      - 從錄下的流量反推 OpenAPI 文件（見下節）
+   * - ``contract record|verify|compare``
+     - 產生、驗證與比對 Pact 風格消費者契約（見契約測試一章）
 
 反推 OpenAPI 文件
 ----------------------

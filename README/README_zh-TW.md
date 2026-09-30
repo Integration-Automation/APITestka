@@ -33,6 +33,7 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
   - [CLI / 開發體驗](#cli--開發體驗)
   - [安全檢測](#安全檢測)
   - [OpenAPI 反推](#openapi-反推)
+  - [契約測試](#契約測試)
   - [GUI](#gui)
   - [可插拔 AI 後端](#可插拔-ai-後端)
 - [Claude 用的 MCP Server](#claude-用的-mcp-server)
@@ -53,13 +54,14 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
 | **資料層** | 變數儲存區、`{{var}}` 模板、CSV/JSON 資料驅動、環境設定檔、假資料 |
 | **斷言** | 欄位斷言、JSON Schema、JSONPath、Snapshot、結構化 diff、OpenAPI contract drift、回應時間 SLA |
 | **連線** | mTLS、Proxy、DNS override、VCR-style cassette 錄製/回放 |
-| **模擬伺服器** | 靜態、動態、stateful、故障注入、OpenAPI 驅動、Jinja 模板、Webhook 接收、record-replay proxy |
+| **模擬伺服器** | 靜態、動態、stateful、故障注入、OpenAPI 驅動、Jinja 模板、Webhook 接收、record-replay proxy、WebSocket 與 gRPC 端點 |
 | **Runner** | 順序與平行執行、Tag 過濾、Dependency-aware 排序、Retry 策略 |
 | **報告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趨勢資料庫 / Run diff |
 | **生態整合** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 匯入、OpenAPI / Postman 匯入 |
 | **CLI / DX** | 子命令式 CLI、REPL、終端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
 | **Spec 反推** | 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog |
+| **契約測試** | 從測試執行產生 Pact v2 消費者契約、提供端驗證、與 OpenAPI 雙向比對 |
 | **AI** | 可插拔後端,LLM 不可用時自動退回確定性 fallback |
 | **MCP** | 一級支援 Claude Code,將框架曝露為 MCP 工具 |
 | **GUI** | 可選 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI |
@@ -349,6 +351,7 @@ apitestka completion bash               # source >> ~/.bashrc
 apitestka mcp                           # 走 stdio 啟動 MCP server
 apitestka openapi --report run_success.json -o openapi.json   # 從存下的執行結果反推規格
 apitestka openapi --run actions.json    # 先執行再印出反推的規格
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # 見契約測試
 ```
 
 ### 安全檢測
@@ -384,6 +387,42 @@ openapi_changelog(prev_spec, current_spec)           # markdown changelog
 查詢參數名稱變成 `in: query` 參數,JSON 或文字內容變成回應與請求內容的 schema。
 存下的報告是 `generate_json_report` 產生的 `<name>_success.json`;`AT_export_openapi`
 指令與 `apitestka openapi` 也讀得到它。
+
+### 契約測試
+
+Pact 風格的雙向消費者契約(`je_api_testka.contract`)。消費端的測試執行會變成 Pact v2 檔案格式的
+契約,可以直接送到 Pact Broker 或 Pactflow。回應內容預設帶 `type` 比對規則:提供端必須回傳相同的
+結構與值的型別,而不是相同的值。契約接著從兩邊檢查:
+
+- **提供端驗證**:把每個互動重播到執行中的提供端,檢查狀態碼相同、契約列出的 header 都在
+  (`Content-Type` 只比 media type)、內容符合比對規則(`type`、`regex`、`min`;物件可以多帶欄位)。
+  提供端狀態(`providerState`)透過 Python 函式或設定 URL 建立,設定 URL 會收到
+  `{"consumer": ..., "state": ...}`。
+- **雙向檢查**:不用啟動提供端,直接把契約和提供端的 OpenAPI 文件比對:operation 存在(路徑樣板可比對)、
+  查詢參數有宣告且必填的有送、請求內容符合 schema、狀態碼有宣告(完全相同、`2XX` 或 `default`)、
+  回應內容符合 schema(`$ref`、`allOf` / `anyOf` / `oneOf`、`nullable`)。提供端用自己的測試執行
+  維持 OpenAPI 文件正確,例如用 `apitestka openapi`。
+
+```python
+from je_api_testka.contract import write_contract, verify_contract, check_contract_against_openapi
+
+# 消費端:測試執行(目前紀錄加上存下的報告)變成契約
+write_contract("pacts/web-shop.json", consumer="web", provider="shop", report_paths=["run_success.json"])
+# 提供端:把契約重播到執行中的提供端
+verify_contract("pacts/web-shop.json", base_url="http://localhost:8000")
+# 雙向:不用提供端,直接和它的 OpenAPI 文件比對
+check_contract_against_openapi("pacts/web-shop.json", "openapi.json")
+```
+
+```bash
+apitestka contract record --report run_success.json --consumer web --provider shop -o pacts/web-shop.json
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000
+apitestka contract compare pacts/web-shop.json openapi.json
+```
+
+`verify` 與 `compare` 會印出報告(`--json` 輸出 JSON),契約不成立時結束碼為 1。JSON action:
+`AT_write_contract`、`AT_verify_contract`、`AT_check_contract_against_openapi`(後兩者失敗時該 action
+會帶著報告失敗)。
 
 ### GUI
 
@@ -463,6 +502,7 @@ je_api_testka/
 ├── ai/                      # 可插拔 AI 後端 + 周邊
 ├── cli/                     # apitestka CLI 子命令、REPL、shell completion
 ├── connection/              # ConnectionOptions、DNS override、Cassette
+├── contract/                # Pact 風格消費者契約、提供端驗證、OpenAPI 比對
 ├── data/                    # VariableStore、template、faker、env profile
 ├── diff/                    # Response diff / contract drift / SLA
 ├── graphql_wrapper/         # GraphQL helper

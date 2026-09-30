@@ -40,7 +40,7 @@ je_api_testka/
 │   ├── callback/          # Observer pattern - post-request callbacks
 │   ├── executor/          # Command pattern - JSON keyword-driven actions (AT_* commands)
 │   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports
-│   ├── mock_server/       # Flask-based mock server
+│   ├── mock_server/       # Flask mock server plus WebSocket and gRPC mocks
 │   ├── socket_server/     # TCP remote automation server
 │   ├── project/           # Factory pattern - project scaffolding
 │   ├── json/, xml/        # JSON and XML I/O utilities
@@ -54,6 +54,7 @@ je_api_testka/
 ├── data/                  # Variable store, templates, env profiles, fake data
 ├── connection/            # Connection options, DNS override, record/replay cassettes
 ├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export
+├── contract/              # Pact-style consumer contracts, provider verification, OpenAPI check
 ├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
 ├── runner/                # Parallel runner, tag filter, dependency ordering
 ├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment

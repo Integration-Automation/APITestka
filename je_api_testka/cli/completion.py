@@ -7,7 +7,7 @@ Each script enumerates the top-level subcommands of ``apitestka``.
 from __future__ import annotations
 
 SUBCOMMANDS = (
-    "run", "create", "mock", "import", "repl", "summary", "scaffold", "completion", "mcp", "openapi",
+    "run", "create", "mock", "import", "repl", "summary", "scaffold", "completion", "mcp", "openapi", "contract",
 )
 SUPPORTED_SHELLS = ("bash", "zsh", "fish", "powershell")
 

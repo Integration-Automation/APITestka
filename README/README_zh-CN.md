@@ -33,6 +33,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
   - [CLI / 开发体验](#cli--开发体验)
   - [安全检测](#安全检测)
   - [OpenAPI 反推](#openapi-反推)
+  - [契约测试](#契约测试)
   - [GUI](#gui)
   - [可插拔 AI 后端](#可插拔-ai-后端)
 - [Claude 的 MCP Server](#claude-的-mcp-server)
@@ -53,13 +54,14 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 | **数据层** | 变量存储、`{{var}}` 模板、CSV/JSON 数据驱动、环境配置、假数据 |
 | **断言** | 字段断言、JSON Schema、JSONPath、Snapshot、结构化 diff、OpenAPI contract drift、响应时间 SLA |
 | **连接** | mTLS、代理、DNS override、VCR-style cassette 录制/回放 |
-| **模拟服务器** | 静态、动态、stateful、故障注入、OpenAPI 驱动、Jinja 模板、Webhook 接收、record-replay 代理 |
+| **模拟服务器** | 静态、动态、stateful、故障注入、OpenAPI 驱动、Jinja 模板、Webhook 接收、record-replay 代理、WebSocket 与 gRPC 端点 |
 | **Runner** | 顺序与并行、Tag 过滤、Dependency-aware 排序、Retry 策略 |
 | **报告** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite 趋势库 / Run diff |
 | **生态集成** | Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR 导入、OpenAPI / Postman 导入 |
 | **CLI / DX** | 子命令式 CLI、REPL、终端摘要、Shell completion、Scaffold |
 | **安全** | Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS / Rate limit / SSRF probe、pip-audit、Fuzz |
 | **Spec 反推** | 测试记录 → OpenAPI、JSON Schema 推断、OpenAPI changelog |
+| **契约测试** | 从测试运行生成 Pact v2 消费者契约、提供端验证、与 OpenAPI 双向比较 |
 | **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback |
 | **MCP** | 一级支持 Claude Code,将框架作为 MCP 工具暴露 |
 | **GUI** | 可选 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI |
@@ -349,6 +351,7 @@ apitestka completion bash               # source >> ~/.bashrc
 apitestka mcp                           # 走 stdio 启动 MCP server
 apitestka openapi --report run_success.json -o openapi.json   # 从保存的运行结果反推规格
 apitestka openapi --run actions.json    # 先运行再打印反推的规格
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # 见契约测试
 ```
 
 ### 安全检测
@@ -384,6 +387,42 @@ openapi_changelog(prev_spec, current_spec)           # markdown changelog
 查询参数名称变成 `in: query` 参数,JSON 或文本内容变成响应与请求体的 schema。
 保存的报告是 `generate_json_report` 生成的 `<name>_success.json`;`AT_export_openapi`
 命令与 `apitestka openapi` 也能读取它。
+
+### 契约测试
+
+Pact 风格的双向消费者契约(`je_api_testka.contract`)。消费端的测试运行会变成 Pact v2 文件格式的
+契约,可以直接发送到 Pact Broker 或 Pactflow。响应体默认带 `type` 匹配规则:提供端必须返回相同的
+结构与值的类型,而不是相同的值。契约接着从两边检查:
+
+- **提供端验证**:把每个交互重放到运行中的提供端,检查状态码相同、契约列出的 header 都存在
+  (`Content-Type` 只比较 media type)、响应体符合匹配规则(`type`、`regex`、`min`;对象可以多带字段)。
+  提供端状态(`providerState`)通过 Python 函数或设置 URL 建立,设置 URL 会收到
+  `{"consumer": ..., "state": ...}`。
+- **双向检查**:不用启动提供端,直接把契约和提供端的 OpenAPI 文档比较:operation 存在(路径模板可匹配)、
+  查询参数已声明且必填的已发送、请求体符合 schema、状态码已声明(完全相同、`2XX` 或 `default`)、
+  响应体符合 schema(`$ref`、`allOf` / `anyOf` / `oneOf`、`nullable`)。提供端用自己的测试运行
+  保持 OpenAPI 文档正确,例如用 `apitestka openapi`。
+
+```python
+from je_api_testka.contract import write_contract, verify_contract, check_contract_against_openapi
+
+# 消费端:测试运行(当前记录加上保存的报告)变成契约
+write_contract("pacts/web-shop.json", consumer="web", provider="shop", report_paths=["run_success.json"])
+# 提供端:把契约重放到运行中的提供端
+verify_contract("pacts/web-shop.json", base_url="http://localhost:8000")
+# 双向:不用提供端,直接和它的 OpenAPI 文档比较
+check_contract_against_openapi("pacts/web-shop.json", "openapi.json")
+```
+
+```bash
+apitestka contract record --report run_success.json --consumer web --provider shop -o pacts/web-shop.json
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000
+apitestka contract compare pacts/web-shop.json openapi.json
+```
+
+`verify` 与 `compare` 会打印报告(`--json` 输出 JSON),契约不成立时退出码为 1。JSON action:
+`AT_write_contract`、`AT_verify_contract`、`AT_check_contract_against_openapi`(后两者失败时该 action
+会带着报告失败)。
 
 ### GUI
 
@@ -463,6 +502,7 @@ je_api_testka/
 ├── ai/                      # 可插拔 AI 后端 + 周边
 ├── cli/                     # apitestka CLI 子命令、REPL、shell completion
 ├── connection/              # ConnectionOptions、DNS override、Cassette
+├── contract/                # Pact 风格消费者契约、提供端验证、OpenAPI 比较
 ├── data/                    # VariableStore、template、faker、env profile
 ├── diff/                    # Response diff / contract drift / SLA
 ├── graphql_wrapper/         # GraphQL helper

@@ -23,8 +23,12 @@ JSON_MEDIA_TYPE: str = "application/json"
 TEXT_MEDIA_TYPE: str = "text/plain"
 
 
-def _media_sample(raw: Any) -> Optional[Tuple[str, Any]]:
-    """Return ``(media type, sample)`` for a body, or ``None`` when it is empty."""
+def decode_body(raw: Any) -> Optional[Tuple[str, Any]]:
+    """
+    Return ``(media type, value)`` for a recorded body, or ``None`` when it is empty or not UTF-8.
+
+    JSON text becomes ``("application/json", parsed value)``; any other text ``("text/plain", text)``.
+    """
     if isinstance(raw, (bytes, bytearray)):
         try:
             raw = raw.decode("utf-8")
@@ -40,7 +44,7 @@ def _media_sample(raw: Any) -> Optional[Tuple[str, Any]]:
 
 def _content(raw: Any) -> Optional[dict]:
     """Return an OpenAPI ``content`` map for a body, or ``None`` when it is empty."""
-    sample = _media_sample(raw)
+    sample = decode_body(raw)
     if sample is None:
         return None
     media_type, value = sample

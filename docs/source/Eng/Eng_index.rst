@@ -30,7 +30,7 @@ Features
      - mTLS, proxies, DNS override, VCR-style cassette record/replay
    * - **Mock server**
      - Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja
-       templating, webhook receiver, record-replay proxy
+       templating, webhook receiver, record-replay proxy, WebSocket and gRPC endpoints
    * - **Runner**
      - Sequential & parallel execution, tag filters, dependency-aware
        ordering, retry policies
@@ -47,6 +47,9 @@ Features
        rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs
    * - **Spec inference**
      - Test record → OpenAPI, JSON Schema inference, OpenAPI changelog
+   * - **Contract testing**
+     - Pact v2 consumer contracts from test runs, provider verification,
+       bidirectional check against OpenAPI
    * - **AI**
      - Pluggable backend with deterministic fallback for test generation,
        fake data, failure classification
@@ -68,6 +71,7 @@ Features
    doc/data_layer/data_layer_doc
    doc/assertion/assertion_doc
    doc/diff/diff_doc
+   doc/contract/contract_doc
    doc/connection/connection_doc
    doc/runner/runner_doc
    doc/report/report_doc

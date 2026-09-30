@@ -34,6 +34,7 @@ server for Claude, and more.
   - [CLI / Developer Experience](#cli--developer-experience)
   - [Security Probes](#security-probes)
   - [OpenAPI Inference](#openapi-inference)
+  - [Contract Testing](#contract-testing)
   - [GUI](#gui)
   - [Pluggable AI Backend](#pluggable-ai-backend)
 - [MCP Server for Claude](#mcp-server-for-claude)
@@ -54,13 +55,14 @@ server for Claude, and more.
 | **Data layer** | Variable store, `{{var}}` templating, CSV/JSON data-driven loops, env profiles, fake data |
 | **Assertions** | Field assertions, JSON Schema, JSONPath, snapshot, structural diffs, OpenAPI contract drift, response-time SLAs |
 | **Connection** | mTLS, proxies, DNS override, VCR-style cassette record/replay |
-| **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy |
+| **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy, WebSocket and gRPC endpoints |
 | **Runner** | Sequential & parallel execution, tag filters, dependency-aware ordering, retry policies |
 | **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff |
 | **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer |
 | **CLI / DX** | Subcommand CLI, REPL, terminal summary, shell completion, scaffold |
 | **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
 | **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog |
+| **Contract testing** | Pact v2 consumer contracts from test runs, provider verification, bidirectional check against OpenAPI |
 | **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification |
 | **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
 | **GUI** | Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed |
@@ -353,6 +355,7 @@ apitestka completion bash               # source >> ~/.bashrc
 apitestka mcp                           # MCP server over stdio
 apitestka openapi --report run_success.json -o openapi.json   # infer a spec from a saved run
 apitestka openapi --run actions.json    # run first, print the inferred spec
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # see Contract Testing
 ```
 
 ### Security Probes
@@ -389,6 +392,45 @@ a response entry, query parameter names become `in: query` parameters, and JSON 
 bodies become response and request-body schemas. A saved report is the
 `<name>_success.json` file from `generate_json_report`; the `AT_export_openapi` command and
 `apitestka openapi` read it too.
+
+### Contract Testing
+
+Pact-style, bidirectional consumer contracts (`je_api_testka.contract`). The consumer's test run
+becomes a contract in the Pact v2 file format, so it can go to a Pact Broker or Pactflow as it is. Every
+response body gets a `type` matching rule by default: the provider must return the same structure
+and value types, not the same values. The contract is then checked from two sides:
+
+- **Provider verification** replays each interaction against a running provider: equal status,
+  the contract's headers present (`Content-Type` by media type), and the body satisfying the
+  matching rules (`type`, `regex`, `min`; objects may carry extra keys). Provider states
+  (`providerState`) are set up through a Python callable or a setup URL that receives
+  `{"consumer": ..., "state": ...}`.
+- **Bidirectional check** compares the contract with the provider's OpenAPI document without
+  running the provider: the operation exists (path templates match), query parameters are declared
+  and required ones sent, the request body fits its schema, the status is declared (exact, `2XX` or
+  `default`), and the response body fits its schema (`$ref`, `allOf` / `anyOf` / `oneOf`, `nullable`).
+  The provider keeps its OpenAPI document honest from its own test run, e.g. with `apitestka openapi`.
+
+```python
+from je_api_testka.contract import write_contract, verify_contract, check_contract_against_openapi
+
+# consumer: its test run (current record plus saved reports) becomes the contract
+write_contract("pacts/web-shop.json", consumer="web", provider="shop", report_paths=["run_success.json"])
+# provider: replay the contract against a running provider
+verify_contract("pacts/web-shop.json", base_url="http://localhost:8000")
+# bidirectional: check the contract against the provider's OpenAPI document, no provider needed
+check_contract_against_openapi("pacts/web-shop.json", "openapi.json")
+```
+
+```bash
+apitestka contract record --report run_success.json --consumer web --provider shop -o pacts/web-shop.json
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000
+apitestka contract compare pacts/web-shop.json openapi.json
+```
+
+`verify` and `compare` print a report (`--json` for JSON) and exit with 1 when the contract does not
+hold. JSON actions: `AT_write_contract`, `AT_verify_contract`, `AT_check_contract_against_openapi`
+(the last two fail the action with the report).
 
 ### GUI
 
@@ -470,6 +512,7 @@ je_api_testka/
 ├── ai/                      # Pluggable AI backend + helpers
 ├── cli/                     # apitestka CLI subcommands + REPL + completions
 ├── connection/              # ConnectionOptions, DNS override, Cassette
+├── contract/                # Pact-style consumer contracts, provider verification, OpenAPI check
 ├── data/                    # VariableStore, templates, faker, env profiles
 ├── diff/                    # Response diff / contract drift / SLA
 ├── graphql_wrapper/         # GraphQL helper

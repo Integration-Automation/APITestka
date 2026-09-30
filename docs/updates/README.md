@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-04 | 2026-10-01 | Pact-style bidirectional contract testing | #done #contract | [2026-10](2026-10.md) |
 | U-20261001-03 | 2026-10-01 | Mock server serves WebSocket and gRPC endpoints | #done #mock #grpc #websocket | [2026-10](2026-10.md) |
 | U-20261001-02 | 2026-10-01 | Imported, scaffolded and AI-generated actions run as they are | #bugfix #executor | [2026-10](2026-10.md) |
 | U-20261001-01 | 2026-10-01 | records_to_openapi reachable from the CLI and MCP | #done #openapi #cli #mcp | [2026-10](2026-10.md) |
@@ -89,5 +90,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 3 |
+| [2026-10.md](2026-10.md) | 2026-10 | 4 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

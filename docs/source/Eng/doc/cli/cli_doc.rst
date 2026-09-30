@@ -80,6 +80,8 @@ The ``apitestka`` command (installed with the package) groups the everyday tasks
      - Run the MCP server over stdio
    * - ``openapi``
      - Infer an OpenAPI document from recorded traffic (below)
+   * - ``contract record|verify|compare``
+     - Record, verify and compare Pact-style consumer contracts (see Contract Testing)
 
 Inferring an OpenAPI document
 -----------------------------

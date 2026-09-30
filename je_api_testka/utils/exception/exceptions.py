@@ -156,3 +156,7 @@ class CallbackExecutorException(APITesterException):
 
 class MockServerException(APITesterException):
     pass
+
+
+class APIContractException(APITesterException):
+    """A consumer contract is malformed, or it does not hold against a provider or its OpenAPI document."""
