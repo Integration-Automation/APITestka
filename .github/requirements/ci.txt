@@ -499,6 +499,10 @@ itsdangerous==2.2.0 \
     --hash=sha256:c6242fc49e35958c8b15141343aa660db5fc54d4f13a1db01a3f5891b98700ef \
     --hash=sha256:e0050c0b7da1eea53ffaf149c0cfbb5c6e2e2b69c4bef22c81fa6eb73e5f6173
     # via flask
+je-action-core==0.0.1 \
+    --hash=sha256:6d1bc94e793f2e682bfae536824dfcff3322f0049dce5109df18fdd440a31f94 \
+    --hash=sha256:84361b5b9bfa4489c15b3e5715c6e6d080f4fa25e1a10112806525bf00df241e
+    # via -r .github/requirements/ci.in
 jinja2==3.1.6 \
     --hash=sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d \
     --hash=sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67

@@ -170,8 +170,8 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
   - **callback executor**: legacy checks, a failure returns `None`;
   - **socket server**: reads the 8192-byte prefix, answers every error.
 
-  Until the package is on PyPI, `pyproject.toml` / `dev.toml` (`[tool.uv.sources]`) and the CI install it from
-  GitHub at a fixed commit (`progress.md` #16). ActionCore lists APITestka in its own §6.
+  It is a PyPI dependency (`je_action_core>=0.0.1`; hash-locked in `.github/requirements/ci.txt`). ActionCore lists
+  APITestka in its own §6.
 - **Sibling executors** share the action-list shape and the `Return_Data_Over_JE` socket terminator,
   but differ in command prefix (`AT_` here, `LD_` LoadDensity, `MT_` MailThunder, `FA_` FileAutomation),
   dict key (`api_testka` here) and builtins policy: APITestka registers no Python builtins (explicit

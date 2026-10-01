@@ -11,8 +11,3 @@ Cross-repo and workspace items live in `D:\Codes\progress.md` (relevant here: X-
   - Docs to update: the "Package gate" bullet in the three READMEs, the "Package Gate" section of `docs/source/{Eng,Zh}/doc/executor/executor_doc.rst`, and `architecture.md` §7.
   - Timing: the warning is first released in the version after 0.0.145 (`origin/main` `pyproject.toml`). Flip once two releases after that one have shipped it.
   - Decide first: how a user who only runs action files (`apitestka run`, `python -m je_api_testka -e`, the socket server) allows a package once there is no Python host to call `executor.allow_packages(...)`.
-
-- **#16** [BLOCKED: je_action_core on PyPI, ActionCore `progress.md` #1] Install `je_action_core` from PyPI instead of the GitHub pin.
-  - Remove `[tool.uv.sources]` from `pyproject.toml` and `dev.toml`, then run `uv lock`.
-  - Add `je_action_core` to `.github/requirements/ci.in`, regenerate `ci.txt`, and drop the "Install je_action_core" step in `.github/workflows/ci.yml`.
-  - Until this is done, do not release `main`: the published metadata requires `je_action_core`, and PyPI does not have it yet.

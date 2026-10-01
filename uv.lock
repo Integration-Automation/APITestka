@@ -646,8 +646,12 @@ wheels = [
 
 [[package]]
 name = "je-action-core"
-version = "0.0.0"
-source = { git = "https://github.com/Integration-Automation/ActionCore?rev=19bfe0a7c907af00c6a59af3de04448999b42e44#19bfe0a7c907af00c6a59af3de04448999b42e44" }
+version = "0.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/8a/7e4e4a165e4b78456109904a72c1c352949504f6835251c73f920c5c8dc6/je_action_core-0.0.1.tar.gz", hash = "sha256:84361b5b9bfa4489c15b3e5715c6e6d080f4fa25e1a10112806525bf00df241e", size = 29714, upload-time = "2026-10-01T05:33:56.836Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0e/74/b07d9438e7a6c962ec219f16da28b072fa85c1cc6d8ba35e710eaf1c7499/je_action_core-0.0.1-py3-none-any.whl", hash = "sha256:6d1bc94e793f2e682bfae536824dfcff3322f0049dce5109df18fdd440a31f94", size = 22910, upload-time = "2026-10-01T05:33:55.704Z" },
+]
 
 [[package]]
 name = "je-api-testka"
@@ -699,7 +703,7 @@ requires-dist = [
     { name = "flask" },
     { name = "grpcio", marker = "extra == 'grpc'", specifier = ">=1.60" },
     { name = "httpx" },
-    { name = "je-action-core", git = "https://github.com/Integration-Automation/ActionCore?rev=19bfe0a7c907af00c6a59af3de04448999b42e44" },
+    { name = "je-action-core", specifier = ">=0.0.1" },
     { name = "jsonpath-ng", marker = "extra == 'schema'", specifier = ">=1.6" },
     { name = "jsonschema", marker = "extra == 'schema'", specifier = ">=4.0" },
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.28.1,<3" },
