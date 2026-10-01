@@ -4,7 +4,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Optional
-from xml.parsers.expat import ExpatError
 
 from PySide6.QtWidgets import QFileDialog, QLineEdit, QWidget
 
@@ -89,7 +88,7 @@ class ToolsPage(BasePage):
         try:
             target = Path(path)
             target.write_text(reformat_xml_file(target.read_text(encoding="utf-8")), encoding="utf-8")
-        except (OSError, ExpatError) as error:
+        except (OSError, APITesterException) as error:
             log(f"{tr('error')}: {error}")
             return
         log(tr("written").format(path=path))

@@ -1,7 +1,9 @@
-from defusedxml import DefusedXmlException, ElementTree, minidom
 # _WriterElementTree is used only for write_xml serialization (ElementTree(...).write).
-# Parsing is delegated to defusedxml above.
-from xml.etree import ElementTree as _WriterElementTree  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+# Parsing is delegated to defusedxml below.
+from xml.etree import ElementTree as _WriterElementTree  # nosec B405  # nosemgrep
+from xml.parsers.expat import ExpatError  # nosec B407 - only the exception class; parsing uses defusedxml
+
+from defusedxml import DefusedXmlException, ElementTree, minidom
 
 from je_api_testka.utils.exception.exception_tags import cant_read_xml_error, xml_type_error
 from je_api_testka.utils.exception.exceptions import APITesterXMLException, APITesterXMLTypeException
@@ -12,15 +14,20 @@ from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 _PARSE_ERRORS = (ElementTree.ParseError, DefusedXmlException)
 
 
-def reformat_xml_file(xml_string: str):
+def reformat_xml_file(xml_string: str) -> str:
     """
     將 XML 字串重新排版為易讀格式
     Reformat XML string into pretty-printed format
 
     :param xml_string: 原始 XML 字串 / Raw XML string
     :return: 格式化後的 XML 字串 / Pretty-printed XML string
+    :raises APITesterXMLException: for malformed XML, or XML that defusedxml refuses
+        (entity expansion, external entities, DTDs); the parser's error is the cause.
     """
-    dom = minidom.parseString(xml_string)
+    try:
+        dom = minidom.parseString(xml_string)
+    except (ExpatError, DefusedXmlException) as error:
+        raise APITesterXMLException(cant_read_xml_error) from error
     return dom.toprettyxml()
 
 

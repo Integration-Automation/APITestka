@@ -1,6 +1,6 @@
 import pytest
 
-from je_api_testka import XMLParser, dict_to_elements_tree, elements_tree_to_dict
+from je_api_testka import XMLParser, dict_to_elements_tree, elements_tree_to_dict, reformat_xml_file
 from je_api_testka.utils.exception.exceptions import APITesterXMLException
 
 _TEST_XML_STRING = """<?xml version="1.0"?>
@@ -83,3 +83,15 @@ def test_xml_parser_from_file_reads_a_file(tmp_path):
     path = tmp_path / "data.xml"
     path.write_text(_TEST_XML_STRING, encoding="utf-8")
     assert XMLParser(str(path), "file").xml_root.tag == "data"
+
+
+@pytest.mark.parametrize("text", ["<data><unclosed></data>", _ENTITY_BOMB], ids=["malformed", "entity-expansion"])
+def test_reformat_xml_file_rejects_bad_xml(text):
+    # Regression: malformed XML leaked ExpatError and refused XML leaked DefusedXmlException.
+    with pytest.raises(APITesterXMLException) as caught:
+        reformat_xml_file(text)
+    assert caught.value.__cause__ is not None
+
+
+def test_reformat_xml_file_pretty_prints():
+    assert reformat_xml_file("<data><a>1</a></data>").splitlines()[1:3] == ["<data>", "\t<a>1</a>"]
