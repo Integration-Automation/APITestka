@@ -547,7 +547,8 @@ A sidebar leads to one page per feature, with a console underneath:
   **Tools** (JSON, XML, project scaffolding).
 
 The window has light and dark themes (plain Qt style sheets; **Theme** follows the system by default) and
-four languages: English, 繁體中文, 简体中文 and 日本語. `je_api_testka.gui.main_widget.APITestkaWidget` is
+four languages: English, 繁體中文, 简体中文 and 日本語. Switching the language keeps the request history,
+the environments and a running mock server. `je_api_testka.gui.main_widget.APITestkaWidget` is
 the embeddable widget, and PyBreeze embeds it. The logic behind the pages (`request_model`,
 `history_panel`, `env_manager_model`) has no Qt dependency.
 

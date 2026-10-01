@@ -528,7 +528,7 @@ python -m je_api_testka.gui.main_window
   **趋势**(延迟异常与 HTML 报告)与 **工具**(JSON、XML、创建项目)。
 
 窗口有浅色与深色主题(纯 Qt style sheet;**主题** 默认跟随系统),以及 English、繁體中文、简体中文、日本語四种语言。
-`je_api_testka.gui.main_widget.APITestkaWidget` 是可嵌入的 widget,PyBreeze 就是嵌入它。页面背后的逻辑
+切换语言会保留请求历史、环境与正在运行的模拟服务器。`je_api_testka.gui.main_widget.APITestkaWidget` 是可嵌入的 widget,PyBreeze 就是嵌入它。页面背后的逻辑
 (`request_model`、`history_panel`、`env_manager_model`)不依赖 Qt。
 
 ### 可插拔 AI 后端

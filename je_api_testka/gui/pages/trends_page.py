@@ -44,6 +44,7 @@ class TrendsPage(BasePage):
             primary_button(tr("open_report"), self.open_report)]))
         self.table = QTableWidget(0, len(VERDICT_COLUMNS))
         self.table.setHorizontalHeaderLabels([tr(f"column_{name}") for name in VERDICT_COLUMNS])
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.verticalHeader().setVisible(False)

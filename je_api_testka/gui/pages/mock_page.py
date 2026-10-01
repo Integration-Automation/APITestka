@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from PySide6.QtWidgets import QLabel, QLineEdit, QSpinBox, QWidget
 
@@ -13,6 +13,9 @@ from je_api_testka.utils.mock_server.mock_config import apply_mock_config, read_
 DEFAULT_MOCK_HOST: str = "127.0.0.1"
 DEFAULT_MOCK_PORT: int = 8090
 _MAX_PORT: int = 65535
+# HTTP mocks serving in this process. They outlive the page (a language switch rebuilds it), so a rebuilt
+# page still shows them; an entry goes when its server stops or fails to start.
+_serving: List[Tuple[str, int]] = []
 
 
 def start_mock(host: str, port: int, config_path: str = "") -> FlaskMockServer:
@@ -24,7 +27,11 @@ def start_mock(host: str, port: int, config_path: str = "") -> FlaskMockServer:
         for kind, address in endpoints.items():
             log(f"{kind}: {address}")
     log(tr("mock_listening").format(host=host, port=port))
-    server.start_mock_server()
+    _serving.append((host, port))
+    try:
+        server.start_mock_server()
+    finally:
+        _serving.remove((host, port))
     return server
 
 
@@ -45,6 +52,10 @@ class MockPage(BasePage):
             (tr("mock_config_file"), self.config_field), (tr("status"), self.status_label),
         ], [plain_button(tr("stop_protocol_mocks"), self.stop_protocol_mocks), self.start_button]))
         self.body.addStretch(1)
+        if _serving:
+            host, port = _serving[-1]
+            self.start_button.setEnabled(False)
+            self.status_label.setText(tr("mock_running").format(host=host, port=port))
 
     def start(self) -> None:
         """Start the mock in the background; the Flask server then runs until the application exits."""

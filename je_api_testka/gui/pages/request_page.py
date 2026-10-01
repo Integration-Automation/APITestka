@@ -70,6 +70,7 @@ class RequestPage(QWidget):
         splitter.setSizes([180, 420, 520])
         layout.addWidget(splitter, stretch=1)
         self.refresh_environments()
+        self._refresh_history()
 
     def _build_toolbar(self) -> QHBoxLayout:
         row = QHBoxLayout()

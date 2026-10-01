@@ -46,10 +46,16 @@ MAX_CONSOLE_BLOCKS: int = 5000
 class APITestkaWidget(QWidget):
     """Sidebar navigation over the feature pages, with the console underneath."""
 
-    def __init__(self, parent: Optional[QWidget] = None) -> None:
+    def __init__(self, parent: Optional[QWidget] = None, *, history: Optional[HistoryPanelModel] = None,
+                 environments: Optional[EnvManagerModel] = None) -> None:
+        """
+        :param history: request history to show and extend (default: a new, empty one).
+        :param environments: environments to edit and use (default: a new, empty set). The standalone window
+            passes the same two models to every rebuild, so a language switch keeps them.
+        """
         super().__init__(parent)
-        self.history = HistoryPanelModel()
-        self.environments = EnvManagerModel()
+        self.history = history if history is not None else HistoryPanelModel()
+        self.environments = environments if environments is not None else EnvManagerModel()
         self.pages: Dict[str, QWidget] = self._build_pages()
         self.sidebar = QListWidget()
         self.sidebar.setObjectName("sidebar")

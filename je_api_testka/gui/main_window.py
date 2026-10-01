@@ -11,6 +11,8 @@ from typing import Optional
 from PySide6.QtGui import QAction, QActionGroup
 from PySide6.QtWidgets import QApplication, QMainWindow, QMenu
 
+from je_api_testka.gui.env_manager_model import EnvManagerModel
+from je_api_testka.gui.history_panel import HistoryPanelModel
 from je_api_testka.gui.language_wrapper.multi_language_wrapper import language_wrapper
 from je_api_testka.gui.main_widget import APITestkaWidget
 from je_api_testka.gui.theme import THEME_DARK, THEME_LIGHT, THEME_SYSTEM, build_stylesheet, resolve_theme
@@ -24,7 +26,10 @@ DEFAULT_SIZE = (1280, 820)
 
 
 class APITestkaUI(QMainWindow):
-    """Main window; switching the language rebuilds the widget, switching the theme restyles it."""
+    """
+    Main window; switching the language rebuilds the widget, switching the theme restyles it.
+    The request history and the environments belong to the window, so a rebuild keeps them.
+    """
 
     def __init__(self, theme: str = THEME_SYSTEM) -> None:
         super().__init__()
@@ -33,13 +38,15 @@ class APITestkaUI(QMainWindow):
             from ctypes import windll  # Windows only: group the taskbar icon under this app
             windll.shell32.SetCurrentProcessExplicitAppUserModelID(tr("application_name"))
         self.resize(*DEFAULT_SIZE)
+        self.history = HistoryPanelModel()
+        self.environments = EnvManagerModel()
         self.api_testka_widget: Optional[APITestkaWidget] = None
         self._rebuild()
         self.apply_theme(theme)
 
     def _rebuild(self) -> None:
         self.setWindowTitle(tr("application_name"))
-        self.api_testka_widget = APITestkaWidget()
+        self.api_testka_widget = APITestkaWidget(history=self.history, environments=self.environments)
         self.setCentralWidget(self.api_testka_widget)
         self.menuBar().clear()
         self._add_choice_menu(tr("menu_language"), LANGUAGES, language_wrapper.language, self.switch_language)

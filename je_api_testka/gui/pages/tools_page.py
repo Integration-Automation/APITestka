@@ -55,7 +55,7 @@ class ToolsPage(BasePage):
         """Pretty-print the JSON input into the output box."""
         try:
             self.json_output.setPlainText(reformat_json(self.json_input.toPlainText()))
-        except APITesterException as error:
+        except (APITesterException, ValueError) as error:  # invalid JSON raises json.JSONDecodeError
             self.json_output.setPlainText(f"{tr('error')}: {error}")
 
     def read_json(self) -> None:

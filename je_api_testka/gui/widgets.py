@@ -2,17 +2,19 @@
 Small Qt building blocks shared by the GUI pages.
 
 * :func:`tr` looks a key up in the active language.
-* :class:`TaskThread` runs a callable off the UI thread and reports back with signals.
+* :class:`TaskThread` runs a callable on a daemon worker thread and reports back with signals.
 * :class:`FileField`, :func:`page_title`, :func:`primary_button`, :func:`monospace_view`
   and :func:`form_group` keep the page modules short and consistent.
 * :class:`BasePage` gives every page a title, a scrollable body and ``run_task``.
 """
 from __future__ import annotations
 
+import threading
 import traceback
 from typing import Callable, Iterable, List, Optional, Sequence, Tuple
 
-from PySide6.QtCore import QThread, Signal
+import shiboken6
+from PySide6.QtCore import QObject, Signal, SignalInstance
 from PySide6.QtGui import QFontDatabase
 from PySide6.QtWidgets import (
     QFileDialog,
@@ -49,25 +51,57 @@ def log(message: str) -> None:
     api_testka_ui_queue.put(message)
 
 
-class TaskThread(QThread):
-    """Run ``function`` in a worker thread; ``succeeded`` carries its result, ``failed`` the error text."""
+class TaskThread(QObject):
+    """
+    Run ``function`` on a daemon worker thread; ``succeeded`` carries its result, ``failed`` the error
+    text, and ``finished`` follows either. The signals are delivered on the UI thread.
+
+    The worker is a daemon ``threading.Thread``, not a ``QThread``: a language switch rebuilds the pages and
+    closing the window destroys them while a task (the mock server never ends) may still run, and destroying
+    a running ``QThread`` aborts the process. When the owning page is gone, the results are dropped.
+    """
 
     succeeded = Signal(object)
     failed = Signal(str)
+    finished = Signal()
 
     def __init__(self, function: Callable[[], object], parent: Optional[QWidget] = None) -> None:
         super().__init__(parent)
         self._function = function
+        self._worker = threading.Thread(target=self._run, name="apitestka-gui-task", daemon=True)
 
-    def run(self) -> None:
+    def start(self) -> None:
+        """Start the worker."""
+        self._worker.start()
+
+    def wait(self, timeout_ms: int) -> bool:
+        """Block up to ``timeout_ms`` for the worker; True when it has finished."""
+        self._worker.join(timeout_ms / 1000)
+        return not self._worker.is_alive()
+
+    def isFinished(self) -> bool:  # noqa: N802 - keeps QThread's name for the pages and tests
+        """True once the worker has run and returned."""
+        return self._worker.ident is not None and not self._worker.is_alive()
+
+    def _run(self) -> None:
         # A worker must never die silently: every error is logged and handed back to the page.
         try:
             result = self._function()
         except Exception as error:  # noqa: BLE001 - reported to the UI and the log below
             apitestka_logger.error(f"GUI task failed: {error!r}\n{traceback.format_exc()}")
-            self.failed.emit(str(error) or repr(error))
+            self._emit(self.failed, str(error) or repr(error))
+        else:
+            self._emit(self.succeeded, result)
+        self._emit(self.finished)
+
+    def _emit(self, signal: SignalInstance, *args: object) -> None:
+        if not shiboken6.isValid(self):
             return
-        self.succeeded.emit(result)
+        try:
+            signal.emit(*args)
+        except RuntimeError:
+            # The page, and this object with it, was deleted between the check and the emit.
+            apitestka_logger.info("GUI task finished after its page was closed; result dropped")
 
 
 class FileField(QWidget):

@@ -3,7 +3,10 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import sys
 import time
+from pathlib import Path
 
 import pytest
 
@@ -16,10 +19,12 @@ else:
     QtWidgets = pytest.importorskip("PySide6.QtWidgets", exc_type=ImportError)
 
 from je_api_testka.data.variable_store import variable_store  # noqa: E402
+from je_api_testka.gui.history_panel import HistoryEntry  # noqa: E402
 from je_api_testka.gui.language_wrapper.multi_language_wrapper import language_wrapper  # noqa: E402
 from je_api_testka.gui.main_widget import PAGE_KEYS, APITestkaWidget  # noqa: E402
 from je_api_testka.gui.main_window import APITestkaUI  # noqa: E402
 from je_api_testka.gui.message_queue import api_testka_ui_queue  # noqa: E402
+from je_api_testka.gui.pages import mock_page  # noqa: E402
 from je_api_testka.gui.pages.executor_page import format_results  # noqa: E402
 from je_api_testka.gui.pages.openapi_page import generated_tests, spec_check_text  # noqa: E402
 from je_api_testka.gui.pages.records_page import record_rows  # noqa: E402
@@ -144,6 +149,22 @@ def test_executor_page_runs_typed_actions(qapp, widget):
     assert _wait_until(qapp, lambda: "AT_fake_uuid" in page.results_view.toPlainText())
 
 
+
+def test_tools_page_reports_invalid_json(widget):
+    page = widget.pages["page_tools"]
+    page.json_input.setPlainText("{nope")
+    page.format_json()
+    assert page.json_output.toPlainText().startswith("Error:")
+
+
+@pytest.mark.parametrize(("key", "stretched"), [("page_records", 1), ("page_trends", 0)])
+def test_table_columns_fit_their_headers(widget, key, stretched):
+    modes = QtWidgets.QHeaderView.ResizeMode
+    header = widget.pages[key].table.horizontalHeader()
+    for column in range(header.count()):
+        expected = modes.Stretch if column == stretched else modes.ResizeToContents
+        assert header.sectionResizeMode(column) == expected
+
 def test_page_helpers():
     assert format_results({"execute: ['AT_x']": 1}) == "execute: ['AT_x']\n  => 1"
     rows = record_rows([{"request_method": "POST", "request_url": "u", "status_code": 201}])
@@ -157,7 +178,8 @@ def test_openapi_page_helpers(tmp_path):
     spec.write_text(json.dumps({"servers": [{"url": "https://api.invalid"}],
                                 "paths": {"/a": {"get": {"responses": {"200": {}}}}}}), encoding="utf-8")
     assert "[UNTESTED] GET /a" in spec_check_text(str(spec), 0.0, str(tmp_path / "missing.json"))
-    assert json.loads((tmp_path / "missing.json").read_text(encoding="utf-8"))[0][1]["test_url"] == "https://api.invalid/a"
+    missing = json.loads((tmp_path / "missing.json").read_text(encoding="utf-8"))
+    assert missing[0][1]["test_url"] == "https://api.invalid/a"
     assert json.loads(generated_tests(str(spec), "noop"))[0][0] == "AT_test_api_method"
 
 
@@ -176,3 +198,69 @@ def test_window_languages_and_themes(qapp):
         language_wrapper.reset_language("English")
         window.deleteLater()
         qapp.processEvents()
+
+
+_PAGE_DELETED_WHILE_TASK_RUNS = """
+import threading
+from PySide6.QtCore import QEvent
+from PySide6.QtWidgets import QApplication
+from je_api_testka.gui.widgets import BasePage
+
+app = QApplication([])
+page = BasePage("t")
+release = threading.Event()
+task = page.run_task(release.wait, print)
+page.deleteLater()
+app.sendPostedEvents(None, QEvent.Type.DeferredDelete.value)
+release.set()
+task._worker.join(5)
+app.processEvents()
+page = BasePage("t")
+page.run_task(threading.Event().wait, print)
+print("survived")
+"""
+
+
+def test_deleting_a_page_with_a_running_task_does_not_abort(tmp_path):
+    """A language switch deletes the pages and closing the window ends the process mid-task (the mock server
+    never ends); with a QThread worker both aborted the process."""
+    repository = Path(__file__).resolve().parents[2]
+    environment = {**os.environ, "QT_QPA_PLATFORM": "offscreen", "PYTHONPATH": str(repository)}
+    completed = subprocess.run([sys.executable, "-c", _PAGE_DELETED_WHILE_TASK_RUNS], cwd=tmp_path,
+                               env=environment, capture_output=True, text=True, timeout=60, check=False)
+    assert completed.returncode == 0, completed.stderr[-2000:]
+    assert "survived" in completed.stdout
+
+
+def test_language_switch_keeps_history_and_environments(qapp):
+    window = APITestkaUI(theme="light")
+    try:
+        window.environments.upsert("staging", {"base": "https://staging.invalid"})
+        window.history.push(HistoryEntry("get", "https://api.invalid/a", 200, "5 ms"))
+        window.switch_language("Japanese")
+        pages = window.api_testka_widget.pages
+        assert pages["page_request"].environment_combo.findData("staging") > 0
+        assert pages["page_request"].history_list.count() == 1
+        assert pages["page_environments"].env_list.count() == 1
+    finally:
+        language_wrapper.reset_language("English")
+        window.deleteLater()
+        qapp.processEvents()
+
+
+def test_rebuilt_mock_page_shows_a_mock_still_serving(qapp, monkeypatch):
+    monkeypatch.setattr(mock_page, "_serving", [("127.0.0.1", 18090)])
+    page = mock_page.MockPage()
+    assert "18090" in page.status_label.text()
+    assert not page.start_button.isEnabled()
+    page.deleteLater()
+    qapp.processEvents()
+
+
+def test_a_mock_that_fails_to_start_is_not_listed(monkeypatch):
+    def refuse(_server):
+        raise OSError("address in use")
+    monkeypatch.setattr(mock_page.FlaskMockServer, "start_mock_server", refuse)
+    with pytest.raises(OSError):
+        mock_page.start_mock("127.0.0.1", 18091)
+    assert mock_page._serving == []
