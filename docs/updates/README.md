@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-21 | 2026-10-01 | je_action_core pin moves to 19bfe0a | #build #L-6 | [2026-10](2026-10.md) |
 | U-20261001-20 | 2026-10-01 | Executor and its helpers move to je_action_core | #migration #executor #L-6 | [2026-10](2026-10.md) |
 | U-20261001-19 | 2026-10-01 | Unknown executor commands raise APITesterExecuteException | #bugfix #executor #L-6 | [2026-10](2026-10.md) |
 | U-20261001-18 | 2026-10-01 | GUI checked on a real display; four fixes | #bugfix #gui | [2026-10](2026-10.md) |
@@ -106,5 +107,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 20 |
+| [2026-10.md](2026-10.md) | 2026-10 | 21 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

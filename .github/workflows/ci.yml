@@ -42,7 +42,7 @@ jobs:
       # in the hash-locked ci.txt; install it from GitHub at a fixed commit until it is.
       - name: Install je_action_core
         run: |
-          pip install --no-deps "je_action_core @ git+https://github.com/Integration-Automation/ActionCore@4f5e88d57690a3a675816a46033bf488432b2cb1"
+          pip install --no-deps "je_action_core @ git+https://github.com/Integration-Automation/ActionCore@19bfe0a7c907af00c6a59af3de04448999b42e44"
 
       # PySide6's Qt libraries load these at import; the Ubuntu runner image lacks libEGL.so.1 at least.
       # The list is the ELF NEEDED entries of QtGui, QtWidgets and the offscreen plugin outside the base system.

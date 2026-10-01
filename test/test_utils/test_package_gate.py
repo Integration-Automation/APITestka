@@ -30,7 +30,8 @@ def shared_gate():
 def test_unconfigured_gate_still_loads_but_warns():
     manager = _manager()
     with pytest.warns(DeprecationWarning, match="not on the allowlist"):
-        manager.add_package_to_executor("json")
+        # None, so the AT_add_package_to_executor record stays None (je_action_core U-20261001-03)
+        assert manager.add_package_to_executor("json") is None
     assert "json_dumps" in manager.executor.event_dict
 
 

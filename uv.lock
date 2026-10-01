@@ -647,7 +647,7 @@ wheels = [
 [[package]]
 name = "je-action-core"
 version = "0.0.0"
-source = { git = "https://github.com/Integration-Automation/ActionCore?rev=4f5e88d57690a3a675816a46033bf488432b2cb1#4f5e88d57690a3a675816a46033bf488432b2cb1" }
+source = { git = "https://github.com/Integration-Automation/ActionCore?rev=19bfe0a7c907af00c6a59af3de04448999b42e44#19bfe0a7c907af00c6a59af3de04448999b42e44" }
 
 [[package]]
 name = "je-api-testka"
@@ -699,7 +699,7 @@ requires-dist = [
     { name = "flask" },
     { name = "grpcio", marker = "extra == 'grpc'", specifier = ">=1.60" },
     { name = "httpx" },
-    { name = "je-action-core", git = "https://github.com/Integration-Automation/ActionCore?rev=4f5e88d57690a3a675816a46033bf488432b2cb1" },
+    { name = "je-action-core", git = "https://github.com/Integration-Automation/ActionCore?rev=19bfe0a7c907af00c6a59af3de04448999b42e44" },
     { name = "jsonpath-ng", marker = "extra == 'schema'", specifier = ">=1.6" },
     { name = "jsonschema", marker = "extra == 'schema'", specifier = ">=4.0" },
     { name = "mcp", marker = "extra == 'mcp'", specifier = ">=1.28.1,<3" },
