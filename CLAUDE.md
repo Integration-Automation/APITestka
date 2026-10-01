@@ -226,6 +226,7 @@ Workspace rule shared by every repository under `D:\Codes` (full text: `D:\Codes
 - **Do NOT mention any AI tools, assistants, or co-authors in commit messages**
 - **No `Co-Authored-By` lines referencing AI in commits**
 - Focus on what changed and why, not how it was written
+- Both branches publish to PyPI from CI: a push to `main` releases `je_api_testka` (`publish.yml`), and a push to `dev` that passes the tests and changes what the package ships releases `je_api_testka_dev` (the `publish-dev` job of `ci.yml`, `scripts/dev_release.py`). Never bump a version by hand; the version in `dev.toml` is only a floor
 - Examples:
   - `feat: add HTTP/2 multiplexing support for httpx async backend`
   - `fix: prevent XXE injection in XML report parser`

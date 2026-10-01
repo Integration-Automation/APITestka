@@ -81,6 +81,14 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   language switch keeps them); it applies no style sheet, so an embedding application keeps its own look.
 - **Packaging**: `pyproject.toml` and `dev.toml` (`je_api_testka_dev`) declare the same console scripts,
   `pytest11` entry point and extras; `test/test_utils/test_dev_toml_parity.py` keeps them equal.
+- **PyPI packages**: `je_api_testka` (stable) and `je_api_testka_dev` (dev channel), both published by CI.
+  - Stable: a push to `main` runs `publish.yml`, which bumps `pyproject.toml`, uploads, tags and creates the
+    GitHub release.
+  - Dev: the `publish-dev` job of `ci.yml` runs after the `test` matrix on a push to `dev` (never for `main`, a
+    pull request or the schedule), builds from `dev.toml` and uploads when the commit is still the tip of `dev`
+    and the wheel differs from the newest published one. `scripts/dev_release.py` takes the version from PyPI
+    (newest release plus one patch), so nothing is committed back. The job's build tooling is hash-locked in
+    `.github/requirements/publish.txt`.
 
 ## 4. Main flows
 

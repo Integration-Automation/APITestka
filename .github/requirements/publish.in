@@ -1,0 +1,3 @@
+# What the publish-dev job of ci.yml installs; publish.txt is generated from this file (the command is in ci.yml).
+build
+twine
