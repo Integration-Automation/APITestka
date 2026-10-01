@@ -6,6 +6,7 @@ import json
 import pytest
 
 from je_api_testka import execute_action, generate_json_report
+from je_api_testka import test_api_method_httpx as api_httpx
 from je_api_testka.spec.openapi_export import build_openapi, export_openapi, load_report_records
 from je_api_testka.utils.exception.exceptions import APIJsonReportException
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
@@ -86,3 +87,12 @@ def test_export_through_executor(tmp_path):
     test_record_instance.test_record_list.append({"request_url": "https://x.invalid/a", "status_code": 200})
     execute_action([["AT_export_openapi", {"output_path": str(tmp_path / "spec.json")}]])
     assert "/a" in json.loads((tmp_path / "spec.json").read_text(encoding="utf-8"))["paths"]
+
+
+def test_httpx_record_url_is_text_so_the_export_can_parse_it(mock_url):
+    """httpx used to record an ``httpx.URL`` object, which ``urlparse`` (and so the export) rejected."""
+    api_httpx("get", f"{mock_url}/get?page=1", timeout=30)
+
+    assert isinstance(test_record_instance.test_record_list[-1]["request_url"], str)
+    operation = build_openapi()["paths"]["/get"]["get"]
+    assert operation["parameters"][0]["name"] == "page"

@@ -36,7 +36,7 @@ def get_httpx_data(response: Response,
         "elapsed": response.elapsed,           # 請求耗時 / Request elapsed time
         "request_time_sec": response.elapsed.total_seconds(),  # 耗時秒數 / Elapsed time in seconds
         "request_method": response.request.method,  # 請求方法 / Request method
-        "request_url": response.request.url,        # 請求 URL / Request URL
+        "request_url": str(response.request.url),   # 請求 URL（文字）/ Request URL as text, like requests
         "request_body": "",                         # 請求 Body (預設空) / Request body (default empty)
         "start_time": start_time,                   # 測試開始時間 / Test start time
         "end_time": end_time                        # 測試結束時間 / Test end time

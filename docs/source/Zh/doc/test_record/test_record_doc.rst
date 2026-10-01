@@ -52,7 +52,7 @@
    * - ``request_method``
      - 使用的 HTTP 方法
    * - ``request_url``
-     - 請求 URL
+     - 請求 URL（每個後端都記成文字）
    * - ``request_body``
      - 請求內容
    * - ``start_time``

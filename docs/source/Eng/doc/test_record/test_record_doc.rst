@@ -52,7 +52,7 @@ Each successful record contains the following fields:
    * - ``request_method``
      - HTTP method used
    * - ``request_url``
-     - Request URL
+     - Request URL, as text for every backend
    * - ``request_body``
      - Request body sent
    * - ``start_time``
