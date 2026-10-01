@@ -669,10 +669,14 @@ pip install 'je_api_testka[gui]'
 git clone https://github.com/Integration-Automation/APITestka.git
 cd APITestka
 pip install -r dev_requirements.txt
-pytest                     # full suite (~300+ tests)
+pytest                     # full suite
 ```
 
 CI runs the suite against Python 3.10 – 3.14 on Ubuntu, macOS, and Windows.
+
+The GUI widget tests run offscreen (`QT_QPA_PLATFORM=offscreen`). On Linux, Qt needs a few system
+libraries (`sudo apt-get install libegl1 libgl1 libx11-6 libxkbcommon0 libfontconfig1 libfreetype6`); without them those tests are skipped locally. CI installs them and sets
+`APITESTKA_REQUIRE_QT=1`, which turns a failed Qt import into an error.
 
 ---
 

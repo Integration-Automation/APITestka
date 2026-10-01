@@ -36,8 +36,18 @@ jobs:
         run: |
           pip install --require-hashes --only-binary :all: -r .github/requirements/ci.txt
 
-      # The tests import the checked-out source, not a published package.
+      # PySide6's Qt libraries load these at import; the Ubuntu runner image lacks libEGL.so.1 at least.
+      # The list is the ELF NEEDED entries of QtGui, QtWidgets and the offscreen plugin outside the base system.
+      - name: Install Qt runtime libraries (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libegl1 libgl1 libx11-6 libxkbcommon0 libfontconfig1 libfreetype6
+
+      # The tests import the checked-out source, not a published package. APITESTKA_REQUIRE_QT turns a
+      # failed PySide6 import into an error, so the GUI widget tests cannot silently skip in CI.
       - name: Run tests
         env:
           PYTHONPATH: ${{ github.workspace }}
+          APITESTKA_REQUIRE_QT: "1"
         run: python -m pytest test/ -v

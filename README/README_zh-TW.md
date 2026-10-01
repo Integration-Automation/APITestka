@@ -648,10 +648,14 @@ pip install 'je_api_testka[gui]'
 git clone https://github.com/Integration-Automation/APITestka.git
 cd APITestka
 pip install -r dev_requirements.txt
-pytest                     # 整套(300+ 測試)
+pytest                     # 整套測試
 ```
 
 CI 矩陣:Ubuntu / macOS / Windows × Python 3.10–3.14。
+
+GUI widget 測試以 offscreen 模式執行(`QT_QPA_PLATFORM=offscreen`)。Linux 上 Qt 需要幾個系統函式庫
+(`sudo apt-get install libegl1 libgl1 libx11-6 libxkbcommon0 libfontconfig1 libfreetype6`),本機沒裝時這些測試會略過。CI 會安裝它們並設定 `APITESTKA_REQUIRE_QT=1`,
+讓 Qt 載入失敗變成錯誤而不是略過。
 
 ---
 

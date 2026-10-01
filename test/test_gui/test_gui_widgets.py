@@ -8,8 +8,12 @@ import time
 import pytest
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-# On Linux without libEGL, importing QtWidgets raises a plain ImportError; skip rather than fail.
-QtWidgets = pytest.importorskip("PySide6.QtWidgets", exc_type=ImportError)
+if os.environ.get("APITESTKA_REQUIRE_QT"):
+    # CI sets this, so a missing Qt system library fails the run instead of skipping these tests.
+    from PySide6 import QtWidgets
+else:
+    # Locally, a machine without Qt's system libraries (e.g. libEGL) skips rather than fails.
+    QtWidgets = pytest.importorskip("PySide6.QtWidgets", exc_type=ImportError)
 
 from je_api_testka.data.variable_store import variable_store  # noqa: E402
 from je_api_testka.gui.language_wrapper.multi_language_wrapper import language_wrapper  # noqa: E402
