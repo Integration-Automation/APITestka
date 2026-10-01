@@ -30,7 +30,9 @@ jobs:
       # Hash-locked and wheels-only, the same file as the publish-dev job of ci.yml: this job holds the
       # PyPI token. Regenerate with
       #   uv pip compile .github/requirements/publish.in --generate-hashes --python-version 3.12 \
-      #     --python-platform x86_64-manylinux_2_28 --only-binary :all: -o .github/requirements/publish.txt
+      #     --python-platform x86_64-manylinux_2_28 --only-binary :all: --exclude-newer 2026-09-24 \
+      #     -o .github/requirements/publish.txt
+      # (--exclude-newer keeps the 7-day wait Dependabot applies; move the date when regenerating)
       - name: Install build tooling
         run: |
           python -m pip install --require-hashes --only-binary :all: -r .github/requirements/publish.txt

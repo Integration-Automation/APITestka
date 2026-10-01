@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-27 | 2026-10-01 | The publish lock is resolved with the 7-day cut-off the other locks use | #ci #security #X-13 | [2026-10](2026-10.md) |
 | U-20261001-26 | 2026-10-01 | Both publish jobs build with the locked setuptools | #done #ci #security #X-13 | [2026-10](2026-10.md) |
 | U-20261001-25 | 2026-10-01 | Both publish jobs install hash-locked build tooling | #done #ci #security #X-13 | [2026-10](2026-10.md) |
 | U-20261001-24 | 2026-10-01 | The sdist carries no tests | #done #packaging #X-13 | [2026-10](2026-10.md) |
@@ -112,5 +113,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 26 |
+| [2026-10.md](2026-10.md) | 2026-10 | 27 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |
