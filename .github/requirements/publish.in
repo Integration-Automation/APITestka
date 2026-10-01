@@ -1,3 +1,4 @@
-# What the publish-dev job of ci.yml installs; publish.txt is generated from this file (the command is in ci.yml).
+# What the two jobs that upload to PyPI install: publish-dev in ci.yml and publish in publish.yml.
+# publish.txt is generated from this file; the command is in both workflows, above the install step.
 build
 twine

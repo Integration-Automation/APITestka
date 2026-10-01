@@ -155,14 +155,3 @@ def test_the_workflow_uploads_only_a_changed_build_and_keeps_no_credentials():
     assert job.index("git ls-remote origin refs/heads/dev") < upload
     assert "if: steps.compare.outputs.changed == 'true' && steps.tip.outputs.current == 'true'" in job
     assert "persist-credentials: false" in job
-
-
-def test_the_workflow_installs_its_build_tooling_hash_locked():
-    # The job holds the PyPI token, so what it installs is fixed by hash, as in the test job.
-    job = _publish_job()
-    installs = re.findall(r"^.*\bpip install\b.*$", job, re.MULTILINE)
-    assert installs
-    assert all("--require-hashes" in line and ".github/requirements/publish.txt" in line for line in installs)
-    locked = (REPO_ROOT / ".github" / "requirements" / "publish.txt").read_text(encoding="utf-8")
-    assert re.search(r"^build==", locked, re.MULTILINE)
-    assert re.search(r"^twine==", locked, re.MULTILINE)

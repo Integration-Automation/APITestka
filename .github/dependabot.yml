@@ -6,7 +6,11 @@
 version: 2
 updates:
   - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/" # Location of package manifests
+    # Location of package manifests. "/" does not reach .github/requirements, which holds the
+    # hash-locked files the CI test job and the two publish jobs install (ci.txt, publish.txt).
+    directories:
+      - "/"
+      - "/.github/requirements"
     # Updates belong on dev: main is the released branch and merging into it
     # publishes, so a PR opened against main just sits there.
     target-branch: "dev"

@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-25 | 2026-10-01 | Both publish jobs install hash-locked build tooling | #done #ci #security #X-13 | [2026-10](2026-10.md) |
 | U-20261001-24 | 2026-10-01 | The sdist carries no tests | #done #packaging #X-13 | [2026-10](2026-10.md) |
 | U-20261001-23 | 2026-10-01 | CI publishes je_api_testka_dev from the dev branch | #release #ci #X-13 | [2026-10](2026-10.md) |
 | U-20261001-22 | 2026-10-01 | je_action_core comes from PyPI | #done #build #L-6 | [2026-10](2026-10.md) |
@@ -110,5 +111,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 24 |
+| [2026-10.md](2026-10.md) | 2026-10 | 25 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

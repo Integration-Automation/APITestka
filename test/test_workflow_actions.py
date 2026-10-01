@@ -5,6 +5,9 @@ tj-actions/changed-files compromise rewrote tags), so each ``uses:`` names a
 full 40-hex commit and carries the release it corresponds to as a comment,
 which is what Dependabot reads and updates. Pinning also keeps Node 20 actions
 from lingering unnoticed: GitHub removed Node 20 from its runners on 2026-09-23.
+
+The jobs that are handed the PyPI token pin their packages the same way: each
+installs one hash-locked requirements file and nothing by name.
 """
 from __future__ import annotations
 
@@ -19,6 +22,12 @@ _USES = re.compile(r"^\s*(?:-\s*)?uses:\s*(\S+)(.*)$")
 _PINNED = re.compile(r"^[\w.-]+/[\w./-]+@[0-9a-f]{40}$")
 _LOCAL = re.compile(r"^\./")
 _VERSION_COMMENT = re.compile(r"^\s+#\s*v\d+(\.\d+)*\s*$")
+_PYPI_TOKEN = "secrets.PYPI_API_TOKEN"
+_LOCKED_DIRECTORY = ".github/requirements"
+_LOCKED_TOOLING = f"{_LOCKED_DIRECTORY}/publish.txt"
+_LOCKED_INSTALL = f"python -m pip install --require-hashes --only-binary :all: -r {_LOCKED_TOOLING}"
+_INSTALL = re.compile(r"\b(?:pip3?|pipx|uv)\b.*\binstall\b")
+_RUN_KEY = re.compile(r"^(?:-\s*)?run:\s*")
 
 
 def _uses(path: Path) -> list[tuple[int, str, str]]:
@@ -81,6 +90,14 @@ def test_dependabot_waits_a_week_before_proposing_a_release():
     assert blocks and all(match and int(match.group(1)) >= 7 for match in days)
 
 
+def test_dependabot_reaches_the_hash_locked_requirements():
+    # Dependabot reads only the directories it is given, and "/" does not include
+    # .github/requirements, so the pins in ci.txt and publish.txt would never move.
+    listed = {path for ecosystem, block in _dependabot_blocks() if ecosystem == "pip"
+              for path in re.findall(r"^\s*(?:-|directory:)\s*\"(/[^\"]*)\"", block, re.MULTILINE)}
+    assert {"/", f"/{_LOCKED_DIRECTORY}"} <= listed
+
+
 def _checkout_steps(path: Path) -> list[tuple[int, str]]:
     """Return ``(line number, step text)`` for each ``actions/checkout`` step."""
     lines = path.read_text(encoding="utf-8").splitlines()
@@ -128,3 +145,42 @@ def test_every_job_has_a_timeout(workflow):
     bad = [name for name, body in _jobs(workflow)
            if "runs-on:" in body and not re.search(r"^\s*timeout-minutes:", body, re.MULTILINE)]
     assert bad == []
+
+
+def _publish_jobs() -> dict[str, str]:
+    """Map ``workflow file:job id`` to the text of each job that is handed the PyPI token."""
+    return {f"{workflow.name}:{name}": body
+            for workflow in _WORKFLOWS for name, body in _jobs(workflow) if _PYPI_TOKEN in body}
+
+
+def _installs(job: str) -> list[str]:
+    """Return the commands of a job that install packages; comment lines are not commands."""
+    lines = (_RUN_KEY.sub("", line.strip()) for line in job.splitlines())
+    return [line for line in lines if not line.startswith("#") and _INSTALL.search(line)]
+
+
+def test_the_publish_jobs_are_the_two_that_upload():
+    # The dev channel (ci.yml) and the stable release (publish.yml). A third job that gets the
+    # token joins the check below by itself; this list only shows that the check found the two.
+    assert sorted(_publish_jobs()) == ["ci.yml:publish-dev", "publish.yml:publish"]
+
+
+@pytest.mark.parametrize("job", sorted(_publish_jobs()))
+def test_a_publish_job_installs_only_the_hash_locked_tooling(job):
+    # A job that holds the PyPI token runs whatever its tools resolve to on that day, so it
+    # installs the locked file and nothing else: no pip upgrade, no second install by name.
+    assert _installs(_publish_jobs()[job]) == [_LOCKED_INSTALL]
+
+
+def test_the_install_check_sees_an_unpinned_install():
+    unpinned = "- name: Install build tools\n  run: |\n    python -m pip install --upgrade pip\n" \
+               "    pip install build twine\n# pip install nothing\n- run: pipx install twine\n"
+    assert _installs(unpinned) == [
+        "python -m pip install --upgrade pip", "pip install build twine", "pipx install twine"]
+    assert _installs(f"- run: {_LOCKED_INSTALL}\n") == [_LOCKED_INSTALL]
+
+
+def test_the_locked_tooling_pins_what_the_publish_jobs_run():
+    locked = (_ROOT / _LOCKED_TOOLING).read_text(encoding="utf-8")
+    assert re.search(r"^build==", locked, re.MULTILINE)
+    assert re.search(r"^twine==", locked, re.MULTILINE)
