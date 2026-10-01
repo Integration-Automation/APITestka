@@ -2,3 +2,7 @@
 # publish.txt is generated from this file; the command is in both workflows, above the install step.
 build
 twine
+# The build backend. Both jobs run `python -m build --no-isolation`, so the backend is this locked one
+# and not whatever is newest on PyPI when the job runs. It must satisfy `build-system.requires` in
+# pyproject.toml and dev.toml; test/test_workflow_actions.py fails when it does not.
+setuptools

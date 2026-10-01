@@ -63,8 +63,9 @@ jobs:
           print(f"Bumped version -> {new_version}")
           EOF
 
+      # --no-isolation: the backend is the setuptools locked in publish.txt, not a fresh download.
       - name: Build distribution
-        run: python -m build
+        run: python -m build --no-isolation
 
       - name: Publish to PyPI
         env:

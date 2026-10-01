@@ -90,9 +90,13 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
     pull request or the schedule), builds from `dev.toml` and uploads when the commit is still the tip of `dev`
     and the wheel differs from the newest published one. `scripts/dev_release.py` takes the version from PyPI
     (newest release plus one patch), so nothing is committed back.
-  - Both jobs hold the PyPI token and install only `.github/requirements/publish.txt`: `build` and `twine`,
-    hash-locked and wheels-only, generated from `publish.in`. `test/test_workflow_actions.py` fails when a job
-    with the token installs anything else. Dependabot's pip entry lists `/.github/requirements`.
+  - Both jobs hold the PyPI token and install only `.github/requirements/publish.txt`: `build`, `twine` and
+    the build backend `setuptools`, hash-locked and wheels-only, generated from `publish.in`. Both build with
+    `python -m build --no-isolation`, so the backend is the locked one and nothing is downloaded during the
+    build. `test/test_workflow_actions.py` fails when a job with the token installs anything else or builds
+    in isolation, and when `build-system.requires` in `pyproject.toml` or `dev.toml` asks for something the
+    lock does not satisfy: raising the `setuptools` floor means regenerating `publish.txt` in the same
+    change. Dependabot's pip entry lists `/.github/requirements`.
 
 ## 4. Main flows
 

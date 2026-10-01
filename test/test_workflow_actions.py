@@ -7,7 +7,8 @@ which is what Dependabot reads and updates. Pinning also keeps Node 20 actions
 from lingering unnoticed: GitHub removed Node 20 from its runners on 2026-09-23.
 
 The jobs that are handed the PyPI token pin their packages the same way: each
-installs one hash-locked requirements file and nothing by name.
+installs one hash-locked requirements file and nothing by name, and builds
+with the backend that file locks instead of one downloaded during the build.
 """
 from __future__ import annotations
 
@@ -15,6 +16,8 @@ import re
 from pathlib import Path
 
 import pytest
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
 _ROOT = next(p for p in Path(__file__).resolve().parents if (p / ".github" / "workflows").is_dir())
 _WORKFLOWS = sorted((_ROOT / ".github" / "workflows").glob("*.yml"))
@@ -27,7 +30,12 @@ _LOCKED_DIRECTORY = ".github/requirements"
 _LOCKED_TOOLING = f"{_LOCKED_DIRECTORY}/publish.txt"
 _LOCKED_INSTALL = f"python -m pip install --require-hashes --only-binary :all: -r {_LOCKED_TOOLING}"
 _INSTALL = re.compile(r"\b(?:pip3?|pipx|uv)\b.*\binstall\b")
+_BUILD = re.compile(r"\bpython3? -m build\b|\bpyproject-build\b")
+_LOCKED_BACKEND_FLAG = "--no-isolation"
 _RUN_KEY = re.compile(r"^(?:-\s*)?run:\s*")
+_PINNED_PACKAGE = re.compile(r"^([A-Za-z0-9][A-Za-z0-9._-]*)==(\S+)", re.MULTILINE)
+_BUILD_REQUIRES = re.compile(r"^requires\s*=\s*\[([^\]]*)\]", re.MULTILINE)
+_BUILT_METADATA = ("pyproject.toml", "dev.toml")
 
 
 def _uses(path: Path) -> list[tuple[int, str, str]]:
@@ -153,10 +161,41 @@ def _publish_jobs() -> dict[str, str]:
             for workflow in _WORKFLOWS for name, body in _jobs(workflow) if _PYPI_TOKEN in body}
 
 
-def _installs(job: str) -> list[str]:
-    """Return the commands of a job that install packages; comment lines are not commands."""
+def _commands(job: str, pattern: re.Pattern[str]) -> list[str]:
+    """Return the lines of a job that match ``pattern``; comment lines are not commands."""
     lines = (_RUN_KEY.sub("", line.strip()) for line in job.splitlines())
-    return [line for line in lines if not line.startswith("#") and _INSTALL.search(line)]
+    return [line for line in lines if not line.startswith("#") and pattern.search(line)]
+
+
+def _installs(job: str) -> list[str]:
+    """Return the commands of a job that install packages."""
+    return _commands(job, _INSTALL)
+
+
+def _builds(job: str) -> list[str]:
+    """Return the commands of a job that build the distribution."""
+    return _commands(job, _BUILD)
+
+
+def _locked() -> dict[str, str]:
+    """Map each package the locked tooling pins to its version."""
+    return dict(_PINNED_PACKAGE.findall((_ROOT / _LOCKED_TOOLING).read_text(encoding="utf-8")))
+
+
+def _build_requires(metadata: str) -> list[Requirement]:
+    """Return ``build-system.requires`` of a metadata file.
+
+    Parsed as text: ``tomllib`` is missing on Python 3.10, which CI still tests.
+    """
+    items = _BUILD_REQUIRES.search((_ROOT / metadata).read_text(encoding="utf-8")).group(1)
+    return [Requirement(item) for item in re.findall(r"[\"']([^\"']+)[\"']", items)]
+
+
+def _unmet(requirements: list[Requirement], locked: dict[str, str]) -> list[str]:
+    """Return the requirements ``locked`` does not satisfy; a package it does not pin is unmet."""
+    names = [(requirement, canonicalize_name(requirement.name)) for requirement in requirements]
+    return [str(requirement) for requirement, name in names
+            if name not in locked or not requirement.specifier.contains(locked[name])]
 
 
 def test_the_publish_jobs_are_the_two_that_upload():
@@ -181,6 +220,34 @@ def test_the_install_check_sees_an_unpinned_install():
 
 
 def test_the_locked_tooling_pins_what_the_publish_jobs_run():
-    locked = (_ROOT / _LOCKED_TOOLING).read_text(encoding="utf-8")
-    assert re.search(r"^build==", locked, re.MULTILINE)
-    assert re.search(r"^twine==", locked, re.MULTILINE)
+    # build and twine are the commands; setuptools is the backend a build without isolation imports.
+    assert {"build", "twine", "setuptools"} <= set(_locked())
+
+
+@pytest.mark.parametrize("job", sorted(_publish_jobs()))
+def test_a_publish_job_builds_with_the_locked_backend(job):
+    # An isolated build downloads the newest backend each time, outside the lock, into the job
+    # that is about to upload with the token.
+    builds = _builds(_publish_jobs()[job])
+    assert builds and all(_LOCKED_BACKEND_FLAG in command.split() for command in builds)
+
+
+def test_the_build_check_sees_an_isolated_build():
+    isolated = "- name: Build\n  run: python -m build\n# python -m build --no-isolation\n- run: pyproject-build\n"
+    assert _builds(isolated) == ["python -m build", "pyproject-build"]
+    assert _builds("- run: python -m twine check dist/*\n") == []
+
+
+@pytest.mark.parametrize("metadata", _BUILT_METADATA)
+def test_the_locked_tooling_satisfies_build_system_requires(metadata):
+    # --no-isolation checks build-system.requires instead of installing it. A floor raised without
+    # regenerating publish.txt (Dependabot edits these files) fails here, not in the publish job.
+    requirements = _build_requires(metadata)
+    assert requirements
+    assert _unmet(requirements, _locked()) == []
+
+
+def test_the_requirement_check_sees_a_raised_floor_and_an_unpinned_package():
+    locked = {"setuptools": "84.0.0"}
+    assert _unmet([Requirement("setuptools>=82.0.1")], locked) == []
+    assert _unmet([Requirement("setuptools>=85"), Requirement("wheel")], locked) == ["setuptools>=85", "wheel"]
