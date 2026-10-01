@@ -179,3 +179,11 @@ def test_mock_server_methods_via_executor():
     ])
     registered = next(iter(record.values()))
     assert "GET /health" in registered
+
+
+def test_unknown_command_is_reported_by_name():
+    """An unknown command used to reach ``None(...)`` and be recorded as a bare TypeError."""
+    action = ["AT_no_such_command", {"x": 1}]
+    outcome = execute_action([action])[f"execute: {action}"]
+    assert outcome.startswith("APITesterExecuteException(")
+    assert "AT_no_such_command" in outcome

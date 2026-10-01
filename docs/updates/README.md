@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-19 | 2026-10-01 | Unknown executor commands raise APITesterExecuteException | #bugfix #executor #L-6 | [2026-10](2026-10.md) |
 | U-20261001-18 | 2026-10-01 | GUI checked on a real display; four fixes | #bugfix #gui | [2026-10](2026-10.md) |
 | U-20261001-17 | 2026-10-01 | httpx records request_url as text | #bugfix #spec | [2026-10](2026-10.md) |
 | U-20261001-16 | 2026-10-01 | Package gate in front of AT_add_package_to_executor | #change #security #X-12 | [2026-10](2026-10.md) |
@@ -104,5 +105,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 18 |
+| [2026-10.md](2026-10.md) | 2026-10 | 19 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

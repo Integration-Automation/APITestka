@@ -265,6 +265,8 @@ class Executor:
         # Runner metadata (id, depends_on, tags) orders and filters actions; the command never sees it.
         action = strip_runner_metadata(action)
         event: Callable = self.event_dict.get(action[0])
+        if event is None:
+            raise APITesterExecuteException(executor_data_error + " " + str(action))
         if len(action) == _NAME_AND_ARGUMENTS:
             if isinstance(action[1], dict):
                 return event(**action[1])  # 使用 kwargs 呼叫 / Call with kwargs
