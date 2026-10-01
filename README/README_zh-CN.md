@@ -130,6 +130,12 @@ apitestka run smoke.json
   报告、diff、badge、trend 都从这里读取。
 - **Executor** — `AT_*` 命名的命令对应到 Python 函数。JSON action list 驱动它,
   所有新功能都在这里注册,`apitestka run` 即可使用。
+- **包闸门** — `AT_add_package_to_executor` 会导入 Python 包,并把它的成员注册成命令,
+  所以只要 action 文件或 socket 客户端写得出 `os`、`subprocess`,就能执行任何东西。
+  `executor.allow_packages("name", …)` 列出可以加载的包(含子模块),
+  `executor.set_allow_arbitrary_packages(False)` 会在导入前拒绝其他包;这两个都不是
+  action 命令,所以 action 文件不能自己打开闸门。宿主程序设置闸门之前,任何包仍会加载,
+  但会发出 `DeprecationWarning`:之后的版本会默认拒绝清单以外的包。
 - **VariableStore** — thread-safe 的 key/value 存储。`{{var}}` placeholder
   在 payload、URL、header、template 中均可解析。配 `AT_extract_and_store` 串接 request。
 - **Optional dependencies** — 重型功能(WebSocket、JSON Schema、JWT、MCP)走 extras,

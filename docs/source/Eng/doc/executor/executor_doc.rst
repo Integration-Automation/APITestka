@@ -101,3 +101,24 @@ Built-in Executor Commands
      - Add route to mock server
    * - ``AT_start_flask_mock_server``
      - Start mock server
+
+Package Gate
+------------
+
+``AT_add_package_to_executor`` and ``AT_add_package_to_callback_executor`` import a Python
+package and register its members as commands, so an action file (or a socket client) that can
+name ``os`` or ``subprocess`` can run anything. The host program decides which packages may load:
+
+.. code-block:: python
+
+   from je_api_testka import executor
+
+   executor.allow_packages("my_helpers")          # these, and their submodules
+   executor.set_allow_arbitrary_packages(False)   # refuse everything else before importing it
+
+Neither switch is an action command, so an action file cannot open its own gate. A refused
+package is recorded as an ``APITesterExecuteException`` in the action's result.
+``set_allow_arbitrary_packages(True)`` loads any package without a warning.
+
+Until the host calls either switch, any package still loads but raises a ``DeprecationWarning``;
+a future release will refuse packages outside the allowlist by default.

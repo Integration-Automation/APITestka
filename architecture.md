@@ -130,7 +130,7 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - **Mock routes / runtime plugins**: `flask_mock_server_instance.add_router()` (or `add_dynamic_route()`,
   `add_template_route()`); `WebSocketRoute` (reply map, fallback or `handler`) and `GrpcStubServer.register()` /
   `register_server_stream()` for scripted protocol endpoints; `AT_add_package_to_executor` registers an installed
-  package's members.
+  package's members once the package gate lets it through (§7).
 
 ## 6. Cross-project boundaries
 
@@ -160,13 +160,17 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - **Sibling executors** share the action-list shape and the `Return_Data_Over_JE` socket terminator,
   but differ in command prefix (`AT_` here, `LD_` LoadDensity, `MT_` MailThunder, `FA_` FileAutomation),
   dict key (`api_testka` here) and builtins policy: APITestka registers no Python builtins (explicit
-  allowlist), LoadDensity registers builtins minus `_UNSAFE_BUILTINS`, and MailThunder registers
-  every builtin (known gap).
+  allowlist); LoadDensity, MailThunder and WebRunner register the same `SAFE_BUILTINS` allowlist.
+  APITestka and WebRunner put the same package gate in front of `*_add_package_to_executor` (workspace X-12).
 
 ## 7. Design constraints
 
 - Command maps are explicit allowlists. No `eval()` or `exec()` on untrusted input. Validate socket
   payloads (CLAUDE.md § Coding Standards › Security (Mandatory)).
+- `AT_add_package_to_executor` / `AT_add_package_to_callback_executor` pass the package gate in
+  `utils/package_manager/package_manager_class.py` before importing: `executor.allow_packages(...)` and
+  `executor.set_allow_arbitrary_packages(...)` are Python-only switches, never `AT_*` commands, so an action
+  file cannot open its own gate. Unconfigured (`None`), any package loads with a `DeprecationWarning`.
 - Parse XML with `defusedxml`. Every `requests` call passes a `timeout=`. No `verify=False` without a
   justification comment. No `shell=True` (§ Security (Mandatory); § Static Analysis Compliance › Security).
 - Extend through `add_command_to_executor` or new `AT_` commands rather than reshaping the core map

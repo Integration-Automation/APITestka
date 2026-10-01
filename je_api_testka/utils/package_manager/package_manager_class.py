@@ -1,12 +1,15 @@
+import warnings
 from importlib import import_module
 from importlib.util import find_spec
 from inspect import getmembers, isbuiltin, isclass, isfunction
-from typing import Union
+from typing import Optional, Set, Union
 
+from je_api_testka.utils.exception.exceptions import APITesterExecuteException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
 class PackageManager:
+    """Imports packages for ``AT_add_package_to_executor`` behind a package gate."""
 
     def __init__(self):
         """
@@ -20,6 +23,48 @@ class PackageManager:
         # Executor and callback executor
         self.executor = None
         self.callback_executor = None
+        # 套件閘門：None 表示未設定（任何套件仍會載入，但發出 DeprecationWarning）
+        # Package gate. None = not configured: any package still loads, with a
+        # DeprecationWarning. False = only ``allowed_packages``; True = any package, silently.
+        self.allow_arbitrary_packages: Optional[bool] = None
+        self.allowed_packages: Set[str] = set()
+
+    def set_allow_arbitrary_packages(self, enabled: bool) -> None:
+        """
+        設定是否允許載入允許清單以外的套件
+        Allow (True) or refuse (False) packages outside :attr:`allowed_packages`.
+        Deliberately not an ``AT_*`` command: an action file must not open its own gate.
+        """
+        self.allow_arbitrary_packages = bool(enabled)
+
+    def allow_packages(self, *packages: str) -> None:
+        """
+        把套件加入允許清單（連同其子模組）
+        Add packages to the allowlist; a listed package also allows its submodules.
+        """
+        self.allowed_packages.update(packages)
+
+    def _is_allowlisted(self, package: str) -> bool:
+        return any(package == allowed or package.startswith(allowed + ".") for allowed in self.allowed_packages)
+
+    def _check_allowed(self, package: object) -> None:
+        """Refuse ``package`` before it is imported, unless the gate lets it through."""
+        if isinstance(package, str) and self._is_allowlisted(package):
+            return
+        if self.allow_arbitrary_packages is True:
+            return
+        if self.allow_arbitrary_packages is False:
+            raise APITesterExecuteException(
+                f"package {package!r} is not allowed; the host must call "
+                "executor.allow_packages(...) or executor.set_allow_arbitrary_packages(True)"
+            )
+        warnings.warn(
+            f"loading package {package!r} that is not on the allowlist; a future release will refuse "
+            "it by default. Call executor.allow_packages(...) for the packages you load, or "
+            "executor.set_allow_arbitrary_packages(True) to keep loading any package.",
+            DeprecationWarning,
+            stacklevel=3,
+        )
 
     def check_package(self, package: str) -> Union[str, None]:
         """
@@ -42,24 +87,28 @@ class PackageManager:
                     apitestka_logger.error(repr(error))
         return self.installed_package_dict.get(package, None)
 
-    def add_package_to_executor(self, package):
+    def add_package_to_executor(self, package: str) -> None:
         """
         將套件的函式加入 executor
         Add package functions to executor
 
         :param package: 套件名稱 / Package name
+        :raises APITesterExecuteException: when the package gate refuses ``package`` (nothing is imported).
         """
         apitestka_logger.info(f"PackageManager add_package_to_executor package: {package}")
+        self._check_allowed(package)
         self.add_package_to_target(package=package, target=self.executor)
 
-    def add_package_to_callback_executor(self, package) -> None:
+    def add_package_to_callback_executor(self, package: str) -> None:
         """
         將套件的函式加入 callback_executor
         Add package functions to callback executor
 
         :param package: 套件名稱 / Package name
+        :raises APITesterExecuteException: when the package gate refuses ``package`` (nothing is imported).
         """
         apitestka_logger.info(f"PackageManager add_package_to_callback_executor package: {package}")
+        self._check_allowed(package)
         self.add_package_to_target(package=package, target=self.callback_executor)
 
     def get_member(self, package, predicate, target) -> None:

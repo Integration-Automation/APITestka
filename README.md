@@ -132,6 +132,13 @@ apitestka run smoke.json
 - **Executor** — a command map (`AT_*` keys) over Python callables. JSON action lists
   drive it. New features register themselves here so `apitestka run` can use them
   without writing Python.
+- **Package gate** — `AT_add_package_to_executor` imports a Python package and registers its
+  members as commands, so an action file or socket client that can name `os` or `subprocess` can
+  run anything. `executor.allow_packages("name", …)` lists the packages it may load (submodules
+  included) and `executor.set_allow_arbitrary_packages(False)` refuses the rest before importing
+  them; neither is an action command, so an action file cannot open its own gate. Until the host
+  configures the gate, any package still loads but raises a `DeprecationWarning`: a future
+  release will refuse unlisted packages by default.
 - **VariableStore** — a thread-safe key/value store. `{{var}}` placeholders inside
   payloads, URLs, headers, and templates resolve against it. Combine with
   `AT_extract_and_store` to chain requests.

@@ -29,6 +29,19 @@ The ``Executor`` class provides JSON keyword-driven test execution.
            :return: list of execution details
            """
 
+       @staticmethod
+       def set_allow_arbitrary_packages(enabled: bool) -> None:
+           """
+           Allow (True) or refuse (False) AT_add_package_to_executor for packages
+           outside the allowlist. Python only, never an action command.
+           """
+
+       @staticmethod
+       def allow_packages(*packages: str) -> None:
+           """
+           Add packages, and their submodules, to the package allowlist.
+           """
+
 Module Functions
 ----------------
 

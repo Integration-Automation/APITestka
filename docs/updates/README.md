@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261001-16 | 2026-10-01 | Package gate in front of AT_add_package_to_executor | #change #security #X-12 | [2026-10](2026-10.md) |
 | U-20261001-15 | 2026-10-01 | The package passes its lint rules | #change #lint | [2026-10](2026-10.md) |
 | U-20261001-14 | 2026-10-01 | reformat_xml_file raises its own exception for bad XML | #bugfix #gui | [2026-10](2026-10.md) |
 | U-20261001-13 | 2026-10-01 | Every workflow job has a timeout | #ci #tests | [2026-10](2026-10.md) |
@@ -101,5 +102,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 15 |
+| [2026-10.md](2026-10.md) | 2026-10 | 16 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |
