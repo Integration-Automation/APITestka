@@ -1,5 +1,5 @@
 import types
-from typing import Dict, Callable, Any, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from je_api_testka import test_api_method_httpx
 from je_api_testka.ai.backend import select_ai_backend
@@ -47,21 +47,24 @@ from je_api_testka.spec.spec_loop import check_spec_against_tests
 from je_api_testka.sse_wrapper.sse_method import test_api_method_sse
 from je_api_testka.utils.assert_result.schema_check import check_json_schema, check_jsonpath
 from je_api_testka.utils.assert_result.snapshot import assert_snapshot
-from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
-from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
-from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
+from je_api_testka.utils.exception.exception_tags import (
+    add_command_exception_tag,
+    executor_data_error,
+    executor_list_error,
+)
+from je_api_testka.utils.exception.exceptions import APIAddCommandException, APITesterExecuteException
 from je_api_testka.utils.generate_report.allure_report import generate_allure_report
 from je_api_testka.utils.generate_report.badge import generate_badge
 from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
 from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
 from je_api_testka.utils.generate_report.junit_report import generate_junit_report
-from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
-from je_api_testka.utils.generate_report.run_diff import diff_runs
 from je_api_testka.utils.generate_report.latency_trends import (
     assert_no_latency_anomalies,
     detect_latency_anomalies,
     record_endpoint_latencies,
 )
+from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
+from je_api_testka.utils.generate_report.run_diff import diff_runs
 from je_api_testka.utils.generate_report.trend_report import generate_trend_report
 from je_api_testka.utils.generate_report.trend_store import DEFAULT_TREND_DB, list_trend_rows, record_current_run
 from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
@@ -100,6 +103,10 @@ def _cassette_record(file_path: str, method: str, url: str, request_body: str,
 def _detect_latency_anomalies(db_path: str = DEFAULT_TREND_DB, policy: Optional[dict] = None) -> List[dict]:
     """JSON-ready verdicts of :func:`detect_latency_anomalies`."""
     return [verdict.to_dict() for verdict in detect_latency_anomalies(db_path, policy)]
+
+
+_NAME_ONLY: int = 1  # [name]
+_NAME_AND_ARGUMENTS: int = 2  # [name, {kwargs}] or [name, [args]]
 
 
 class Executor:
@@ -239,12 +246,12 @@ class Executor:
         # Runner metadata (id, depends_on, tags) orders and filters actions; the command never sees it.
         action = strip_runner_metadata(action)
         event: Callable = self.event_dict.get(action[0])
-        if len(action) == 2:
+        if len(action) == _NAME_AND_ARGUMENTS:
             if isinstance(action[1], dict):
                 return event(**action[1])  # 使用 kwargs 呼叫 / Call with kwargs
             else:
                 return event(*action[1])   # 使用 args 呼叫 / Call with args
-        elif len(action) == 1:
+        elif len(action) == _NAME_ONLY:
             return event()                # 無參數呼叫 / Call without arguments
         else:
             raise APITesterExecuteException(executor_data_error + " " + str(action))

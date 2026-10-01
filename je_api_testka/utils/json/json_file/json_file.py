@@ -3,8 +3,7 @@ from pathlib import Path
 from threading import Lock
 from typing import Dict
 
-from je_api_testka.utils.exception.exception_tags import cant_find_json_error
-from je_api_testka.utils.exception.exception_tags import cant_save_json_error
+from je_api_testka.utils.exception.exception_tags import cant_find_json_error, cant_save_json_error
 from je_api_testka.utils.exception.exceptions import APITesterJsonException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 

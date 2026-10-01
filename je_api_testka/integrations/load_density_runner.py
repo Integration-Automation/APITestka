@@ -18,6 +18,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+
 # LoadDensity runs out of process by design; argv is a fixed list built here and no shell is used.
 import subprocess  # noqa: S404
 import sys

@@ -1,7 +1,8 @@
-from typing import Union
 from importlib import import_module
 from importlib.util import find_spec
-from inspect import getmembers, isfunction, isbuiltin, isclass
+from inspect import getmembers, isbuiltin, isclass, isfunction
+from typing import Union
+
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 
@@ -35,7 +36,7 @@ class PackageManager:
                 try:
                     # Plugin loader: package name resolved through importlib.find_spec first,
                     # so import_module receives a verified spec.name, not raw user input.
-                    installed_package = import_module(found_spec.name)  # nosemgrep: python.lang.security.audit.non-literal-import.non-literal-import
+                    installed_package = import_module(found_spec.name)  # nosemgrep
                     self.installed_package_dict.update({found_spec.name: installed_package})
                 except ModuleNotFoundError as error:
                     apitestka_logger.error(repr(error))

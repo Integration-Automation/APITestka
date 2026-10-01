@@ -9,11 +9,11 @@ from __future__ import annotations
 
 from typing import Iterable, List
 
+from je_api_testka.runner.metadata import action_kwargs
+
 
 def _action_tags(action: list) -> List[str]:
-    if len(action) < 2 or not isinstance(action[1], dict):
-        return []
-    raw = action[1].get("tags")
+    raw = (action_kwargs(action) or {}).get("tags")
     if isinstance(raw, list):
         return [str(tag) for tag in raw]
     return []

@@ -2,8 +2,7 @@ from datetime import datetime
 from typing import Dict, Union
 
 import requests
-from requests import Session, Response
-from requests import delete, get, head, options, patch, post, put
+from requests import Response, Session, delete, get, head, options, patch, post, put
 from requests.structures import CaseInsensitiveDict
 
 from je_api_testka.requests_wrapper.requests_data import get_requests_data

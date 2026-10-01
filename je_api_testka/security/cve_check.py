@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import shutil
+
 # We deliberately delegate to the optional pip-audit binary; argv is built
 # from a list (no shell=True) and the path is resolved via shutil.which.
 import subprocess  # noqa: S404

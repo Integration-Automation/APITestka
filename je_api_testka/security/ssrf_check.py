@@ -29,6 +29,9 @@ SSRF_PROBES = (
     "file:///etc/passwd",
 )
 
+# A probe counts as accepted when the target answers below this status.
+CLIENT_ERROR_STATUS: int = 400
+
 
 @dataclass
 class SSRFFinding:
@@ -57,6 +60,6 @@ def probe_ssrf(
         for probe in pool:
             payload = {parameter: probe}
             response = client.request(method.upper(), target, json=payload)
-            if response.status_code < 400:
+            if response.status_code < CLIENT_ERROR_STATUS:
                 findings.append(SSRFFinding(probe=probe, status=response.status_code))
     return findings

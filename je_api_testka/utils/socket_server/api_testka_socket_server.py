@@ -38,10 +38,10 @@ class TCPServerHandler(socketserver.BaseRequestHandler):
             try:
                 # 嘗試解析 JSON 並執行對應動作 / Try to parse JSON and execute action
                 execute_str = json.loads(command_string)
-                execute_dict = execute_action(execute_str).items()
+                execute_results = execute_action(execute_str).values()
 
                 # 將執行結果回傳給客戶端 / Send execution result back to client
-                for execute_function, execute_return in execute_dict:
+                for execute_return in execute_results:
                     socket.sendto(str(execute_return).encode("utf-8"), self.client_address)
                     socket.sendto(_NEWLINE, self.client_address)
 

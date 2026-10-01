@@ -21,8 +21,8 @@ from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.har_import import convert_har
 from je_api_testka.spec.openapi_export import build_openapi
 from je_api_testka.spec.records_to_openapi import DEFAULT_SPEC_TITLE, DEFAULT_SPEC_VERSION
-from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.exception.exceptions import APITesterException
+from je_api_testka.utils.executor.action_executor import execute_action
 from je_api_testka.utils.executor.request_action import build_request_action
 from je_api_testka.utils.generate_report.markdown_report import render_markdown
 from je_api_testka.utils.test_record.test_record_class import test_record_instance

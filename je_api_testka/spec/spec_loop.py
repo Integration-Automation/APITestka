@@ -30,13 +30,13 @@ from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.contract.commands import read_openapi
 from je_api_testka.contract.openapi_compat import interaction_problems
 from je_api_testka.contract.pact import BODY_RULE_EQUALITY, interaction_from_record
+from je_api_testka.spec.openapi_export import collect_records
 from je_api_testka.spec.path_templates import (
     generalize_path,
     match_path_template,
     server_base_path,
     strip_base_path,
 )
-from je_api_testka.spec.openapi_export import collect_records
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.utils.exception.exceptions import APIAssertException
 

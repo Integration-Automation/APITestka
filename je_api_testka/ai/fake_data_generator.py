@@ -14,6 +14,9 @@ from je_api_testka.ai.reply import parse_json_reply
 from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
+_SCALARS = {"integer": 1, "number": 1.0, "boolean": True, "null": None}
+_STRING_FORMATS = {"uuid": fake_uuid, "email": fake_email}
+
 
 def _deterministic(schema: dict) -> Any:
     schema_type = schema.get("type")
@@ -21,20 +24,9 @@ def _deterministic(schema: dict) -> Any:
         return {key: _deterministic(value) for key, value in (schema.get("properties") or {}).items()}
     if schema_type == "array":
         return [_deterministic(schema.get("items") or {})]
-    if schema_type == "integer":
-        return 1
-    if schema_type == "number":
-        return 1.0
-    if schema_type == "boolean":
-        return True
-    if schema_type == "null":
-        return None
-    fmt = schema.get("format", "")
-    if fmt == "uuid":
-        return fake_uuid()
-    if fmt == "email":
-        return fake_email()
-    return fake_word()
+    if schema_type in _SCALARS:
+        return _SCALARS[schema_type]
+    return _STRING_FORMATS.get(schema.get("format", ""), fake_word)()
 
 
 def generate_fake_payload(schema: dict) -> Any:

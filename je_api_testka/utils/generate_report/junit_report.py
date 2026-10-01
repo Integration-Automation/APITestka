@@ -4,6 +4,7 @@ JUnit XML report generator for CI integration (GitHub Actions, Jenkins, etc).
 from __future__ import annotations
 
 from pathlib import Path
+
 # Element/SubElement/ElementTree are write-only in this module - no parsing of
 # untrusted XML happens, so the defusedxml replacement does not apply here.
 # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml

@@ -1,6 +1,6 @@
 import json
 from threading import Lock
-from typing import Tuple, Dict
+from typing import Dict, Tuple
 
 from je_api_testka.utils.exception.exception_tags import cant_save_json_report_record_us_null
 from je_api_testka.utils.exception.exceptions import APIJsonReportException

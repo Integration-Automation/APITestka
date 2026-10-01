@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Dict, Union
 
-from httpx import get, put, patch, post, head, delete, options, Response
+from httpx import Response, delete, get, head, options, patch, post, put
 
 from je_api_testka.httpx_wrapper.httpx_data import get_httpx_data
 from je_api_testka.utils.assert_result.result_check import check_result
 from je_api_testka.utils.exception.exception_tags import (
-    wrong_http_method_error_message,
     http_method_have_wrong_type,
+    wrong_http_method_error_message,
 )
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger

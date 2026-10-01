@@ -6,8 +6,7 @@ import sys
 from je_api_testka import create_project_dir
 from je_api_testka.utils.exception.exception_tags import argparse_get_wrong_data
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException
-from je_api_testka.utils.executor.action_executor import execute_action
-from je_api_testka.utils.executor.action_executor import execute_files
+from je_api_testka.utils.executor.action_executor import execute_action, execute_files
 from je_api_testka.utils.file_process.get_dir_file_list import get_dir_files_as_list
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 
@@ -16,10 +15,8 @@ if __name__ == "__main__":
         def preprocess_read_json_file_execute_action(file_path: str):
             execute_action(read_action_json(file_path))
 
-
         def preprocess_read_json_files_execute_files(file_path: str):
             execute_files(get_dir_files_as_list(file_path))
-
 
         def preprocess_read_str_execute_action(execute_str: str):
             if sys.platform in ["win32", "cygwin", "msys"]:
@@ -28,7 +25,6 @@ if __name__ == "__main__":
             else:
                 execute_str = json.loads(execute_str)
             execute_action(execute_str)
-
 
         argparse_event_dict = {
             "execute_file": preprocess_read_json_file_execute_action,

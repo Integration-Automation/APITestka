@@ -11,7 +11,7 @@ from typing import List
 
 import httpx
 
-from je_api_testka.security.header_scan import HeaderFinding, SEVERITY_HIGH, SEVERITY_MEDIUM
+from je_api_testka.security.header_scan import SEVERITY_HIGH, SEVERITY_MEDIUM, HeaderFinding
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 DEFAULT_CORS_TIMEOUT_SECONDS: float = 10.0

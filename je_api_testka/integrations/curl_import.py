@@ -13,7 +13,7 @@ from typing import Dict, Optional, Tuple
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.executor.request_action import build_request_action
 
-CURL_TOKEN: str = "curl"
+CURL_PROGRAM: str = "curl"
 _METHOD_FLAGS = ("-X", "--request")
 _HEADER_FLAGS = ("-H", "--header")
 _DATA_FLAGS = ("-d", "--data", "--data-raw")
@@ -69,7 +69,7 @@ def _parse_tokens(tokens: list) -> Tuple[str, str, Dict[str, str], Optional[obje
 def curl_to_action(curl_command: str) -> list:
     """Return ``["AT_test_api_method", {...}]`` for the given curl line."""
     tokens = shlex.split(curl_command)
-    if not tokens or tokens[0] != CURL_TOKEN:
+    if not tokens or tokens[0] != CURL_PROGRAM:
         raise APITesterException("input does not start with 'curl'")
     method, url, headers, body = _parse_tokens(tokens)
     return build_request_action(method, url, headers=headers, body=body)

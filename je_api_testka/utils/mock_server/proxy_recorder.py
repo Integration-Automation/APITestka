@@ -10,9 +10,8 @@ from __future__ import annotations
 import json
 from typing import Optional
 
-from flask import Flask, Response, request
-
 import httpx
+from flask import Flask, Response, request
 
 from je_api_testka.connection.cassette import Cassette, CassetteRecord
 
