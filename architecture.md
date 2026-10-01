@@ -80,7 +80,9 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
   keyword-only `history` and `environments` models are optional; the window passes its own to every rebuild, so a
   language switch keeps them); it applies no style sheet, so an embedding application keeps its own look.
 - **Packaging**: `pyproject.toml` and `dev.toml` (`je_api_testka_dev`) declare the same console scripts,
-  `pytest11` entry point and extras; `test/test_utils/test_dev_toml_parity.py` keeps them equal.
+  `pytest11` entry point and extras; `test/test_utils/test_dev_toml_parity.py` keeps them equal. Neither the
+  wheel nor the sdist carries `test/`: package discovery never finds it, and `MANIFEST.in` prunes it from the
+  sdist (`test/test_utils/test_sdist_manifest.py`).
 - **PyPI packages**: `je_api_testka` (stable) and `je_api_testka_dev` (dev channel), both published by CI.
   - Stable: a push to `main` runs `publish.yml`, which bumps `pyproject.toml`, uploads, tags and creates the
     GitHub release.
