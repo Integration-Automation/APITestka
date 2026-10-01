@@ -14,7 +14,7 @@ description = "Requests Automation Framework"
 requires-python = ">=3.10"
 license-files = ["LICENSE"]
 dependencies = [
-    "requests", "Flask", "httpx", "defusedxml"
+    "requests", "Flask", "httpx", "defusedxml", "je_action_core"
 ]
 classifiers = [
     "Programming Language :: Python :: 3.10",
@@ -68,3 +68,7 @@ timeout = 30
 [tool.bandit]
 # Test code uses assert by design (pytest); see CLAUDE.md "Test Code Exemptions".
 exclude_dirs = ["test", "tests", "build", "dist", ".venv", "venv"]
+
+# je_action_core is not on PyPI yet (ActionCore progress.md #1): uv resolves it from GitHub at this commit.
+[tool.uv.sources]
+je-action-core = { git = "https://github.com/Integration-Automation/ActionCore", rev = "4f5e88d57690a3a675816a46033bf488432b2cb1" }

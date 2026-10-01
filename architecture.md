@@ -20,16 +20,16 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/__main__.py` | Legacy flag CLI (`python -m je_api_testka`) |
 | `je_api_testka/requests_wrapper/`, `httpx_wrapper/` | HTTP backends: `test_api_method_requests`, `test_api_method_httpx`, `test_api_method_httpx_async`, `delegate_async_httpx` |
 | `je_api_testka/websocket_wrapper/`, `sse_wrapper/`, `graphql_wrapper/` | Extra protocol backends that need optional dependencies |
-| `je_api_testka/utils/executor/action_executor.py` | `Executor.event_dict` (the `AT_*` command map), `execute_action`, `execute_files`, `add_command_to_executor` |
+| `je_api_testka/utils/executor/action_executor.py` | `Executor` (je_action_core's `ActionExecutor` with APITestka's settings): `event_dict` (the `AT_*` command map), `execute_action`, `execute_files`, `add_command_to_executor` |
 | `je_api_testka/utils/test_record/` | `test_record_instance`: shared success and error records, guarded by an `RLock` |
 | `je_api_testka/utils/assert_result/` | `check_result`, JSON Schema and JSONPath checks, snapshots |
 | `je_api_testka/utils/generate_report/` | HTML, JSON, XML, JUnit, Allure and Markdown reports; badge, run diff, trend store; per-endpoint latency history and anomaly detection (`latency_trends.py`, same SQLite file) and the HTML trend report (`trend_report.py`) |
-| `je_api_testka/utils/callback/` | `callback_executor`: run a trigger command, then a callback |
+| `je_api_testka/utils/callback/` | `callback_executor` (je_action_core's callback executor): run a trigger command, then a callback; a failure is logged and returns `None` |
 | `je_api_testka/utils/mock_server/` | `flask_mock_server_instance` with dynamic, template, proxy, webhook and OpenAPI routes, plus fault injection; `WebSocketMockServer` (`websocket_mock.py`) and `GrpcStubServer` (`grpc_stub.py`) run in background threads; `protocol_mocks.py` keeps one of each for JSON actions; `mock_config.py` reads `apitestka mock --config` |
-| `je_api_testka/utils/socket_server/` | `start_apitestka_socket_server` (TCP command server) |
-| `je_api_testka/utils/package_manager/` | `package_manager`: loads an installed package's members into the executor |
+| `je_api_testka/utils/socket_server/` | `start_apitestka_socket_server`: je_action_core's TCP action server running `execute_action` (port 9939) |
+| `je_api_testka/utils/package_manager/` | `package_manager` (je_action_core's, gate on): loads an installed package's members into the executor |
 | `je_api_testka/utils/project/` | `create_project_dir` scaffolding (keyword and executor templates) |
-| `je_api_testka/utils/{json,xml,file_process,logging,exception,retry,observability}/` | JSON and XML I/O, directory listing, `apitestka_logger` (file at `$APITESTKA_LOG_FILE` or `~/.je_api_testka/logs/APITestka.log`, opened on first use; the root logger is left alone), exception hierarchy, `RetryPolicy`, OpenTelemetry hooks |
+| `je_api_testka/utils/{json,xml,file_process,logging,exception,retry,observability}/` | JSON (je_action_core's `ActionJsonFile` with APITestka's messages) and XML I/O, directory listing (je_action_core's), `apitestka_logger` (file at `$APITESTKA_LOG_FILE` or `~/.je_api_testka/logs/APITestka.log`, opened on first use; the root logger is left alone), exception hierarchy, `RetryPolicy`, OpenTelemetry hooks |
 | `je_api_testka/data/` | Variable store, template rendering, env profiles, fake-data helpers, data rows |
 | `je_api_testka/connection/` | Connection options, DNS override, record/replay cassettes |
 | `je_api_testka/diff/`, `spec/` | Response and contract diff, SLA checks; schema inference, records → OpenAPI (`records_to_openapi`; `openapi_export` reads saved JSON reports and writes the spec), OpenAPI changelog, path-template matching (`path_templates`), deterministic examples (`examples`), test-as-spec loop (`spec_loop`: drift, coverage, missing tests, inferred document) |
@@ -158,6 +158,20 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
   from `<report_name>.json`: `totals.requests`, `totals.failure_rate`, `latency_overall.p95_ms`, because
   LoadDensity exits with 0 even when an action fails. `test/test_integrations/test_load_density.py` checks this
   side against a stand-in package that follows the contract; LoadDensity lists APITestka in its own §6.
+- **ActionCore (this repo depends on it)**: `je_action_core` (Integration-Automation/ActionCore) holds the executor,
+  command registry, package manager and gate, callback executor, action-file reading and writing, file listing and
+  the TCP action server. APITestka uses all of them, with these settings:
+  - **executor**: document key `api_testka`, `executor_list_error` for every bad list, `LegacyActionParser` with
+    `executor_data_error`, plain record keys, `LoggingReporter(apitestka_logger)`, and `strip_runner_metadata` as
+    the action rewrite;
+  - **registry**: functions only;
+  - **package manager**: `<package>_<member>` names, functions, builtins and classes, the gate on, all errors
+    logged;
+  - **callback executor**: legacy checks, a failure returns `None`;
+  - **socket server**: reads the 8192-byte prefix, answers every error.
+
+  Until the package is on PyPI, `pyproject.toml` / `dev.toml` (`[tool.uv.sources]`) and the CI install it from
+  GitHub at a fixed commit (`progress.md` #16). ActionCore lists APITestka in its own §6.
 - **Sibling executors** share the action-list shape and the `Return_Data_Over_JE` socket terminator,
   but differ in command prefix (`AT_` here, `LD_` LoadDensity, `MT_` MailThunder, `FA_` FileAutomation),
   dict key (`api_testka` here) and builtins policy: APITestka registers no Python builtins (explicit

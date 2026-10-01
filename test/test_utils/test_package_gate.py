@@ -5,6 +5,8 @@ from unittest.mock import patch
 
 import pytest
 
+from je_action_core import package_manager as core_package_manager
+
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException
 from je_api_testka.utils.executor.action_executor import executor
 from je_api_testka.utils.package_manager import package_manager_class
@@ -35,7 +37,7 @@ def test_unconfigured_gate_still_loads_but_warns():
 def test_closed_gate_refuses_before_importing():
     manager = _manager()
     manager.set_allow_arbitrary_packages(False)
-    with patch.object(package_manager_class, "import_module") as importer:
+    with patch.object(core_package_manager, "import_module") as importer:
         with pytest.raises(APITesterExecuteException, match="not allowed"):
             manager.add_package_to_executor("os")
         importer.assert_not_called()

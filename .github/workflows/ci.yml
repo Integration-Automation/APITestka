@@ -32,10 +32,17 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       # Hash-locked, wheels-only, one file for every OS and Python in the matrix. Regenerate with
-      #   uv pip compile .github/requirements/ci.in --universal --python-version 3.10       #     --generate-hashes --only-binary :all: -o .github/requirements/ci.txt
+      #   uv pip compile .github/requirements/ci.in --universal --python-version 3.10 \
+      #     --generate-hashes --only-binary :all: -o .github/requirements/ci.txt
       - name: Install dependencies
         run: |
           pip install --require-hashes --only-binary :all: -r .github/requirements/ci.txt
+
+      # je_action_core has no dependencies and is not on PyPI yet (ActionCore progress.md #1), so it cannot be
+      # in the hash-locked ci.txt; install it from GitHub at a fixed commit until it is.
+      - name: Install je_action_core
+        run: |
+          pip install --no-deps "je_action_core @ git+https://github.com/Integration-Automation/ActionCore@4f5e88d57690a3a675816a46033bf488432b2cb1"
 
       # PySide6's Qt libraries load these at import; the Ubuntu runner image lacks libEGL.so.1 at least.
       # The list is the ELF NEEDED entries of QtGui, QtWidgets and the offscreen plugin outside the base system.

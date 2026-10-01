@@ -5,7 +5,7 @@
 APITestka (`je_api_testka`) is a lightweight, cross-platform Python framework for automated API testing. Supports HTTP/HTTPS, SOAP/XML, JSON with `requests` and `httpx` backends.
 
 - **Python**: 3.10+
-- **Dependencies**: `requests`, `Flask`, `httpx`
+- **Dependencies**: `requests`, `Flask`, `httpx`, `defusedxml`, `je_action_core` (the executor core shared with LoadDensity, MailThunder and FileAutomation)
 - **Optional GUI**: `PySide6==6.11.2`
 
 ## Build & Test Commands

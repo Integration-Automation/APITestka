@@ -1,5 +1,14 @@
-import types
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, List, Optional
+
+from je_action_core import (
+    ActionExecutor,
+    ActionListRules,
+    CommandPolicy,
+    CommandRegistry,
+    ExecutorSettings,
+    LegacyActionParser,
+    LoggingReporter,
+)
 
 from je_api_testka import test_api_method_httpx
 from je_api_testka.ai.backend import select_ai_backend
@@ -105,13 +114,29 @@ def _detect_latency_anomalies(db_path: str = DEFAULT_TREND_DB, policy: Optional[
     return [verdict.to_dict() for verdict in detect_latency_anomalies(db_path, policy)]
 
 
-_NAME_ONLY: int = 1  # [name]
-_NAME_AND_ARGUMENTS: int = 2  # [name, {kwargs}] or [name, [args]]
+# The action list key and the error texts; the dispatch itself is je_action_core's (workspace L-6).
+ACTION_LIST_KEY: str = "api_testka"
+_SETTINGS = ExecutorSettings(
+    rules=ActionListRules(ACTION_LIST_KEY, error=APITesterExecuteException, missing_message=executor_list_error,
+                          not_list_message=executor_list_error, empty_message=executor_list_error),
+    parser=LegacyActionParser(error=APITesterExecuteException, message=executor_data_error),
+    reporter=LoggingReporter(apitestka_logger),
+    read_json=read_action_json,
+    # Runner metadata (id, depends_on, tags) orders and filters actions; the command never sees it.
+    prepare=strip_runner_metadata,
+)
 
 
-class Executor:
+def _registry() -> CommandRegistry:
+    return CommandRegistry(policy=CommandPolicy.FUNCTIONS_ONLY,
+                           rejection=lambda _name: APIAddCommandException(add_command_exception_tag))
 
-    def __init__(self):
+
+class Executor(ActionExecutor):
+    """The ``AT_*`` commands over je_action_core's executor: ``[name]``, ``[name, {kwargs}]``, ``[name, [args]]``."""
+
+    def __init__(self) -> None:
+        super().__init__(_SETTINGS, _registry())
         # 初始化 Executor，建立事件字典
         # Initialize Executor and build event dictionary
         self.event_dict = {
@@ -252,82 +277,6 @@ class Executor:
         """
         package_manager.allow_packages(*packages)
 
-    def _execute_event(self, action: list) -> Any:
-        """
-        執行單一事件
-        Execute a single event
-
-        :param action: 要執行的事件 (list 格式)
-                       Event to execute (list format)
-        :return: 事件回傳值 / Event return value
-        """
-        apitestka_logger.info(f"Executor _execute_event action: {action}")
-        # Runner metadata (id, depends_on, tags) orders and filters actions; the command never sees it.
-        action = strip_runner_metadata(action)
-        event: Callable = self.event_dict.get(action[0])
-        if event is None:
-            raise APITesterExecuteException(executor_data_error + " " + str(action))
-        if len(action) == _NAME_AND_ARGUMENTS:
-            if isinstance(action[1], dict):
-                return event(**action[1])  # 使用 kwargs 呼叫 / Call with kwargs
-            else:
-                return event(*action[1])   # 使用 args 呼叫 / Call with args
-        elif len(action) == _NAME_ONLY:
-            return event()                # 無參數呼叫 / Call without arguments
-        else:
-            raise APITesterExecuteException(executor_data_error + " " + str(action))
-
-    def execute_action(self, action_list: Union[list, dict]) -> Dict[str, str]:
-        """
-        執行多個事件，並記錄結果
-        Execute multiple actions and record results
-
-        :param action_list: 事件列表，例如：
-                            [["method", {"param": value}], ["method", {"param": value}]]
-        :return: 執行紀錄字典 / Execution record dictionary
-        """
-        apitestka_logger.info(f"Executor execute_action action_list: {action_list}")
-        if isinstance(action_list, dict):
-            action_list: list = action_list.get("api_testka", [])
-            if action_list is None:
-                raise APITesterExecuteException(executor_list_error)
-
-        execute_record_dict = {}
-        if not isinstance(action_list, list) or not action_list:
-            raise APITesterExecuteException(executor_list_error)
-
-        for action in action_list:
-            try:
-                event_response = self._execute_event(action)
-                execute_record: str = "execute: " + str(action)
-                execute_record_dict.update({execute_record: event_response})
-            except Exception as error:
-                apitestka_logger.info(
-                    f"execute_action, action_list: {action_list}, action: {action}, failed: {repr(error)}"
-                )
-                execute_record = "execute: " + str(action)
-                execute_record_dict.update({execute_record: repr(error)})
-
-        # 輸出執行結果到 logger / Log execution results
-        for key, value in execute_record_dict.items():
-            apitestka_logger.info(f"{key} -> {value}")
-
-        return execute_record_dict
-
-    def execute_files(self, execute_files_list: list) -> List[Any]:
-        """
-        執行多個檔案中的事件
-        Execute actions from multiple files
-
-        :param execute_files_list: 檔案路徑列表 / List of file paths
-        :return: 每個檔案的執行結果列表 / List of execution details
-        """
-        apitestka_logger.info(f"Executor execute_files execute_files_list: {execute_files_list}")
-        execute_detail_list: list = []
-        for file in execute_files_list:
-            execute_detail_list.append(self.execute_action(read_action_json(file)))
-        return execute_detail_list
-
 
 # 建立全域 Executor 並綁定到 package_manager
 # Create global Executor and bind to package_manager
@@ -344,11 +293,7 @@ def add_command_to_executor(command_dict: dict) -> None:
                          Command dictionary (name: function)
     """
     apitestka_logger.info(f"action_executor.py add_command_to_executor command_dict: {command_dict}")
-    for command_name, command in command_dict.items():
-        if isinstance(command, (types.MethodType, types.FunctionType)):
-            executor.event_dict.update({command_name: command})
-        else:
-            raise APIAddCommandException(add_command_exception_tag)
+    executor.add_command_to_executor(command_dict)
 
 
 def execute_action(action_list: list) -> Any:
