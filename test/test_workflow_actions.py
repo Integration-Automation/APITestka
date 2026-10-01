@@ -53,25 +53,31 @@ def test_one_version_per_action():
     assert {action: shas for action, shas in seen.items() if len(shas) > 1} == {}
 
 
-def test_dependabot_keeps_pins_current_on_dev():
-    # Pinned SHAs only stay current if something bumps them; every update
-    # goes to dev because main is the release branch. Parsed as text: PyYAML
-    # is not a test dependency.
+def _dependabot_blocks() -> list[tuple[str, str]]:
+    """Return ``(ecosystem, block text)`` for each update block of ``dependabot.yml``.
+
+    Parsed as text: PyYAML is not a test dependency.
+    """
     text = (_ROOT / ".github" / "dependabot.yml").read_text(encoding="utf-8")
     blocks = re.split(r"^\s*-\s*package-ecosystem:", text, flags=re.MULTILINE)[1:]
-    ecosystems = {block.split()[0].strip("\"'") for block in blocks}
-    assert {"pip", "github-actions"} <= ecosystems
+    return [(block.split()[0].strip("\"'"), block) for block in blocks]
+
+
+def test_dependabot_keeps_pins_current_on_dev():
+    # Pinned SHAs only stay current if something bumps them; every update
+    # goes to dev because main is the release branch.
+    blocks = _dependabot_blocks()
+    assert {"pip", "github-actions"} <= {ecosystem for ecosystem, _block in blocks}
     assert all(re.search(r"^\s*target-branch:\s*\"dev\"", block, re.MULTILINE)
-               for block in blocks)
+               for _ecosystem, block in blocks)
 
 
 def test_dependabot_waits_a_week_before_proposing_a_release():
     # A compromised release is usually found and yanked within days. Dependabot's
     # own default wait is 3 days, and zizmor's dependabot-cooldown audit asks
     # for 7. The wait never delays security updates.
-    text = (_ROOT / ".github" / "dependabot.yml").read_text(encoding="utf-8")
-    blocks = re.split(r"^\s*-\s*package-ecosystem:", text, flags=re.MULTILINE)[1:]
-    days = [re.search(r"^\s*default-days:\s*(\d+)", block, re.MULTILINE) for block in blocks]
+    blocks = _dependabot_blocks()
+    days = [re.search(r"^\s*default-days:\s*(\d+)", block, re.MULTILINE) for _ecosystem, block in blocks]
     assert blocks and all(match and int(match.group(1)) >= 7 for match in days)
 
 
