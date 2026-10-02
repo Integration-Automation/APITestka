@@ -13,6 +13,12 @@ from je_api_testka.utils.exception.exception_tags import (
 )
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.test_record.request_capture import (
+    capture_api_request,
+    note_error,
+    note_response,
+    note_response_received,
+)
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 # 建立 Session 物件，用於持久化連線
@@ -96,6 +102,7 @@ def get_response(response: requests.Response,
     return get_requests_data(response, start_time, end_time)
 
 
+@capture_api_request
 def test_api_method_requests(http_method: str, test_url: str,
                              soap: bool = False, record_request_info: bool = True,
                              clean_record: bool = False, result_check_dict: dict = None,
@@ -125,8 +132,10 @@ def test_api_method_requests(http_method: str, test_url: str,
             return test_api_method_requests(http_method, test_url=test_url, headers=headers, verify=verify,
                                             timeout=timeout, allow_redirects=allow_redirects, **kwargs)
 
+        note_response_received(response.status_code, response.content)
         end_time = datetime.now()
         response_data = get_response(response, start_time, end_time)
+        note_response(response_data)
         response.raise_for_status()
 
         if clean_record:
@@ -142,6 +151,7 @@ def test_api_method_requests(http_method: str, test_url: str,
                 test_record_instance.test_record_list.append(response_data)
             return {"response": response, "response_data": response_data}
     except Exception as error:
+        note_error(error)
         apitestka_logger.error(
             f"requests test_api_method, http_method: {http_method}, test_url:{test_url}, soap: {soap}, "
             f"record_request_info: {record_request_info}, clean_record: {clean_record}, "
