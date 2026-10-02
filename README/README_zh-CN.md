@@ -145,6 +145,8 @@ apitestka run smoke.json
 
 ### 共享请求记录
 
+无效方法、URL 与选项保留旧的配置失败记录，不生成 canonical 已执行请求记录。响应证据在元数据转换前保存；包装后的 TLS 原因仍归类为 TLS 失败。
+
 Canonical 结束时间由开始时间加单调时钟耗时计算，系统时间校正不会使区间倒退。Runner／配置错误与连接及其他传输错误分开记录。
 
 ActionCore 支持 request context 后，HTTP 包装器可在明确的运行作用域内同步记录 RequestRecord v1。原生响应和旧报告格式保持兼容。HTTP 与断言失败保留真实状态码，传输失败的未知测量值使用 null。`record_request_info=False` 排除成功记录，失败仍会记录。默认不保存正文和标头；`from_legacy_record(..., capture_payload=True)` 可导入正文并遮蔽敏感标头。各 context 独立保存记录，`clean_record()` 只清除旧的全局记录。

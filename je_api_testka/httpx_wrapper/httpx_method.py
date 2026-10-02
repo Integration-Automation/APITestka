@@ -11,7 +11,12 @@ from je_api_testka.utils.exception.exception_tags import (
 )
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
-from je_api_testka.utils.test_record.request_capture import capture_api_request, note_error, note_response
+from je_api_testka.utils.test_record.request_capture import (
+    capture_api_request,
+    note_error,
+    note_response,
+    note_response_received,
+)
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 # 定義 HTTP 方法字典，對應到 httpx 的方法
@@ -111,6 +116,7 @@ def test_api_method_httpx(http_method: str, test_url: str, record_request_info: 
     try:
         start_time: datetime = datetime.now()
         response = send_httpx_requests(http_method, test_url=test_url, verify=verify, timeout=timeout, **kwargs)
+        note_response_received(response.status_code, response.content)
         end_time = datetime.now()
         response_data = get_httpx_response(response, start_time, end_time)
         note_response(response_data)

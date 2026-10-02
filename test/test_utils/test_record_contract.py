@@ -1,6 +1,7 @@
 import asyncio
 import builtins
 import json
+import ssl
 from datetime import timedelta
 
 import httpx
@@ -179,8 +180,41 @@ def test_wall_clock_correction_keeps_success_and_monotonic_end_time(mock_url, mo
     assert result["response_time_ms"] == pytest.approx(25)
 
 
-def test_configuration_error_is_a_runner_failure():
+@pytest.mark.parametrize("method,url,kwargs", [("bad-method", "http://localhost/", {}),
+                                               ("get", "not-a-url", {}),
+                                               ("get", "http://localhost/", {"unknown_option": True})])
+def test_configuration_error_does_not_fabricate_executed_request(method, url, kwargs):
     run = context()
     with use_run_context(run):
-        assert run_requests("bad-method", "http://localhost/") is None
-    assert run.snapshot()[0]["error"]["kind"] == "runner_internal"
+        assert run_requests(method, url, **kwargs) is None
+    assert run.snapshot() == []
+    assert len(test_record_instance.error_record_list) == 1
+
+
+def test_metadata_conversion_failure_retains_executed_request(mock_url, monkeypatch):
+    from je_api_testka.requests_wrapper import request_method
+
+    def fail(*args, **kwargs):
+        raise ValueError("metadata conversion failed")
+
+    monkeypatch.setattr(request_method, "get_response", fail)
+    run = context()
+    with use_run_context(run):
+        assert run_requests("get", mock_url + "/get") is None
+    result = run.snapshot()[0]
+    assert result["error"]["kind"] == "runner_internal"
+    assert result["status_code"] == 200
+    assert result["response_length"] > 0
+
+
+def test_wrapped_tls_failure_keeps_tls_kind(monkeypatch):
+    from je_api_testka.httpx_wrapper import httpx_method
+
+    def fail(*args, **kwargs):
+        raise httpx.ConnectError("handshake failed") from ssl.SSLCertVerificationError("untrusted")
+
+    monkeypatch.setattr(httpx_method, "send_httpx_requests", fail)
+    run = context("httpx")
+    with use_run_context(run):
+        assert run_httpx("get", "https://localhost/") is None
+    assert run.snapshot()[0]["error"]["kind"] == "tls"

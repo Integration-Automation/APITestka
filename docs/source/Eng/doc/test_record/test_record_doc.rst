@@ -76,3 +76,5 @@ With ActionCore request-context support, HTTP wrappers can also capture RequestR
    records_json = run.to_json()
 
 Canonical end times use the start timestamp plus monotonic elapsed time, so wall clock corrections cannot reverse the interval. Runner/configuration failures are distinct from connection and other transport errors.
+
+Invalid methods, URLs and options remain legacy configuration failures and produce no canonical executed-request record. Response evidence is retained before metadata conversion; wrapped TLS causes retain the TLS failure kind.

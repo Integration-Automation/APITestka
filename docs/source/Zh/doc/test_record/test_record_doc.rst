@@ -76,3 +76,5 @@ ActionCore 支援 request context 後，HTTP 包裝器可在明確的執行作�
    records_json = run.to_json()
 
 Canonical 結束時間由開始時間加單調時鐘耗時計算，系統時間校正不會使區間倒退。Runner／設定錯誤與連線及其他傳輸錯誤分開記錄。
+
+無效方法、URL 與選項保留舊的設定失敗紀錄，不產生 canonical 已執行請求紀錄。回應證據在中繼資料轉換前保存；包裝後的 TLS 原因仍歸類為 TLS 失敗。

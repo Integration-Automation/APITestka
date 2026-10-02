@@ -10,10 +10,10 @@ from functools import wraps
 from time import monotonic, time
 from typing import TYPE_CHECKING, cast
 
-from httpx import RequestError
+from httpx import InvalidURL, RequestError, UnsupportedProtocol
 from requests.exceptions import RequestException
 
-from je_api_testka.utils.exception.exceptions import APIAssertException, APICheckException
+from je_api_testka.utils.exception.exceptions import APIAssertException, APICheckException, APITesterException
 from je_api_testka.utils.test_record.contract import from_legacy_record, get_optional_run_context
 
 if TYPE_CHECKING:
@@ -28,6 +28,7 @@ class _PendingRequest:
     clock: float = field(default_factory=lambda: monotonic())
     response: dict[str, object] | None = None
     error: Exception | None = None
+    response_received: bool = False
 
 
 _pending_request: ContextVar[_PendingRequest | None] = ContextVar("apitestka_pending_request", default=None)
@@ -40,11 +41,31 @@ def note_response(response: dict[str, object]) -> None:
         pending.response = response
 
 
+def note_response_received(status_code: int, content: bytes) -> None:
+    """Retain transport evidence even if subsequent legacy metadata conversion fails."""
+    pending = _pending_request.get()
+    if pending is not None:
+        pending.response_received = True
+        pending.response = {"status_code": status_code, "content": content}
+
+
 def note_error(error: Exception) -> None:
     """Keep the original failure before the legacy wrapper converts it to a failure pair."""
     pending = _pending_request.get()
     if pending is not None:
         pending.error = error
+
+
+def _is_tls_failure(error: BaseException) -> bool:
+    visited: set[int] = set()
+    current: BaseException | None = error
+    while current is not None and id(current) not in visited:
+        visited.add(id(current))
+        name = type(current).__name__.lower()
+        if "ssl" in name or "tls" in name:
+            return True
+        current = current.__cause__ or current.__context__
+    return False
 
 
 def _error_kind(error: Exception) -> str:
@@ -55,7 +76,7 @@ def _error_kind(error: Exception) -> str:
         return "http_status"
     if "timeout" in name:
         return "timeout"
-    if "ssl" in name or "tls" in name:
+    if _is_tls_failure(error):
         return "tls"
     if "connect" in name:
         return "connection"
@@ -87,7 +108,10 @@ def _finish(pending: _PendingRequest) -> None:
         return  # A SOAP wrapper delegates to another captured invocation.
     if pending.error is None and not pending.arguments.get("record_request_info", True):
         return
-    record = dict(pending.response or pending.arguments)
+    configuration_errors = (APITesterException, ValueError, TypeError, InvalidURL, UnsupportedProtocol)
+    if not pending.response_received and isinstance(pending.error, configuration_errors):
+        return
+    record = {**pending.arguments, **(pending.response or {})}
     elapsed = monotonic() - pending.clock
     record.update(start_time=pending.start_time, end_time=pending.start_time + elapsed,
                   elapsed=None, request_time_sec=elapsed,

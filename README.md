@@ -149,6 +149,8 @@ apitestka run smoke.json
 
 ### Shared Request Records
 
+Invalid methods, URLs and options remain legacy configuration failures and produce no canonical executed-request record. Response evidence is retained before metadata conversion; wrapped TLS causes retain the TLS failure kind.
+
 Canonical end times use the start timestamp plus monotonic elapsed time, so wall clock corrections cannot reverse the interval. Runner/configuration failures are distinct from connection and other transport errors.
 
 With ActionCore request-context support, HTTP wrappers can also capture RequestRecord v1 in an explicit run scope. Native responses and legacy reports keep their existing formats. HTTP and assertion failures retain the actual status; transport failures use null for unknown measurements. Successful calls with `record_request_info=False` are excluded; failures remain recorded. Bodies and headers are omitted by default. `from_legacy_record(..., capture_payload=True)` enables payload import and masks sensitive headers. Each context has independent records; `clean_record()` only clears the legacy singleton.

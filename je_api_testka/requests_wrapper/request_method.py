@@ -13,7 +13,12 @@ from je_api_testka.utils.exception.exception_tags import (
 )
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
-from je_api_testka.utils.test_record.request_capture import capture_api_request, note_error, note_response
+from je_api_testka.utils.test_record.request_capture import (
+    capture_api_request,
+    note_error,
+    note_response,
+    note_response_received,
+)
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 # 建立 Session 物件，用於持久化連線
@@ -127,6 +132,7 @@ def test_api_method_requests(http_method: str, test_url: str,
             return test_api_method_requests(http_method, test_url=test_url, headers=headers, verify=verify,
                                             timeout=timeout, allow_redirects=allow_redirects, **kwargs)
 
+        note_response_received(response.status_code, response.content)
         end_time = datetime.now()
         response_data = get_response(response, start_time, end_time)
         note_response(response_data)

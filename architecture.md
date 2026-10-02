@@ -151,7 +151,7 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 
 ## 6. Cross-project boundaries
 
-- **Shared request results**: `utils.test_record.run_context` re-exports ActionCore `RunContext`/scope helpers. HTTP wrappers optionally emit RequestRecord v1; `contract.from_legacy_record` imports dictionaries or failure pairs. Canonical results derive end time from monotonic duration and distinguish runner/configuration errors from transport errors; they retain status, elapsed milliseconds and assertion outcomes without changing existing API returns/reports. LoadDensity shares the schema. New core support is required only for explicit canonical recording; old core installations keep legacy functionality. Payload import is opt-in and masks credential headers.
+- **Shared request results**: `utils.test_record.run_context` re-exports ActionCore `RunContext`/scope helpers. HTTP wrappers optionally emit RequestRecord v1 for executed requests; pre-transport configuration errors stay in legacy records, while native status/length survive metadata conversion errors; `contract.from_legacy_record` imports dictionaries or failure pairs. Canonical results derive end time from monotonic duration and distinguish runner/configuration errors from transport errors; they retain status, elapsed milliseconds and assertion outcomes without changing existing API returns/reports. LoadDensity shares the schema. New core support is required only for explicit canonical recording; old core installations keep legacy functionality. Payload import is opt-in and masks credential headers.
 
 
 - **PyBreeze (subprocess)** runs `python -m je_api_testka --execute_str <json>` or `--execute_file <path>`
