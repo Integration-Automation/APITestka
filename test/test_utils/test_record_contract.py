@@ -162,3 +162,25 @@ def test_earlier_core_keeps_legacy_capture_optional(monkeypatch):
 
     monkeypatch.setattr(builtins, "__import__", earlier_core)
     assert get_optional_run_context() is None
+
+
+def test_wall_clock_correction_keeps_success_and_monotonic_end_time(mock_url, monkeypatch):
+    from je_api_testka.utils.test_record import request_capture
+
+    wall_ticks = iter([1000.0, 900.0])
+    clock_ticks = iter([1.0, 1.025])
+    monkeypatch.setattr(request_capture, "time", lambda: next(wall_ticks))
+    monkeypatch.setattr(request_capture, "monotonic", lambda: next(clock_ticks))
+    run = context()
+    with use_run_context(run):
+        assert run_requests("get", mock_url + "/get") is not None
+    result = run.snapshot()[0]
+    assert result["end_time"] == pytest.approx(1000.025)
+    assert result["response_time_ms"] == pytest.approx(25)
+
+
+def test_configuration_error_is_a_runner_failure():
+    run = context()
+    with use_run_context(run):
+        assert run_requests("bad-method", "http://localhost/") is None
+    assert run.snapshot()[0]["error"]["kind"] == "runner_internal"

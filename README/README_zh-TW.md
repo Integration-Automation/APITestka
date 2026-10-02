@@ -145,6 +145,8 @@ apitestka run smoke.json
 
 ### 共用請求紀錄
 
+Canonical 結束時間由開始時間加單調時鐘耗時計算，系統時間校正不會使區間倒退。Runner／設定錯誤與連線及其他傳輸錯誤分開記錄。
+
 ActionCore 支援 request context 後，HTTP 包裝器可在明確的執行作用域內同步記錄 RequestRecord v1。原生回應和舊報告格式保持相容。HTTP 與斷言失敗保留實際狀態碼，傳輸失敗的未知測量值使用 null。`record_request_info=False` 排除成功紀錄，失敗仍會記錄。預設不保存本文和標頭；`from_legacy_record(..., capture_payload=True)` 可匯入本文並遮蔽敏感標頭。各 context 獨立保存紀錄，`clean_record()` 只清除舊的全域紀錄。
 
 ```python

@@ -10,6 +10,9 @@ from functools import wraps
 from time import monotonic, time
 from typing import TYPE_CHECKING, cast
 
+from httpx import RequestError
+from requests.exceptions import RequestException
+
 from je_api_testka.utils.exception.exceptions import APIAssertException, APICheckException
 from je_api_testka.utils.test_record.contract import from_legacy_record, get_optional_run_context
 
@@ -54,7 +57,11 @@ def _error_kind(error: Exception) -> str:
         return "timeout"
     if "ssl" in name or "tls" in name:
         return "tls"
-    return "connection"
+    if "connect" in name:
+        return "connection"
+    if isinstance(error, (RequestError, RequestException, OSError)):
+        return "transport"
+    return "runner_internal"
 
 
 def _assertions(pending: _PendingRequest) -> list[dict[str, object]]:
@@ -81,8 +88,9 @@ def _finish(pending: _PendingRequest) -> None:
     if pending.error is None and not pending.arguments.get("record_request_info", True):
         return
     record = dict(pending.response or pending.arguments)
-    record.update(start_time=pending.start_time, end_time=time(),
-                  elapsed=None, request_time_sec=monotonic() - pending.clock,
+    elapsed = monotonic() - pending.clock
+    record.update(start_time=pending.start_time, end_time=pending.start_time + elapsed,
+                  elapsed=None, request_time_sec=elapsed,
                   assertions=_assertions(pending), outcome="failed" if pending.error else "passed")
     if pending.error is not None:
         record["error"] = {"kind": _error_kind(pending.error),

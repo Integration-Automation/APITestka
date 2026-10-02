@@ -74,3 +74,5 @@ With ActionCore request-context support, HTTP wrappers can also capture RequestR
    with use_run_context(run):
        test_api_method_requests("get", "http://localhost:8091/get")
    records_json = run.to_json()
+
+Canonical end times use the start timestamp plus monotonic elapsed time, so wall clock corrections cannot reverse the interval. Runner/configuration failures are distinct from connection and other transport errors.

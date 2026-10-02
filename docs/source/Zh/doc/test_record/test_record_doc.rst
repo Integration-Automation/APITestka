@@ -74,3 +74,5 @@ ActionCore 支援 request context 後，HTTP 包裝器可在明確的執行作�
    with use_run_context(run):
        test_api_method_requests("get", "http://localhost:8091/get")
    records_json = run.to_json()
+
+Canonical 結束時間由開始時間加單調時鐘耗時計算，系統時間校正不會使區間倒退。Runner／設定錯誤與連線及其他傳輸錯誤分開記錄。
