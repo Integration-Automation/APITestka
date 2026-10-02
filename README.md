@@ -147,6 +147,20 @@ apitestka run smoke.json
 
 ---
 
+### Shared Request Records
+
+With ActionCore request-context support, HTTP wrappers can also capture RequestRecord v1 in an explicit run scope. Native responses and legacy reports keep their existing formats. HTTP and assertion failures retain the actual status; transport failures use null for unknown measurements. Successful calls with `record_request_info=False` are excluded; failures remain recorded. Bodies and headers are omitted by default. `from_legacy_record(..., capture_payload=True)` enables payload import and masks sensitive headers. Each context has independent records; `clean_record()` only clears the legacy singleton.
+
+```python
+from je_api_testka import test_api_method_requests
+from je_api_testka.utils.test_record.run_context import RunContext, use_run_context
+
+run = RunContext(source="apitestka", phase="functional", engine="requests")
+with use_run_context(run):
+    test_api_method_requests("get", "http://localhost:8091/get")
+records_json = run.to_json()
+```
+
 ## Feature Map
 
 ### HTTP / Protocol Backends

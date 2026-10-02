@@ -143,6 +143,20 @@ apitestka run smoke.json
 
 ---
 
+### 共享请求记录
+
+ActionCore 支持 request context 后，HTTP 包装器可在明确的运行作用域内同步记录 RequestRecord v1。原生响应和旧报告格式保持兼容。HTTP 与断言失败保留真实状态码，传输失败的未知测量值使用 null。`record_request_info=False` 排除成功记录，失败仍会记录。默认不保存正文和标头；`from_legacy_record(..., capture_payload=True)` 可导入正文并遮蔽敏感标头。各 context 独立保存记录，`clean_record()` 只清除旧的全局记录。
+
+```python
+from je_api_testka import test_api_method_requests
+from je_api_testka.utils.test_record.run_context import RunContext, use_run_context
+
+run = RunContext(source="apitestka", phase="functional", engine="requests")
+with use_run_context(run):
+    test_api_method_requests("get", "http://localhost:8091/get")
+records_json = run.to_json()
+```
+
 ## 功能总览
 
 ### HTTP / 协议后端

@@ -12,6 +12,7 @@ from je_api_testka.utils.exception.exception_tags import (
 )
 from je_api_testka.utils.exception.exceptions import APITesterException
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
+from je_api_testka.utils.test_record.request_capture import capture_api_request, note_error, note_response
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 # 定義 HTTP 方法字典，對應到 AsyncClient 的方法
@@ -87,6 +88,7 @@ async def send_httpx_requests_async(
     return response
 
 
+@capture_api_request
 async def test_api_method_httpx_async(
     http_method: str,
     test_url: str,
@@ -113,6 +115,7 @@ async def test_api_method_httpx_async(
         )
         end_time = datetime.now()
         response_data = get_httpx_response_async(response, start_time, end_time)
+        note_response(response_data)
         response.raise_for_status()
         if clean_record:
             test_record_instance.clean_record()
@@ -126,6 +129,7 @@ async def test_api_method_httpx_async(
                 test_record_instance.test_record_list.append(response_data)
             return {"response": response, "response_data": response_data}
     except Exception as error:
+        note_error(error)
         apitestka_logger.error(
             "async_httpx_method.py test_api_method_httpx_async "
             f"http_method: {http_method} test_url:{test_url} record_request_info: {record_request_info} "
