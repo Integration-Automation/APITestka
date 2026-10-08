@@ -49,6 +49,24 @@ CLI Flags
    * - ``-c``, ``--create_project``
      - Create a project directory with template files
 
+Exit Status
+-----------
+
+``python -m je_api_testka`` with ``-e``, ``-d`` or ``--execute_str``, and ``apitestka run``, exit with
+status 1 when an action raised or a request was recorded as failed, and print
+``N action(s) failed``. A failed action does not stop the list: the remaining actions run first.
+The other subcommands that run action files (``openapi --run``, ``contract``, ``spec check``,
+``trend``) keep their own exit statuses.
+
+Running Under TestPioneer
+-------------------------
+
+TestPioneer starts a runner with ``TEST_PIONEER_ARTIFACT_DIR`` set to the directory that run's
+output belongs in. A report asked for under a relative name (HTML, JSON, XML, JUnit, Markdown,
+Allure, badge) is then written below that directory, and the folders it needs are created. An
+absolute name, and a name that would leave the directory, are used as given. Without the variable
+nothing changes.
+
 Subcommand CLI
 --------------
 

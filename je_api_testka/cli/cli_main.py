@@ -28,7 +28,7 @@ from typing import Optional, Sequence
 
 from je_api_testka.ai.backend import BACKEND_NAMES, select_ai_backend
 from je_api_testka.ai.test_generator import generate_tests_from_openapi
-from je_api_testka.cli.cli_common import run_action_path
+from je_api_testka.cli.cli_common import EXIT_FAILED, EXIT_OK, FailureCount, run_action_path
 from je_api_testka.cli.contract_cli import configure_contract_parser
 from je_api_testka.cli.load_cli import configure_load_parser
 from je_api_testka.cli.spec_cli import configure_spec_parser
@@ -45,7 +45,12 @@ DEFAULT_MOCK_PORT: int = 8090
 
 
 def _cmd_run(args: argparse.Namespace) -> int:
-    return run_action_path(Path(args.path))
+    with FailureCount() as count:
+        status = run_action_path(Path(args.path))
+    if status == EXIT_OK and count.failed:
+        apitestka_logger.error(f"cli run: {count.failed} action(s) failed")
+        return EXIT_FAILED
+    return status
 
 
 def _cmd_create(args: argparse.Namespace) -> int:

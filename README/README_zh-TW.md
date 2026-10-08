@@ -413,6 +413,8 @@ apitestka trend check                                                           
 apitestka spec check openapi.json --run tests/ --min-coverage 0.8               # 見測試即規格迴路
 ```
 
+`python -m je_api_testka -e/-d/--execute_str` 與 `apitestka run` 在有動作丟出例外、或有請求被記錄為失敗時，會以狀態 1 結束；其餘動作仍會先執行完。由 [TestPioneer](https://github.com/Integration-Automation/TestPioneer) 啟動時（它會設定 `TEST_PIONEER_ARTIFACT_DIR`），以相對名稱要求的報告（HTML、JSON、XML、JUnit、Markdown、Allure、badge）會寫到該目錄底下，因此流程不必再為它寫 `artifacts:`。
+
 ### 安全檢測
 
 ```python

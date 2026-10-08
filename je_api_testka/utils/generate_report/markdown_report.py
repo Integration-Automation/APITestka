@@ -8,6 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import List, Optional
 
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 DEFAULT_MARKDOWN_FILENAME: str = "apitestka_report.md"
@@ -60,6 +61,6 @@ def render_markdown(title: str = "APITestka Report") -> str:
 def generate_markdown_report(file_name: str = DEFAULT_MARKDOWN_FILENAME,
                              title: Optional[str] = None) -> Path:
     """Write the markdown report to disk and return the path."""
-    target = Path(file_name)
+    target = Path(report_path(file_name))
     target.write_text(render_markdown(title or "APITestka Report"), encoding="utf-8")
     return target

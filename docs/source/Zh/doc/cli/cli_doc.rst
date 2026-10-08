@@ -49,6 +49,22 @@ CLI 參數
    * - ``-c``, ``--create_project``
      - 建立專案目錄及範本檔案
 
+結束狀態
+--------
+
+``python -m je_api_testka`` 搭配 ``-e``、``-d`` 或 ``--execute_str``，以及 ``apitestka run``，
+在有動作丟出例外或有請求被記錄為失敗時，會以狀態 1 結束，並印出 ``N action(s) failed``。
+失敗的動作不會中止清單：其餘動作仍會先執行完。其他會執行動作檔的子命令
+（``openapi --run``、``contract``、``spec check``、``trend``）維持各自的結束狀態。
+
+在 TestPioneer 之下執行
+-----------------------
+
+TestPioneer 啟動 runner 時會把 ``TEST_PIONEER_ARTIFACT_DIR`` 設為該次執行的輸出目錄。
+以相對名稱要求的報告（HTML、JSON、XML、JUnit、Markdown、Allure、badge）會寫到該目錄底下，
+所需的資料夾會自動建立。絕對路徑，以及會離開該目錄的名稱，則照原樣使用。
+沒有設定這個變數時，行為不變。
+
 子命令 CLI
 --------------
 

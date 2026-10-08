@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261008-01 | 2026-10-08 | The CLI exits 1 when something failed; reports go below TestPioneer's artifact directory | #feature #cli #report #testpioneer | [2026-10](2026-10.md) |
 | U-20261001-27 | 2026-10-01 | The publish lock is resolved with the 7-day cut-off the other locks use | #ci #security #X-13 | [2026-10](2026-10.md) |
 | U-20261001-26 | 2026-10-01 | Both publish jobs build with the locked setuptools | #done #ci #security #X-13 | [2026-10](2026-10.md) |
 | U-20261001-25 | 2026-10-01 | Both publish jobs install hash-locked build tooling | #done #ci #security #X-13 | [2026-10](2026-10.md) |
@@ -113,5 +114,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 27 |
+| [2026-10.md](2026-10.md) | 2026-10 | 28 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

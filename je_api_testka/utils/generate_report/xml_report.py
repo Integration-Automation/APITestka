@@ -4,6 +4,7 @@ from typing import Tuple
 from defusedxml.minidom import parseString
 
 from je_api_testka.utils.generate_report.json_report import generate_json
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.xml.change_xml_structure.change_xml_structure import dict_to_elements_tree
 
@@ -60,7 +61,7 @@ def generate_xml_report(xml_file_name: str = "default_name") -> None:
     # 儲存失敗紀錄 XML / Save failure XML
     try:
         lock.acquire()
-        with open(xml_file_name + "_failure.xml", "w", encoding="utf-8") as file_to_write:
+        with open(report_path(xml_file_name + "_failure.xml"), "w", encoding="utf-8") as file_to_write:
             file_to_write.write(failure_xml)
     except Exception as error:
         apitestka_logger.error(
@@ -72,7 +73,7 @@ def generate_xml_report(xml_file_name: str = "default_name") -> None:
     # 儲存成功紀錄 XML / Save success XML
     try:
         lock.acquire()
-        with open(xml_file_name + "_success.xml", "w", encoding="utf-8") as file_to_write:
+        with open(report_path(xml_file_name + "_success.xml"), "w", encoding="utf-8") as file_to_write:
             file_to_write.write(success_xml)
     except Exception as error:
         apitestka_logger.error(
