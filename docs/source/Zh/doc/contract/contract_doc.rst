@@ -80,3 +80,6 @@ operation 存在（``/items/{id}`` 這類路徑樣板可比對，第一個 serve
 ``verify`` 與 ``compare`` 會印出報告（``--json`` 輸出 JSON），契約不成立時結束碼為 1，檔案讀不到時為 2。
 executor 指令是 ``AT_write_contract``、``AT_verify_contract`` 與 ``AT_check_contract_against_openapi``；
 後兩者會丟出帶著報告的 ``APIContractException``，讓該 action 失敗。
+
+
+提供者驗證只接受所選基底 URL 下的絕對 URL 路徑。送出前會拒絕路徑穿越（包含百分比編碼）、主機資訊、內嵌查詢與片段；查詢請使用獨立 query 欄位。

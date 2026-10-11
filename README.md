@@ -545,6 +545,8 @@ apitestka contract compare pacts/web-shop.json openapi.json
 hold. JSON actions: `AT_write_contract`, `AT_verify_contract`, `AT_check_contract_against_openapi`
 (the last two fail the action with the report).
 
+Provider verification accepts only absolute URL paths below the selected base URL. Traversal segments (including percent-encoded forms), authorities, embedded queries and fragments are rejected before sending; use the separate query field.
+
 ### GUI
 
 ```bash

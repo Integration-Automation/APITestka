@@ -87,3 +87,6 @@ Command line and JSON actions
 not hold, and with 2 when a file cannot be read. The executor commands are ``AT_write_contract``,
 ``AT_verify_contract`` and ``AT_check_contract_against_openapi``; the last two raise
 ``APIContractException`` carrying the report, so the action fails.
+
+
+Provider verification accepts only absolute URL paths below the selected base URL. Traversal segments (including percent-encoded forms), authorities, embedded queries and fragments are rejected before sending; use the separate query field.

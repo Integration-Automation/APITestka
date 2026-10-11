@@ -1,7 +1,9 @@
 # _WriterElementTree is used only for write_xml serialization (ElementTree(...).write).
 # Parsing is delegated to defusedxml below.
 from xml.etree import ElementTree as _WriterElementTree  # nosec B405  # nosemgrep
-from xml.parsers.expat import ExpatError  # nosec B407 - only the exception class; parsing uses defusedxml
+# Exception type only; all parsing below uses defusedxml, not the stdlib parser.
+# nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+from xml.parsers.expat import ExpatError  # nosec B407
 
 from defusedxml import DefusedXmlException, ElementTree, minidom
 

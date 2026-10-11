@@ -4,7 +4,7 @@ from __future__ import annotations
 import pytest
 
 from je_api_testka.contract.pact import add_interaction, new_pact
-from je_api_testka.contract.verifier import ProviderTarget, assert_pact_verified, verify_pact
+from je_api_testka.contract.verifier import ProviderTarget, _send, assert_pact_verified, verify_pact
 from je_api_testka.utils.exception.exceptions import APIContractException
 
 TYPE = {"$.body": {"match": "type"}}
@@ -68,3 +68,27 @@ def test_unreachable_provider_is_a_mismatch():
 def test_empty_contract_does_not_pass(provider):
     base_url, _states = provider
     assert not verify_pact(new_pact("web", "shop"), ProviderTarget(base_url)).ok
+
+
+@pytest.mark.parametrize("path", ["/../admin", "/%2e%2e/admin", "/%252e%252e/admin", "/a\\..\\admin",
+                                  "//other.example/admin", "https://other.example/admin", "/items?admin=1",
+                                  "/items#admin", "/%0aadmin"])
+def test_contract_path_rejects_traversal_before_sending(path, monkeypatch):
+    def unexpected_request(*_args, **_kwargs):
+        pytest.fail("an unsafe contract must never reach the network")
+
+    monkeypatch.setattr("je_api_testka.contract.verifier.requests.request", unexpected_request)
+    target = ProviderTarget("https://provider.example/api")
+    request = {"method": "GET", "path": path}
+    with pytest.raises(APIContractException):
+        _send(target, request)
+
+
+def test_contract_path_preserves_provider_prefix_and_query(monkeypatch):
+    sent = []
+    monkeypatch.setattr("je_api_testka.contract.verifier.requests.request",
+                        lambda method, url, **kwargs: sent.append((method, url, kwargs)))
+    _send(ProviderTarget("https://provider.example/api/"),
+          {"method": "GET", "path": "/items/1", "query": "q=one%20two"})
+    assert sent[0][0] == "GET"
+    assert sent[0][1] == "https://provider.example/api/items/1?q=one%20two"

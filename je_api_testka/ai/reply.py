@@ -5,7 +5,7 @@ import json
 import re
 from typing import Any
 
-_FENCE = re.compile(r"^```[A-Za-z0-9_-]*\s*\n(.*?)\n?```$", re.DOTALL)
+_FENCE_LANGUAGE = re.compile(r"[A-Za-z0-9_-]*")
 
 
 def parse_json_reply(reply: str) -> Any:
@@ -15,7 +15,8 @@ def parse_json_reply(reply: str) -> Any:
     :raises json.JSONDecodeError: when the reply is not JSON.
     """
     text = reply.strip()
-    fenced = _FENCE.match(text)
-    if fenced:
-        text = fenced.group(1).strip()
+    if text.startswith("```") and text.endswith("```"):
+        language, newline, body = text[3:-3].partition("\n")
+        if newline and _FENCE_LANGUAGE.fullmatch(language.strip()):
+            text = body.strip()
     return json.loads(text)

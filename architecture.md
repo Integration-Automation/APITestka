@@ -233,3 +233,6 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - Any §6 contract changes: PyBreeze or TestPioneer invocation, Windows double encoding, `APITestkaWidget`.
 - A CLAUDE.md section referenced in §7 is renamed or its rule changes.
 - Refresh the "Last verified" line whenever this file is re-checked against HEAD.
+
+
+Release review security contract: Provider verification accepts only absolute URL paths below the selected base URL. Traversal segments (including percent-encoded forms), authorities, embedded queries and fragments are rejected before sending; use the separate query field.

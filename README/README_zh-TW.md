@@ -530,6 +530,8 @@ apitestka contract compare pacts/web-shop.json openapi.json
 `AT_write_contract`、`AT_verify_contract`、`AT_check_contract_against_openapi`(後兩者失敗時該 action
 會帶著報告失敗)。
 
+提供者驗證只接受所選基底 URL 下的絕對 URL 路徑。送出前會拒絕路徑穿越（包含百分比編碼）、主機資訊、內嵌查詢與片段；查詢請使用獨立 query 欄位。
+
 ### GUI
 
 ```bash

@@ -10,9 +10,9 @@ into that state through a Python callable or a setup URL, which receives
 """
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass, field
 from typing import Callable, List, Mapping, Optional
+from urllib.parse import unquote, urlsplit
 
 import requests
 
@@ -92,7 +92,8 @@ def _set_up_state(target: ProviderTarget, consumer: str, state: str) -> None:
 
 
 def _send(target: ProviderTarget, request: Mapping[str, object]) -> requests.Response:
-    url = target.base_url.rstrip("/") + str(request["path"])
+    path = _provider_path(str(request["path"]))
+    url = target.base_url.rstrip("/") + path
     if request.get("query"):
         url += f"?{request['query']}"
     body = request.get("body")
@@ -104,12 +105,32 @@ def _send(target: ProviderTarget, request: Mapping[str, object]) -> requests.Res
     )
 
 
+def _provider_path(path: str) -> str:
+    """Keep a contract request below the selected provider's base path."""
+    parsed = urlsplit(path)
+    if not path.startswith("/") or parsed.scheme or parsed.netloc or parsed.query or parsed.fragment:
+        raise APIContractException("contract path must be an absolute URL path without an authority or query")
+    decoded = path
+    for _ in range(8):
+        candidate = unquote(decoded)
+        if candidate == decoded:
+            break
+        decoded = candidate
+    else:
+        raise APIContractException("contract path has excessive percent encoding")
+    if "\\" in decoded or any(part in (".", "..") for part in decoded.split("/")):
+        raise APIContractException("contract path must not contain traversal segments")
+    if any(ord(char) < 32 for char in decoded):
+        raise APIContractException("contract path must not contain control characters")
+    return path
+
+
 def _actual_body(response: requests.Response, expected: object) -> object:
     if isinstance(expected, str):
         return response.text
     try:
         return response.json()
-    except (json.JSONDecodeError, ValueError):
+    except ValueError:
         return response.text
 
 
