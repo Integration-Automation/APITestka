@@ -22,20 +22,20 @@ def __process_json(json_string: str, **kwargs) -> str:
         # 嘗試將字串解析為 JSON，再重新格式化
         # Try to parse string into JSON, then reformat
         return dumps(loads(json_string), indent=4, sort_keys=True, **kwargs)
-    except json.JSONDecodeError as error:
+    except json.JSONDecodeError:
         # 若解析失敗，記錄錯誤訊息並拋出例外
         # If parsing fails, log error message and raise exception
         apitestka_logger.error(wrong_json_data_error)
-        raise error
+        raise
     except TypeError:
         # 若傳入的不是字串，直接嘗試格式化
         # If input is not a string, try formatting directly
         try:
             return dumps(json_string, indent=4, sort_keys=True, **kwargs)
-        except TypeError:
+        except TypeError as error:
             # 若仍失敗，拋出自訂例外
             # If still fails, raise custom exception
-            raise APITesterJsonException(wrong_json_data_error)
+            raise APITesterJsonException(wrong_json_data_error) from error
 
 
 def reformat_json(json_string: str, **kwargs) -> str:
@@ -51,7 +51,7 @@ def reformat_json(json_string: str, **kwargs) -> str:
     apitestka_logger.info("json_process.py reformat_json")
     try:
         return __process_json(json_string, **kwargs)
-    except APITesterJsonException:
+    except APITesterJsonException as error:
         # 若格式化失敗，拋出自訂例外
         # Raise custom exception if reformatting fails
-        raise APITesterJsonException(cant_reformat_json_error)
+        raise APITesterJsonException(cant_reformat_json_error) from error

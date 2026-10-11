@@ -5,6 +5,9 @@ from httpx import Response
 
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
+# The JSON body is parsed only for a 200 response.
+HTTP_OK: int = 200
+
 
 def get_httpx_data(response: Response,
                    start_time: Union[str, float, int],
@@ -33,7 +36,7 @@ def get_httpx_data(response: Response,
         "elapsed": response.elapsed,           # 請求耗時 / Request elapsed time
         "request_time_sec": response.elapsed.total_seconds(),  # 耗時秒數 / Elapsed time in seconds
         "request_method": response.request.method,  # 請求方法 / Request method
-        "request_url": response.request.url,        # 請求 URL / Request URL
+        "request_url": str(response.request.url),   # 請求 URL（文字）/ Request URL as text, like requests
         "request_body": "",                         # 請求 Body (預設空) / Request body (default empty)
         "start_time": start_time,                   # 測試開始時間 / Test start time
         "end_time": end_time                        # 測試結束時間 / Test end time
@@ -42,7 +45,7 @@ def get_httpx_data(response: Response,
     try:
         # 嘗試解析 JSON，如果狀態碼為 200 則加入 JSON 資料
         # Try to parse JSON, add JSON data if status code is 200
-        if response_data.get("status_code") == 200:
+        if response_data.get("status_code") == HTTP_OK:
             response_data.update({"json": response.json()})
         else:
             response_data.update({"json": None})

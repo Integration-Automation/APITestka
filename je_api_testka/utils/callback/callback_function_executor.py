@@ -1,18 +1,43 @@
-from typing import Any, Callable, Union
+from je_action_core import CallbackErrorPolicy, CallbackSettings, CommandRegistry
+from je_action_core import CallbackFunctionExecutor as _CoreCallbackExecutor
 
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
-from je_api_testka.utils.exception.exception_tags import get_bad_trigger_function, get_bad_trigger_method
+from je_api_testka.utils.exception.exception_tags import (
+    get_bad_trigger_function,
+    get_bad_trigger_method,
+)
 from je_api_testka.utils.exception.exceptions import CallbackExecutorException
-from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
-from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
-from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
+from je_api_testka.utils.generate_report.html_report_generate import (
+    generate_html,
+    generate_html_report,
+)
+from je_api_testka.utils.generate_report.json_report import (
+    generate_json,
+    generate_json_report,
+)
+from je_api_testka.utils.generate_report.xml_report import (
+    generate_xml,
+    generate_xml_report,
+)
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 
+_SETTINGS = CallbackSettings(
+    error=CallbackExecutorException,
+    unknown_trigger_message=get_bad_trigger_function,
+    bad_method_message=get_bad_trigger_method,
+    on_error=CallbackErrorPolicy.RETURN_NONE,  # a failed trigger or callback is logged and returns None
+    log_info=apitestka_logger.info,
+    log_error=apitestka_logger.error,
+)
 
-class CallbackFunctionExecutor:
-    def __init__(self):
+
+class CallbackFunctionExecutor(_CoreCallbackExecutor):
+    """Runs an ``AT_*`` trigger, then a callback (je_action_core's callback executor with APITestka's settings)."""
+
+    def __init__(self) -> None:
+        super().__init__(CommandRegistry(), _SETTINGS)
         # 初始化 CallbackFunctionExecutor，建立事件字典
         # Initialize CallbackFunctionExecutor and build event dictionary
         self.event_dict = {
@@ -31,59 +56,6 @@ class CallbackFunctionExecutor:
             # 套件管理 / Package manager
             "AT_add_package_to_callback_executor": package_manager.add_package_to_callback_executor,
         }
-
-    def callback_function(
-            self,
-            trigger_function_name: str,
-            callback_function: Callable,
-            callback_function_param: Union[dict, None] = None,
-            callback_param_method: Union[str, None] = "kwargs",
-            **kwargs
-    ) -> Any:
-        """
-        執行指定的觸發函式，並在完成後執行回呼函式
-        Execute the specified trigger function, then run the callback function
-
-        :param trigger_function_name: 要觸發的函式名稱，只能是 event_dict 中的函式
-                                      Name of function to trigger, must exist in event_dict
-        :param callback_function: 要執行的回呼函式 / Callback function to execute
-        :param callback_function_param: 回呼函式的參數，只接受 dict
-                                        Parameters for callback function, only dict accepted
-        :param callback_param_method: 回呼函式的參數傳遞方式，只接受 "kwargs" 或 "args"
-                                      Parameter passing method for callback, only "kwargs" or "args"
-        :param kwargs: 傳給觸發函式的參數 / Parameters passed to trigger function
-        :return: 觸發函式的回傳值 / Return value of trigger function
-        """
-        apitestka_logger.info(
-            "CallbackFunctionExecutor callback_function "
-            f"trigger_function_name: {trigger_function_name} "
-            f"callback_function_param: {callback_function_param} "
-            f"callback_param_method: {callback_param_method} "
-            f"kwargs: {kwargs}"
-        )
-        try:
-            # 確認觸發函式存在於事件字典 / Ensure trigger function exists in event_dict
-            if trigger_function_name not in self.event_dict:
-                raise CallbackExecutorException(get_bad_trigger_function)
-
-            # 執行觸發函式 / Execute trigger function
-            execute_return_value = self.event_dict.get(trigger_function_name)(**kwargs)
-
-            # 執行回呼函式 / Execute callback function
-            if callback_function_param is not None:
-                if callback_param_method not in ["kwargs", "args"]:
-                    raise CallbackExecutorException(get_bad_trigger_method)
-                if callback_param_method == "kwargs":
-                    callback_function(**callback_function_param)
-                else:
-                    callback_function(*callback_function_param)
-            else:
-                callback_function()
-
-            return execute_return_value
-        except Exception as error:
-            # 錯誤輸出到 logger / Log error
-            apitestka_logger.error(repr(error))
 
 
 # 建立全域的 callback_executor 並綁定到 package_manager

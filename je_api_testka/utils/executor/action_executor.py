@@ -1,11 +1,22 @@
-import types
-from typing import Dict, Callable, Any, List, Union
+from typing import Any, List, Optional
+
+from je_action_core import (
+    ActionExecutor,
+    ActionListRules,
+    CommandPolicy,
+    CommandRegistry,
+    ExecutorSettings,
+    LegacyActionParser,
+    LoggingReporter,
+)
 
 from je_api_testka import test_api_method_httpx
+from je_api_testka.ai.backend import select_ai_backend
 from je_api_testka.ai.failure_classifier import classify_failures
 from je_api_testka.ai.fake_data_generator import generate_fake_payload
 from je_api_testka.ai.test_generator import generate_tests_from_openapi
 from je_api_testka.connection.cassette import Cassette, CassetteRecord
+from je_api_testka.contract.commands import check_contract_against_openapi, verify_contract, write_contract
 from je_api_testka.data.env_profile import load_env_profile
 from je_api_testka.data.faker_helpers import fake_email, fake_uuid, fake_word
 from je_api_testka.data.template_render import render_template
@@ -18,9 +29,11 @@ from je_api_testka.httpx_wrapper.async_httpx_method import delegate_async_httpx
 from je_api_testka.integrations.curl_import import curl_to_action
 from je_api_testka.integrations.github_pr_comment import post_pr_comment
 from je_api_testka.integrations.har_import import convert_har
+from je_api_testka.integrations.load_density_commands import run_load_test_from, write_load_test
 from je_api_testka.integrations.notify import notify_via_webhook
 from je_api_testka.requests_wrapper.request_method import test_api_method_requests
 from je_api_testka.runner.dependency_runner import order_actions
+from je_api_testka.runner.metadata import strip_runner_metadata
 from je_api_testka.runner.parallel_runner import run_actions_parallel
 from je_api_testka.runner.tag_filter import filter_actions_by_tag
 from je_api_testka.security.auth_helpers import (
@@ -36,26 +49,45 @@ from je_api_testka.security.header_scan import scan_security_headers
 from je_api_testka.security.rate_limit_probe import probe_rate_limit
 from je_api_testka.security.ssrf_check import probe_ssrf
 from je_api_testka.spec.openapi_changelog import openapi_changelog
+from je_api_testka.spec.openapi_export import export_openapi
 from je_api_testka.spec.records_to_openapi import records_to_openapi
 from je_api_testka.spec.schema_inference import infer_schema
+from je_api_testka.spec.spec_loop import check_spec_against_tests
 from je_api_testka.sse_wrapper.sse_method import test_api_method_sse
 from je_api_testka.utils.assert_result.schema_check import check_json_schema, check_jsonpath
 from je_api_testka.utils.assert_result.snapshot import assert_snapshot
-from je_api_testka.utils.exception.exception_tags import add_command_exception_tag
-from je_api_testka.utils.exception.exception_tags import executor_data_error, executor_list_error
-from je_api_testka.utils.exception.exceptions import APITesterExecuteException, APIAddCommandException
+from je_api_testka.utils.exception.exception_tags import (
+    add_command_exception_tag,
+    executor_data_error,
+    executor_list_error,
+)
+from je_api_testka.utils.exception.exceptions import APIAddCommandException, APITesterExecuteException
 from je_api_testka.utils.generate_report.allure_report import generate_allure_report
 from je_api_testka.utils.generate_report.badge import generate_badge
 from je_api_testka.utils.generate_report.html_report_generate import generate_html, generate_html_report
 from je_api_testka.utils.generate_report.json_report import generate_json, generate_json_report
 from je_api_testka.utils.generate_report.junit_report import generate_junit_report
+from je_api_testka.utils.generate_report.latency_trends import (
+    assert_no_latency_anomalies,
+    detect_latency_anomalies,
+    record_endpoint_latencies,
+)
 from je_api_testka.utils.generate_report.markdown_report import generate_markdown_report, render_markdown
 from je_api_testka.utils.generate_report.run_diff import diff_runs
-from je_api_testka.utils.generate_report.trend_store import list_trend_rows, record_current_run
+from je_api_testka.utils.generate_report.trend_report import generate_trend_report
+from je_api_testka.utils.generate_report.trend_store import DEFAULT_TREND_DB, list_trend_rows, record_current_run
 from je_api_testka.utils.generate_report.xml_report import generate_xml, generate_xml_report
 from je_api_testka.utils.json.json_file.json_file import read_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.mock_server.flask_mock_server import flask_mock_server_instance
+from je_api_testka.utils.mock_server.protocol_mocks import (
+    grpc_mock_received,
+    start_grpc_mock,
+    start_websocket_mock,
+    stop_grpc_mock,
+    stop_websocket_mock,
+    websocket_mock_received,
+)
 from je_api_testka.utils.package_manager.package_manager_class import package_manager
 from je_api_testka.websocket_wrapper.websocket_method import test_api_method_websocket
 
@@ -77,9 +109,34 @@ def _cassette_record(file_path: str, method: str, url: str, request_body: str,
     ))
 
 
-class Executor:
+def _detect_latency_anomalies(db_path: str = DEFAULT_TREND_DB, policy: Optional[dict] = None) -> List[dict]:
+    """JSON-ready verdicts of :func:`detect_latency_anomalies`."""
+    return [verdict.to_dict() for verdict in detect_latency_anomalies(db_path, policy)]
 
-    def __init__(self):
+
+# The action list key and the error texts; the dispatch itself is je_action_core's (workspace L-6).
+ACTION_LIST_KEY: str = "api_testka"
+_SETTINGS = ExecutorSettings(
+    rules=ActionListRules(ACTION_LIST_KEY, error=APITesterExecuteException, missing_message=executor_list_error,
+                          not_list_message=executor_list_error, empty_message=executor_list_error),
+    parser=LegacyActionParser(error=APITesterExecuteException, message=executor_data_error),
+    reporter=LoggingReporter(apitestka_logger),
+    read_json=read_action_json,
+    # Runner metadata (id, depends_on, tags) orders and filters actions; the command never sees it.
+    prepare=strip_runner_metadata,
+)
+
+
+def _registry() -> CommandRegistry:
+    return CommandRegistry(policy=CommandPolicy.FUNCTIONS_ONLY,
+                           rejection=lambda _name: APIAddCommandException(add_command_exception_tag))
+
+
+class Executor(ActionExecutor):
+    """The ``AT_*`` commands over je_action_core's executor: ``[name]``, ``[name, {kwargs}]``, ``[name, [args]]``."""
+
+    def __init__(self) -> None:
+        super().__init__(_SETTINGS, _registry())
         # 初始化 Executor，建立事件字典
         # Initialize Executor and build event dictionary
         self.event_dict = {
@@ -129,11 +186,18 @@ class Executor:
             "AT_generate_badge": generate_badge,
             "AT_record_current_run": record_current_run,
             "AT_list_trend_rows": list_trend_rows,
+            "AT_record_endpoint_latencies": record_endpoint_latencies,
+            "AT_detect_latency_anomalies": _detect_latency_anomalies,
+            "AT_assert_no_latency_anomalies": assert_no_latency_anomalies,
+            "AT_generate_trend_report": generate_trend_report,
             # Integrations
             "AT_notify_via_webhook": notify_via_webhook,
             "AT_post_pr_comment": post_pr_comment,
             "AT_curl_to_action": curl_to_action,
             "AT_convert_har": convert_har,
+            # LoadDensity bridge
+            "AT_write_load_test": write_load_test,
+            "AT_run_load_test": run_load_test_from,
             # Security checks
             "AT_cors_preflight": cors_preflight,
             "AT_probe_rate_limit": probe_rate_limit,
@@ -141,11 +205,18 @@ class Executor:
             # Spec inference
             "AT_infer_schema": infer_schema,
             "AT_records_to_openapi": records_to_openapi,
+            "AT_export_openapi": export_openapi,
             "AT_openapi_changelog": openapi_changelog,
+            "AT_check_spec_against_tests": check_spec_against_tests,
+            # Consumer contracts (Pact v2 files)
+            "AT_write_contract": write_contract,
+            "AT_verify_contract": verify_contract,
+            "AT_check_contract_against_openapi": check_contract_against_openapi,
             # AI integrations
             "AT_classify_failures": classify_failures,
             "AT_generate_fake_payload": generate_fake_payload,
             "AT_generate_tests_from_openapi": generate_tests_from_openapi,
+            "AT_select_ai_backend": select_ai_backend,
             # Extra protocol backends (sync entry points only; async variants
             # are intentionally not registered because they return coroutines
             # that the executor would not await).
@@ -171,6 +242,13 @@ class Executor:
             "AT_mock_add_webhook": flask_mock_server_instance.add_webhook,
             "AT_mock_add_proxy": flask_mock_server_instance.add_proxy,
             "AT_mock_load_openapi": flask_mock_server_instance.load_openapi,
+            # WebSocket and gRPC mocks (one of each, running in background threads)
+            "AT_mock_start_websocket_server": start_websocket_mock,
+            "AT_mock_stop_websocket_server": stop_websocket_mock,
+            "AT_mock_websocket_received": websocket_mock_received,
+            "AT_mock_start_grpc_server": start_grpc_mock,
+            "AT_mock_stop_grpc_server": stop_grpc_mock,
+            "AT_mock_grpc_received": grpc_mock_received,
             # Runner
             "AT_run_actions_parallel": run_actions_parallel,
             "AT_filter_actions_by_tag": filter_actions_by_tag,
@@ -180,77 +258,24 @@ class Executor:
             "AT_generate_allure_report": generate_allure_report,
         }
 
-    def _execute_event(self, action: list) -> Any:
+    @staticmethod
+    def set_allow_arbitrary_packages(enabled: bool) -> None:
         """
-        執行單一事件
-        Execute a single event
-
-        :param action: 要執行的事件 (list 格式)
-                       Event to execute (list format)
-        :return: 事件回傳值 / Event return value
+        允許或拒絕載入允許清單以外的套件（``AT_add_package_to_executor``）
+        Allow (True) or refuse (False) ``AT_add_package_to_executor`` and
+        ``AT_add_package_to_callback_executor`` for packages outside the allowlist. Python only,
+        never an action command, so an action file cannot open its own gate. Until it is called,
+        any package loads with a ``DeprecationWarning``.
         """
-        apitestka_logger.info(f"Executor _execute_event action: {action}")
-        event: Callable = self.event_dict.get(action[0])
-        if len(action) == 2:
-            if isinstance(action[1], dict):
-                return event(**action[1])  # 使用 kwargs 呼叫 / Call with kwargs
-            else:
-                return event(*action[1])   # 使用 args 呼叫 / Call with args
-        elif len(action) == 1:
-            return event()                # 無參數呼叫 / Call without arguments
-        else:
-            raise APITesterExecuteException(executor_data_error + " " + str(action))
+        package_manager.set_allow_arbitrary_packages(enabled)
 
-    def execute_action(self, action_list: Union[list, dict]) -> Dict[str, str]:
+    @staticmethod
+    def allow_packages(*packages: str) -> None:
         """
-        執行多個事件，並記錄結果
-        Execute multiple actions and record results
-
-        :param action_list: 事件列表，例如：
-                            [["method", {"param": value}], ["method", {"param": value}]]
-        :return: 執行紀錄字典 / Execution record dictionary
+        把套件（連同子模組）加入 ``AT_add_package_to_executor`` 的允許清單
+        Add packages, and their submodules, to the allowlist of ``AT_add_package_to_executor``.
         """
-        apitestka_logger.info(f"Executor execute_action action_list: {action_list}")
-        if isinstance(action_list, dict):
-            action_list: list = action_list.get("api_testka", [])
-            if action_list is None:
-                raise APITesterExecuteException(executor_list_error)
-
-        execute_record_dict = {}
-        if not isinstance(action_list, list) or not action_list:
-            raise APITesterExecuteException(executor_list_error)
-
-        for action in action_list:
-            try:
-                event_response = self._execute_event(action)
-                execute_record: str = "execute: " + str(action)
-                execute_record_dict.update({execute_record: event_response})
-            except Exception as error:
-                apitestka_logger.info(
-                    f"execute_action, action_list: {action_list}, action: {action}, failed: {repr(error)}"
-                )
-                execute_record = "execute: " + str(action)
-                execute_record_dict.update({execute_record: repr(error)})
-
-        # 輸出執行結果到 logger / Log execution results
-        for key, value in execute_record_dict.items():
-            apitestka_logger.info(f"{key} -> {value}")
-
-        return execute_record_dict
-
-    def execute_files(self, execute_files_list: list) -> List[Any]:
-        """
-        執行多個檔案中的事件
-        Execute actions from multiple files
-
-        :param execute_files_list: 檔案路徑列表 / List of file paths
-        :return: 每個檔案的執行結果列表 / List of execution details
-        """
-        apitestka_logger.info(f"Executor execute_files execute_files_list: {execute_files_list}")
-        execute_detail_list: list = []
-        for file in execute_files_list:
-            execute_detail_list.append(self.execute_action(read_action_json(file)))
-        return execute_detail_list
+        package_manager.allow_packages(*packages)
 
 
 # 建立全域 Executor 並綁定到 package_manager
@@ -268,11 +293,7 @@ def add_command_to_executor(command_dict: dict) -> None:
                          Command dictionary (name: function)
     """
     apitestka_logger.info(f"action_executor.py add_command_to_executor command_dict: {command_dict}")
-    for command_name, command in command_dict.items():
-        if isinstance(command, (types.MethodType, types.FunctionType)):
-            executor.event_dict.update({command_name: command})
-        else:
-            raise APIAddCommandException(add_command_exception_tag)
+    executor.add_command_to_executor(command_dict)
 
 
 def execute_action(action_list: list) -> Any:

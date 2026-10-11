@@ -29,10 +29,13 @@ EXPECTED_NEW_COMMANDS = (
     "AT_render_markdown", "AT_generate_markdown_report",
     "AT_diff_runs", "AT_generate_badge",
     "AT_record_current_run", "AT_list_trend_rows",
+    "AT_record_endpoint_latencies", "AT_detect_latency_anomalies",
+    "AT_assert_no_latency_anomalies", "AT_generate_trend_report",
     "AT_generate_junit_report", "AT_generate_allure_report",
     # Integrations
     "AT_notify_via_webhook", "AT_post_pr_comment",
     "AT_curl_to_action", "AT_convert_har",
+    "AT_write_load_test", "AT_run_load_test",
     # Security
     "AT_cors_preflight", "AT_probe_rate_limit", "AT_probe_ssrf",
     "AT_scan_security_headers", "AT_fuzz_string_inputs",
@@ -40,10 +43,13 @@ EXPECTED_NEW_COMMANDS = (
     "AT_basic_auth_header", "AT_bearer_token_header",
     "AT_build_jwt", "AT_aws_sigv4_headers",
     # Spec
-    "AT_infer_schema", "AT_records_to_openapi", "AT_openapi_changelog",
+    "AT_infer_schema", "AT_records_to_openapi", "AT_export_openapi", "AT_openapi_changelog",
+    "AT_check_spec_against_tests",
+    # Contracts
+    "AT_write_contract", "AT_verify_contract", "AT_check_contract_against_openapi",
     # AI
     "AT_classify_failures", "AT_generate_fake_payload",
-    "AT_generate_tests_from_openapi",
+    "AT_generate_tests_from_openapi", "AT_select_ai_backend",
     # Extra protocols
     "AT_test_api_method_websocket",
     "AT_test_api_method_sse",
@@ -53,6 +59,8 @@ EXPECTED_NEW_COMMANDS = (
     # Mock server advanced
     "AT_mock_add_dynamic_route", "AT_mock_add_template_route",
     "AT_mock_add_webhook", "AT_mock_add_proxy", "AT_mock_load_openapi",
+    "AT_mock_start_websocket_server", "AT_mock_stop_websocket_server", "AT_mock_websocket_received",
+    "AT_mock_start_grpc_server", "AT_mock_stop_grpc_server", "AT_mock_grpc_received",
     # Runner
     "AT_run_actions_parallel", "AT_filter_actions_by_tag", "AT_order_actions",
 )
@@ -90,7 +98,7 @@ def test_curl_import_then_dispatch(tmp_path):
         ["AT_curl_to_action", {"curl_command": "curl https://api.invalid/v1/health"}],
     ])
     action = next(iter(record.values()))
-    body = action["AT_test_api_method_requests"]
+    body = action[1]
     assert body["http_method"] == "get"
     assert body["test_url"] == "https://api.invalid/v1/health"
 
@@ -171,3 +179,11 @@ def test_mock_server_methods_via_executor():
     ])
     registered = next(iter(record.values()))
     assert "GET /health" in registered
+
+
+def test_unknown_command_is_reported_by_name():
+    """An unknown command used to reach ``None(...)`` and be recorded as a bare TypeError."""
+    action = ["AT_no_such_command", {"x": 1}]
+    outcome = execute_action([action])[f"execute: {action}"]
+    assert outcome.startswith("APITesterExecuteException(")
+    assert "AT_no_such_command" in outcome

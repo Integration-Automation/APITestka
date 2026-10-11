@@ -18,7 +18,7 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    * - 類別
      - 內容
    * - **後端**
-     - ``requests``(同步、session)、``httpx``(同步 + 非同步、HTTP/2)、
+     - ``requests``\ (同步、session)、``httpx``\ (同步 + 非同步、HTTP/2)、
        WebSocket、SSE、GraphQL
    * - **資料層**
      - 變數儲存、``{{var}}`` 模板、CSV/JSON 資料驅動、環境設定檔、假資料
@@ -29,28 +29,31 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
      - mTLS、Proxy、DNS override、VCR-style cassette 錄製/回放
    * - **模擬伺服器**
      - 靜態、動態、stateful、故障注入、OpenAPI 驅動、Jinja 模板、Webhook
-       接收、record-replay proxy
+       接收、record-replay proxy、WebSocket 與 gRPC 端點
    * - **Runner**
      - 順序 & 平行執行、Tag 過濾、Dependency-aware 排序、Retry 策略
    * - **報告**
      - HTML / JSON / XML / JUnit / Allure / Markdown / shields.io badge /
-       SQLite 趨勢資料庫 / Run diff
+       SQLite 趨勢資料庫 / Run diff / 各端點延遲趨勢與異常偵測
    * - **生態整合**
      - Slack / Teams / Discord webhook、GitHub PR comment、cURL & HAR
-       匯入、OpenAPI / Postman 匯入
+       匯入、OpenAPI / Postman 匯入、LoadDensity 負載測試橋接
    * - **CLI / DX**
      - 子命令式 CLI、REPL、終端摘要、Shell completion、Scaffold
    * - **安全**
      - Auth helper(Basic / Bearer / JWT / AWS SigV4)、Header / CORS /
        Rate limit / SSRF probe、pip-audit、Fuzz
    * - **Spec 反推**
-     - 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog
+     - 測試紀錄 → OpenAPI、JSON Schema 推斷、OpenAPI changelog、測試即規格迴路
+   * - **契約測試**
+     - 從測試執行產生 Pact v2 消費者契約、提供端驗證、與 OpenAPI 雙向比對
    * - **AI**
-     - 可插拔後端,LLM 不可用時自動退回確定性 fallback
+     - 可插拔後端,LLM 不可用時自動退回確定性 fallback;附 Anthropic 參考實作
    * - **MCP**
      - 一級支援 Claude Code,將框架曝露為 MCP 工具
    * - **GUI**
-     - 可選 PySide6 GUI(英 / 繁中 / 简中 / 日)+ 嵌入 Swagger UI
+     - 可選 PySide6 GUI：每個功能一頁的側邊欄、附歷史與環境的請求建構器、淺色與深色主題、
+       英 / 繁中 / 简中 / 日、嵌入 Swagger UI
    * - **跨平台**
      - Windows、macOS、Linux,Python 3.10–3.14
 
@@ -65,6 +68,8 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    doc/data_layer/data_layer_doc
    doc/assertion/assertion_doc
    doc/diff/diff_doc
+   doc/contract/contract_doc
+   doc/spec_loop/spec_loop_doc
    doc/connection/connection_doc
    doc/runner/runner_doc
    doc/report/report_doc
@@ -78,3 +83,4 @@ HAR / cURL 匯入器、record-replay proxy、安全檢測、平行 runner、給 
    doc/project/project_doc
    doc/test_record/test_record_doc
    doc/mcp/mcp_doc
+   doc/ai/ai_doc

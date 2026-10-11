@@ -5,14 +5,14 @@ from threading import Lock
 from je_api_testka.utils.json.json_file.json_file import write_action_json
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.project.template.template_executor import (
+    bad_executor_template_1,
     executor_template_1,
     executor_template_2,
-    bad_executor_template_1,
 )
 from je_api_testka.utils.project.template.template_keyword import (
+    bad_template_1,
     template_keyword_1,
     template_keyword_2,
-    bad_template_1,
 )
 
 _KEYWORD_DIR = "/keyword"

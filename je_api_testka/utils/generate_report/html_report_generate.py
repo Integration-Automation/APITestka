@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 from je_api_testka.utils.exception.exception_tags import html_generate_no_data_tag
 from je_api_testka.utils.exception.exceptions import APIHTMLException
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -17,6 +18,7 @@ def _cell(value) -> str:
     if isinstance(value, (bytes, bytearray)):
         value = bytes(value).decode("utf-8", errors="replace")
     return escape(str(value))
+
 
 # 使用 Lock 確保多執行緒寫檔安全
 # Use Lock to ensure thread-safe file writing
@@ -93,6 +95,19 @@ _html_string_bottom = """
 </html>
 """.strip()
 
+# One table row per record field; the value cell is a ``{field}`` placeholder filled by ``str.format``.
+_ROW_TEMPLATE = ('<tr><td class="table_data_field_title">{name}</td>'
+                 '<td class="table_data_field_text">{{{name}}}</td></tr>')
+SUCCESS_FIELDS = ("status_code", "text", "content", "headers", "history", "encoding", "cookies", "elapsed",
+                  "request_time_sec", "request_method", "request_url", "request_body", "start_time", "end_time")
+FAILURE_FIELDS = ("http_method", "test_url", "soap", "record_request_info", "clean_record", "result_check_dict",
+                  "error")
+
+
+def _rows(fields: Tuple[str, ...], indent: str) -> str:
+    return "\n".join(indent + _ROW_TEMPLATE.format(name=name) for name in fields)
+
+
 # 成功測試的表格模板
 # Template for success test table
 _success_table = r"""
@@ -103,24 +118,11 @@ _success_table = r"""
     </tr>
     </thead>
     <tbody>
-    <tr><td class="table_data_field_title">status_code</td><td class="table_data_field_text">{status_code}</td></tr>
-    <tr><td class="table_data_field_title">text</td><td class="table_data_field_text">{text}</td></tr>
-    <tr><td class="table_data_field_title">content</td><td class="table_data_field_text">{content}</td></tr>
-    <tr><td class="table_data_field_title">headers</td><td class="table_data_field_text">{headers}</td></tr>
-    <tr><td class="table_data_field_title">history</td><td class="table_data_field_text">{history}</td></tr>
-    <tr><td class="table_data_field_title">encoding</td><td class="table_data_field_text">{encoding}</td></tr>
-    <tr><td class="table_data_field_title">cookies</td><td class="table_data_field_text">{cookies}</td></tr>
-    <tr><td class="table_data_field_title">elapsed</td><td class="table_data_field_text">{elapsed}</td></tr>
-    <tr><td class="table_data_field_title">request_time_sec</td><td class="table_data_field_text">{request_time_sec}</td></tr>
-    <tr><td class="table_data_field_title">request_method</td><td class="table_data_field_text">{request_method}</td></tr>
-    <tr><td class="table_data_field_title">request_url</td><td class="table_data_field_text">{request_url}</td></tr>
-    <tr><td class="table_data_field_title">request_body</td><td class="table_data_field_text">{request_body}</td></tr>
-    <tr><td class="table_data_field_title">start_time</td><td class="table_data_field_text">{start_time}</td></tr>
-    <tr><td class="table_data_field_title">end_time</td><td class="table_data_field_text">{end_time}</td></tr>
+__ROWS__
     </tbody>
 </table>
 <br>
-""".strip()
+""".strip().replace("__ROWS__", _rows(SUCCESS_FIELDS, "    "))
 
 # 失敗測試的表格模板
 # Template for failure test table
@@ -132,17 +134,11 @@ _failure_table = r"""
 </tr>
 </thead>
 <tbody>
-<tr><td class="table_data_field_title">http_method</td><td class="table_data_field_text">{http_method}</td></tr>
-<tr><td class="table_data_field_title">test_url</td><td class="table_data_field_text">{test_url}</td></tr>
-<tr><td class="table_data_field_title">soap</td><td class="table_data_field_text">{soap}</td></tr>
-<tr><td class="table_data_field_title">record_request_info</td><td class="table_data_field_text">{record_request_info}</td></tr>
-<tr><td class="table_data_field_title">clean_record</td><td class="table_data_field_text">{clean_record}</td></tr>
-<tr><td class="table_data_field_title">result_check_dict</td><td class="table_data_field_text">{result_check_dict}</td></tr>
-<tr><td class="table_data_field_title">error</td><td class="table_data_field_text">{error}</td></tr>
+__ROWS__
 </tbody>
 </table>
 <br>
-""".strip()
+""".strip().replace("__ROWS__", _rows(FAILURE_FIELDS, ""))
 
 
 def generate_html() -> Tuple[List, List]:
@@ -205,7 +201,7 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
     success_list, failure_list = generate_html()
     try:
         lock.acquire()  # 確保多執行緒安全 / Ensure thread safety
-        with open(html_file_name + ".html", "w", encoding="utf-8") as file_to_write:
+        with open(report_path(html_file_name + ".html"), "w", encoding="utf-8") as file_to_write:
             file_to_write.writelines(_html_string_head)
             for success in success_list:
                 file_to_write.write(success)

@@ -47,11 +47,28 @@ OpenAPI contract drift
 
    print(openapi_changelog(prev_spec, current_spec))
 
+從錄下的流量反推 OpenAPI
+------------------------------
+
+``records_to_openapi`` 把測試紀錄轉成 OpenAPI 3.1 文件。同一個 method 與路徑的紀錄會合併成一個
+operation：每個出現過的狀態碼各有一筆 response，查詢參數名稱變成 ``in: query`` 參數，JSON 或文字
+內容變成回應與請求內容的 schema。``build_openapi`` 再加上從存下的 JSON 報告讀回的紀錄，
+``export_openapi`` 把結果寫成 UTF-8 JSON。
+
+.. code-block:: python
+
+   from je_api_testka.spec import build_openapi, export_openapi, load_report_records
+
+   records = load_report_records("run_success.json")      # generate_json_report 的輸出
+   spec = build_openapi(["run_success.json"], title="Shop API")
+   export_openapi("openapi.json", ["run_success.json"])
+
 回應時間 SLA
 ------------
 
 ``ResponseSLA`` 帶 ``max_ms`` 與 ``p95_ms`` 兩個門檻;``assert_sla`` 走過
-records,超過就丟 ``APIAssertException``。
+records,超過就丟 ``APIAssertException``。沒給 ``records`` 時檢查共用測試紀錄裡的成功紀錄;
+``sla`` 也可以是一般的 mapping,也就是 JSON action 用的形式。
 
 .. code-block:: python
 
@@ -59,6 +76,11 @@ records,超過就丟 ``APIAssertException``。
 
    sla = ResponseSLA(max_ms=2000, p95_ms=1500)
    assert_sla(records, sla)
+   assert_sla(sla={"max_ms": 2000})       # 目前為止錄下的執行
+
+.. code-block:: json
+
+   [["AT_assert_sla", {"sla": {"max_ms": 2000, "p95_ms": 1500}}]]
 
 Executor 命令
 -------------
@@ -67,3 +89,5 @@ Executor 命令
 * ``AT_diff_openapi_specs``
 * ``AT_assert_sla``
 * ``AT_openapi_changelog``
+* ``AT_records_to_openapi``
+* ``AT_export_openapi``

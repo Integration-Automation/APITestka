@@ -5,8 +5,8 @@
 APITestka (`je_api_testka`) is a lightweight, cross-platform Python framework for automated API testing. Supports HTTP/HTTPS, SOAP/XML, JSON with `requests` and `httpx` backends.
 
 - **Python**: 3.10+
-- **Dependencies**: `requests`, `Flask`, `httpx`
-- **Optional GUI**: `PySide6==6.11.0`, `qt-material`
+- **Dependencies**: `requests`, `Flask`, `httpx`, `defusedxml`, `je_action_core` (the executor core shared with LoadDensity, MailThunder and FileAutomation)
+- **Optional GUI**: `PySide6==6.11.2`
 
 ## Build & Test Commands
 
@@ -39,8 +39,8 @@ je_api_testka/
 │   ├── assert_result/     # Strategy pattern - response validation (JSON Schema, JSONPath, snapshots)
 │   ├── callback/          # Observer pattern - post-request callbacks
 │   ├── executor/          # Command pattern - JSON keyword-driven actions (AT_* commands)
-│   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports
-│   ├── mock_server/       # Flask-based mock server
+│   ├── generate_report/   # Template Method - HTML/JSON/XML/JUnit/Allure/Markdown reports, latency trends
+│   ├── mock_server/       # Flask mock server plus WebSocket and gRPC mocks
 │   ├── socket_server/     # TCP remote automation server
 │   ├── project/           # Factory pattern - project scaffolding
 │   ├── json/, xml/        # JSON and XML I/O utilities
@@ -53,11 +53,12 @@ je_api_testka/
 │   └── exception/         # Custom exception hierarchy
 ├── data/                  # Variable store, templates, env profiles, fake data
 ├── connection/            # Connection options, DNS override, record/replay cassettes
-├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export
+├── diff/, spec/           # Response and contract diff, SLA checks; schema inference, OpenAPI export, test-as-spec loop
+├── contract/              # Pact-style consumer contracts, provider verification, OpenAPI check
 ├── security/              # Auth helpers, header scan, fuzzing, pip-audit wrapper
 ├── runner/                # Parallel runner, tag filter, dependency ordering
-├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment
-├── ai/                    # Pluggable text-completion backend (no-op by default)
+├── integrations/          # cURL and HAR import, webhook notify, GitHub PR comment, LoadDensity bridge
+├── ai/                    # Pluggable text-completion backend (no-op by default; Anthropic reference backend)
 ├── cli/                   # Subcommand CLI (`apitestka`)
 ├── mcp_server/            # MCP stdio server (`apitestka-mcp`)
 ├── pytest_plugin/         # pytest fixtures via the pytest11 entry point
@@ -211,6 +212,7 @@ Workspace rule shared by every repository under `D:\Codes` (full text: `D:\Codes
   - Stage only the files that stage touched (`git add <path>`, never `git add -A`), follow this file's commit-message rules, and never add AI attribution.
   - Committing is not pushing: push or open a PR only as this project's branch flow says or when asked.
   - **Commit and push frequently.** After each big feature — a self-contained stage that passes this project's checks — commit and push to the remote; do not pile up a large batch of work before committing or pushing. Smaller batches collide less with other sessions, let CI catch problems earlier, and are easier to revert. Follow this project's normal branch flow (usually `dev`).
+  - **SonarCloud / Codacy findings.** When a PR or commit fails a SonarCloud or Codacy check, look the findings up through their APIs instead of guessing. The keys are in environment variables: `SonarCloudToken` (SonarCloud, e.g. `curl -s -u "$SonarCloudToken:" "https://sonarcloud.io/api/issues/search?componentKeys=<key>&pullRequest=<n>&resolved=false"`) and `CODACY_PROJECT_TOKEN` (a Codacy project token, valid only for its own project: any other repository answers "Bad credentials", so for a public repository query `https://app.codacy.com/api/v3/analysis/organizations/gh/<org>/repositories/<repo>/pull-requests/<n>/issues?status=new` without a key). **Never reveal a key or any personal credential while doing so**: refer to the variables by name only, never echo or print their values, and never put them in files, commit messages, PR or issue text, logs, or any output that leaves the machine.
 - **`progress.md`** (repository root, tracked) holds outstanding work only: no finished items, no history, no rules.
 - **`docs/updates/`** records finished work: one batch file per month (`YYYY-MM.md`), one entry per piece of work headed `## U-YYYYMMDD-NN · date · title · #tags`, and an index with query commands in `docs/updates/README.md`. When a `progress.md` item is done, delete it and add a `#done` entry plus its index row in the same commit.
 - **`architecture.md`** (repository root) is the short architecture overview: layers, entry points, main flows, extension points, cross-project boundaries. Update it in the same commit whenever a change alters any of those.
@@ -224,6 +226,7 @@ Workspace rule shared by every repository under `D:\Codes` (full text: `D:\Codes
 - **Do NOT mention any AI tools, assistants, or co-authors in commit messages**
 - **No `Co-Authored-By` lines referencing AI in commits**
 - Focus on what changed and why, not how it was written
+- Both branches publish to PyPI from CI: a push to `main` releases `je_api_testka` (`publish.yml`), and a push to `dev` that passes the tests and changes what the package ships releases `je_api_testka_dev` (the `publish-dev` job of `ci.yml`, `scripts/dev_release.py`). Never bump a version by hand; the version in `dev.toml` is only a floor
 - Examples:
   - `feat: add HTTP/2 multiplexing support for httpx async backend`
   - `fix: prevent XXE injection in XML report parser`

@@ -28,7 +28,7 @@ def test_names_differ():
 
 
 @pytest.mark.parametrize("key", [
-    "dependencies", "requires-python", "optional-dependencies", "scripts", "entry-points",
+    "dependencies", "requires-python", "optional-dependencies", "scripts", "gui-scripts", "entry-points",
 ])
 def test_project_tables_match(key):
     assert DEV["project"].get(key) == STABLE["project"].get(key)

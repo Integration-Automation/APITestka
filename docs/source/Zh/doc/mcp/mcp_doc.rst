@@ -46,7 +46,7 @@ MCP-compatible client)能直接把這個框架當成 tool 使用。實作站在 
    * - ``apitestka_render_markdown``
      - 從目前測試紀錄產 Markdown 報告
    * - ``apitestka_records_to_openapi``
-     - 反推 OpenAPI 3.x 文件
+     - 從測試紀錄或存下的 JSON 報告（``report_paths``）反推 OpenAPI 3.x 文件
    * - ``apitestka_clear_records``
      - 清空測試紀錄
    * - ``apitestka_get_records``

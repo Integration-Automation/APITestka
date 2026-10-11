@@ -1,8 +1,8 @@
 """
 OpenAPI 3.x and Postman 2.1 collection importers.
 
-Both functions return a list of action dictionaries usable with the existing
-JSON-driven executor (``execute_action``).
+Both functions return a list of ``["AT_test_api_method", {...}]`` actions that
+``execute_action`` runs as they are.
 """
 from __future__ import annotations
 
@@ -11,39 +11,26 @@ from pathlib import Path
 from typing import Iterable, List
 
 from je_api_testka.utils.exception.exceptions import APITesterException
+from je_api_testka.utils.executor.request_action import build_request_action
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
 UNSUPPORTED_SPEC_FORMAT: str = "Unsupported spec format. Choose 'openapi' or 'postman'."
 HTTP_VERBS: tuple = ("get", "put", "post", "patch", "delete", "options", "head")
 
 
-def _action_for_request(method: str, url: str, headers: dict = None, body: dict = None) -> dict:
-    payload = {
-        "AT_test_api_method_requests": {
-            "http_method": method.lower(),
-            "test_url": url,
-        }
-    }
-    if headers:
-        payload["AT_test_api_method_requests"]["headers"] = headers
-    if body is not None:
-        payload["AT_test_api_method_requests"]["json"] = body
-    return payload
-
-
-def convert_openapi(spec: dict, base_url: str = "") -> List[dict]:
-    """Convert an OpenAPI 3.x dict into a list of executor action dicts."""
+def convert_openapi(spec: dict, base_url: str = "") -> List[list]:
+    """Convert an OpenAPI 3.x dict into a list of executor actions, one per operation."""
     apitestka_logger.info("import_specs convert_openapi")
     if not base_url:
         servers = spec.get("servers") or []
         base_url = servers[0].get("url", "") if servers else ""
-    actions: List[dict] = []
+    actions: List[list] = []
     for path, item in (spec.get("paths") or {}).items():
         for verb in HTTP_VERBS:
             operation = item.get(verb)
             if not operation:
                 continue
-            actions.append(_action_for_request(verb, f"{base_url}{path}"))
+            actions.append(build_request_action(verb, f"{base_url}{path}"))
     return actions
 
 
@@ -55,10 +42,10 @@ def _iterate_postman_items(items: Iterable[dict]) -> Iterable[dict]:
             yield entry
 
 
-def convert_postman(collection: dict) -> List[dict]:
-    """Convert a Postman 2.1 collection dict into action dicts."""
+def convert_postman(collection: dict) -> List[list]:
+    """Convert a Postman 2.1 collection dict into executor actions; a non-JSON raw body is sent as ``data``."""
     apitestka_logger.info("import_specs convert_postman")
-    actions: List[dict] = []
+    actions: List[list] = []
     for entry in _iterate_postman_items(collection.get("item") or []):
         request = entry["request"]
         method = request.get("method", "GET")
@@ -74,11 +61,11 @@ def convert_postman(collection: dict) -> List[dict]:
                 body = json.loads(body_field["raw"])
             except json.JSONDecodeError:
                 body = body_field["raw"]
-        actions.append(_action_for_request(method, url, headers=headers or None, body=body))
+        actions.append(build_request_action(method, url, headers=headers, body=body))
     return actions
 
 
-def convert_spec_file(input_path: str, spec_format: str) -> List[dict]:
+def convert_spec_file(input_path: str, spec_format: str) -> List[list]:
     """Read ``input_path`` and dispatch to the matching converter."""
     text = Path(input_path).read_text(encoding="utf-8")
     document = json.loads(text)

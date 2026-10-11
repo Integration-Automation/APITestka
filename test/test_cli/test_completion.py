@@ -3,7 +3,14 @@ from __future__ import annotations
 
 import pytest
 
+from je_api_testka.cli.cli_main import build_parser
 from je_api_testka.cli.completion import SUBCOMMANDS, generate_completion_script
+
+
+def test_subcommands_match_the_parser():
+    # Regression: completion missed "completion" and "mcp", so the list must follow build_parser.
+    subparsers = next(action for action in build_parser()._actions if action.dest == "command")
+    assert set(SUBCOMMANDS) == set(subparsers.choices)
 
 
 def test_bash_script_lists_subcommands():

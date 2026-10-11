@@ -30,30 +30,35 @@ Features
      - mTLS, proxies, DNS override, VCR-style cassette record/replay
    * - **Mock server**
      - Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja
-       templating, webhook receiver, record-replay proxy
+       templating, webhook receiver, record-replay proxy, WebSocket and gRPC endpoints
    * - **Runner**
      - Sequential & parallel execution, tag filters, dependency-aware
        ordering, retry policies
    * - **Reports**
      - HTML / JSON / XML / JUnit / Allure / Markdown / shields.io badge /
-       SQLite trend store / run diff
+       SQLite trend store / run diff / per-endpoint latency trends with anomaly detection
    * - **Integrations**
      - Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR
-       importers, OpenAPI / Postman importer
+       importers, OpenAPI / Postman importer, LoadDensity load-test bridge
    * - **CLI / DX**
      - Subcommand CLI, REPL, terminal summary, shell completion, scaffold
    * - **Security**
      - Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS /
        rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs
    * - **Spec inference**
-     - Test record → OpenAPI, JSON Schema inference, OpenAPI changelog
+     - Test record → OpenAPI, JSON Schema inference, OpenAPI changelog,
+       test-as-spec loop
+   * - **Contract testing**
+     - Pact v2 consumer contracts from test runs, provider verification,
+       bidirectional check against OpenAPI
    * - **AI**
      - Pluggable backend with deterministic fallback for test generation,
-       fake data, failure classification
+       fake data, failure classification; Anthropic reference backend
    * - **MCP**
      - First-class Claude Code / MCP server exposing the framework as tools
    * - **GUI**
-     - Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed
+     - Optional PySide6 GUI: a sidebar page per feature, request builder with history and
+       environments, light and dark themes, English / 繁中 / 简中 / 日本語, Swagger UI embed
    * - **Cross-Platform**
      - Windows, macOS, Linux. Python 3.10–3.14
 
@@ -68,6 +73,8 @@ Features
    doc/data_layer/data_layer_doc
    doc/assertion/assertion_doc
    doc/diff/diff_doc
+   doc/contract/contract_doc
+   doc/spec_loop/spec_loop_doc
    doc/connection/connection_doc
    doc/runner/runner_doc
    doc/report/report_doc
@@ -81,3 +88,4 @@ Features
    doc/project/project_doc
    doc/test_record/test_record_doc
    doc/mcp/mcp_doc
+   doc/ai/ai_doc

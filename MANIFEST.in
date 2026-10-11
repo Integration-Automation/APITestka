@@ -1,0 +1,4 @@
+# The source distribution carries no tests. Without this line setuptools adds test/test*.py by default.
+# Keep it last: a later include, recursive-include, global-include or graft could bring the directory back
+# (test/test_utils/test_sdist_manifest.py).
+prune test

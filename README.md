@@ -34,6 +34,8 @@ server for Claude, and more.
   - [CLI / Developer Experience](#cli--developer-experience)
   - [Security Probes](#security-probes)
   - [OpenAPI Inference](#openapi-inference)
+  - [Test-as-Spec Loop](#test-as-spec-loop)
+  - [Contract Testing](#contract-testing)
   - [GUI](#gui)
   - [Pluggable AI Backend](#pluggable-ai-backend)
 - [MCP Server for Claude](#mcp-server-for-claude)
@@ -54,16 +56,17 @@ server for Claude, and more.
 | **Data layer** | Variable store, `{{var}}` templating, CSV/JSON data-driven loops, env profiles, fake data |
 | **Assertions** | Field assertions, JSON Schema, JSONPath, snapshot, structural diffs, OpenAPI contract drift, response-time SLAs |
 | **Connection** | mTLS, proxies, DNS override, VCR-style cassette record/replay |
-| **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy |
+| **Mock server** | Static, dynamic, stateful, fault injection, OpenAPI-driven, Jinja templating, webhook receiver, record-replay proxy, WebSocket and gRPC endpoints |
 | **Runner** | Sequential & parallel execution, tag filters, dependency-aware ordering, retry policies |
-| **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff |
-| **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer |
+| **Reports** | HTML / JSON / XML / **JUnit / Allure / Markdown** / shields.io badge / SQLite trend store / run diff / per-endpoint latency trends with anomaly detection |
+| **Integrations** | Slack / Teams / Discord webhook, GitHub PR comment, cURL & HAR importers, OpenAPI / Postman importer, LoadDensity load-test bridge |
 | **CLI / DX** | Subcommand CLI, REPL, terminal summary, shell completion, scaffold |
 | **Security** | Auth helpers (Basic / Bearer / JWT / AWS SigV4), header / CORS / rate-limit / SSRF probes, pip-audit wrapper, fuzz inputs |
-| **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog |
-| **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification |
+| **Spec inference** | Test record → OpenAPI, JSON Schema inference, OpenAPI changelog, test-as-spec loop (drift, coverage, generated tests for gaps) |
+| **Contract testing** | Pact v2 consumer contracts from test runs, provider verification, bidirectional check against OpenAPI |
+| **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification; Anthropic reference backend |
 | **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
-| **GUI** | Optional PySide6 GUI (English / 繁中 / 简中 / 日本語) plus Swagger UI embed |
+| **GUI** | Optional PySide6 GUI: sidebar pages for every feature, request builder with history and environments, light and dark themes, English / 繁中 / 简中 / 日本語, Swagger UI embed |
 | **Cross-platform** | Windows, macOS, Linux. Python 3.10–3.14 |
 
 ---
@@ -129,6 +132,13 @@ apitestka run smoke.json
 - **Executor** — a command map (`AT_*` keys) over Python callables. JSON action lists
   drive it. New features register themselves here so `apitestka run` can use them
   without writing Python.
+- **Package gate** — `AT_add_package_to_executor` imports a Python package and registers its
+  members as commands, so an action file or socket client that can name `os` or `subprocess` can
+  run anything. `executor.allow_packages("name", …)` lists the packages it may load (submodules
+  included) and `executor.set_allow_arbitrary_packages(False)` refuses the rest before importing
+  them; neither is an action command, so an action file cannot open its own gate. Until the host
+  configures the gate, any package still loads but raises a `DeprecationWarning`: a future
+  release will refuse unlisted packages by default.
 - **VariableStore** — a thread-safe key/value store. `{{var}}` placeholders inside
   payloads, URLs, headers, and templates resolve against it. Combine with
   `AT_extract_and_store` to chain requests.
@@ -136,6 +146,24 @@ apitestka run smoke.json
   live behind extras and raise a friendly error if you call them without installing.
 
 ---
+
+### Shared Request Records
+
+Invalid methods, URLs and options remain legacy configuration failures and produce no canonical executed-request record. Response evidence is retained before metadata conversion; wrapped TLS causes retain the TLS failure kind.
+
+Canonical end times use the start timestamp plus monotonic elapsed time, so wall clock corrections cannot reverse the interval. Runner/configuration failures are distinct from connection and other transport errors.
+
+With ActionCore request-context support, HTTP wrappers can also capture RequestRecord v1 in an explicit run scope. Native responses and legacy reports keep their existing formats. HTTP and assertion failures retain the actual status; transport failures use null for unknown measurements. Successful calls with `record_request_info=False` are excluded; failures remain recorded. Bodies and headers are omitted by default. `from_legacy_record(..., capture_payload=True)` enables payload import and masks sensitive headers. Each context has independent records; `clean_record()` only clears the legacy singleton.
+
+```python
+from je_api_testka import test_api_method_requests
+from je_api_testka.utils.test_record.run_context import RunContext, use_run_context
+
+run = RunContext(source="apitestka", phase="functional", engine="requests")
+with use_run_context(run):
+    test_api_method_requests("get", "http://localhost:8091/get")
+records_json = run.to_json()
+```
 
 ## Feature Map
 
@@ -197,6 +225,7 @@ check_jsonpath(payload, "$.data.id", expected=7)
 assert_snapshot("user-by-id", payload, ignore_keys=["timestamp"])
 diff = diff_payloads(prod_response, staging_response, ignore_paths=["server_time"])
 assert_sla(records, ResponseSLA(max_ms=2000, p95_ms=1500))
+assert_sla(sla={"max_ms": 2000})   # the run recorded so far; JSON: ["AT_assert_sla", {"sla": {...}}]
 ```
 
 ### Connection Layer
@@ -233,7 +262,48 @@ The bundled `FlaskMockServer` now supports several layered features:
 
 ```bash
 apitestka mock --host 0.0.0.0 --port 9000
+apitestka mock --config mock.json       # HTTP routes plus WebSocket and gRPC endpoints
 ```
+
+**WebSocket and gRPC endpoints.** `WebSocketMockServer` (`websocket` extra) serves scripted
+routes: a greeting on connect, a reply map for known messages, and a fallback for the rest
+(`{{message}}` echoes, `null` stays silent). `GrpcStubServer` (`grpc` extra) serves methods by
+full path without compiled stubs: fixed unary responses, server streams, or a status-code
+error. Payloads are raw bytes, so serialized protobuf works with generated clients; `str` is
+sent as UTF-8 and other JSON values as compact JSON. Both keep what they received for
+assertions, and an unknown WebSocket path is refused with HTTP 404.
+
+```python
+from je_api_testka.utils.mock_server.websocket_mock import WebSocketMockServer, WebSocketRoute
+from je_api_testka.utils.mock_server.grpc_stub import GrpcStubServer
+
+with WebSocketMockServer(port=0) as ws:          # port 0 picks a free port
+    ws.add_route("/chat", WebSocketRoute(replies={"ping": "pong"}))
+    ...                                          # connect to f"{ws.url}/chat"
+    ws.received("/chat")                         # frames the route got
+
+with GrpcStubServer(port=0) as grpc_mock:        # needs the grpc extra
+    grpc_mock.add_unary_response("/shop.Catalog/Get", {"id": 1})
+    ...                                          # grpc.insecure_channel(grpc_mock.address)
+```
+
+A `--config` file describes all three kinds; every section is optional:
+
+```json
+{
+  "http": {"routes": [{"rule": "/health", "body": {"ok": true}}], "openapi": "spec.json"},
+  "websocket": {"port": 8765, "routes": {"/chat": {"greeting": "hi", "replies": {"ping": "pong"}}}},
+  "grpc": {"port": 50051, "methods": {
+    "/shop.Catalog/Get": {"response": {"id": 1}},
+    "/shop.Catalog/List": {"stream": [{"id": 1}, {"id": 2}]},
+    "/shop.Catalog/Delete": {"error": {"code": "PERMISSION_DENIED", "details": "read only"}}
+  }}
+}
+```
+
+JSON actions reach the same mocks with `AT_mock_start_websocket_server` / `AT_mock_start_grpc_server`
+(`routes` / `methods` in the config form above), `AT_mock_websocket_received` /
+`AT_mock_grpc_received`, and `AT_mock_stop_websocket_server` / `AT_mock_stop_grpc_server`.
 
 ### Runner
 
@@ -267,6 +337,32 @@ generate_badge("badge.json")                # shields.io endpoint
 record_current_run("trend.sqlite")          # historical trend
 ```
 
+**Response-time trends and anomalies.** `record_endpoint_latencies` stores each run's per-endpoint
+latency (count, mean, p50, p95, max) in the trend database. An endpoint is the method plus the path
+template: the OpenAPI template when one is given, otherwise the path with identifiers generalized
+(`/items/42` → `/items/{id}`). `detect_latency_anomalies` compares every endpoint of the latest run with
+the median and MAD of its previous runs (20 by default, at least 5). It flags a slowdown of at least 20 %
+and 5 ms whose robust z-score is above 3.5; all of these are settings. `generate_trend_report` writes an
+HTML table with a sparkline per endpoint. JSON actions: `AT_record_endpoint_latencies`,
+`AT_detect_latency_anomalies`, `AT_assert_no_latency_anomalies`, `AT_generate_trend_report`.
+
+```python
+from je_api_testka.utils.generate_report.latency_trends import (
+    record_endpoint_latencies, detect_latency_anomalies, assert_no_latency_anomalies,
+)
+from je_api_testka.utils.generate_report.trend_report import generate_trend_report
+
+record_endpoint_latencies("trend.sqlite", run_label="build-128")   # after each run
+assert_no_latency_anomalies("trend.sqlite", {"metric": "p95_ms", "threshold": 3.5})
+generate_trend_report("trends.html", "trend.sqlite")
+```
+
+```bash
+apitestka trend record --report run_success.json --label build-128 --openapi openapi.json
+apitestka trend check            # exit 1 on an anomaly
+apitestka trend report -o trends.html
+```
+
 OpenTelemetry hook (no-op when `opentelemetry-api` is absent):
 
 ```python
@@ -293,6 +389,35 @@ actions = convert_har("traffic.har")
 actions = convert_spec_file("openapi.json", spec_format="openapi")
 ```
 
+Each importer returns `["AT_test_api_method", {...}]` actions that `execute_action` runs
+as they are. Runner metadata (`id`, `depends_on`, `tags`) may stay in the kwargs; the
+executor strips it before the call.
+
+**Load testing with LoadDensity.** The same requests can run as a load test on
+[LoadDensity](https://github.com/Integration-Automation/LoadDensity) (Locust). `AT_test_api_method` and
+`AT_test_api_method_httpx` actions, or recorded traffic from saved reports, become LoadDensity HTTP tasks:
+URL, method, `params`, `headers`, `cookies`, `json`, `data`, `timeout`, `allow_redirects` and `verify` carry
+over, and `result_check_dict["status_code"]` becomes a status assertion. Other actions, and relative URLs,
+are left out and listed. `load run` starts LoadDensity in its own process
+(`python -m je_load_density --execute_file`) and judges the run from its summary: no requests, a
+failure rate above `--max-failure-rate` or a p95 above `--max-p95-ms` exits with 1.
+
+```bash
+pip install je_load_density            # in this interpreter, or point --python at another one
+apitestka load convert --actions smoke.json -o load.json --users 20 --time 30
+apitestka load run --actions smoke.json --users 20 --spawn-rate 5 --time 30 \
+    --max-failure-rate 0.01 --max-p95-ms 500
+apitestka load run --report run_success.json --time 60 --python /opt/ld/bin/python
+```
+
+JSON actions: `AT_write_load_test` writes the LoadDensity file; `AT_run_load_test` runs it and fails the
+action when a threshold is broken.
+
+```json
+["AT_run_load_test", {"action_file": "smoke.json", "profile": {"user_count": 20, "test_time": 30},
+                      "thresholds": {"max_failure_rate": 0.01, "max_p95_ms": 500}}]
+```
+
 ### CLI / Developer Experience
 
 ```bash
@@ -305,7 +430,16 @@ apitestka summary                       # ANSI-coloured summary
 apitestka scaffold https://api/x out.json
 apitestka completion bash               # source >> ~/.bashrc
 apitestka mcp                           # MCP server over stdio
+apitestka openapi --report run_success.json -o openapi.json   # infer a spec from a saved run
+apitestka openapi --run actions.json    # run first, print the inferred spec
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000   # see Contract Testing
+apitestka generate-tests openapi.json -o actions.json [--ai anthropic]         # see Pluggable AI Backend
+apitestka load run --actions smoke.json --users 20 --time 30                    # see Integrations
+apitestka trend check                                                           # see Reports and Observability
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8               # see Test-as-Spec Loop
 ```
+
+`python -m je_api_testka -e/-d/--execute_str` and `apitestka run` exit with status 1 when an action raised or a request was recorded as failed; the remaining actions still run first. Under [TestPioneer](https://github.com/Integration-Automation/TestPioneer), which sets `TEST_PIONEER_ARTIFACT_DIR`, a report asked for under a relative name (HTML, JSON, XML, JUnit, Markdown, Allure, badge) is written below that directory, so the workflow needs no `artifacts:` entry for it.
 
 ### Security Probes
 
@@ -326,43 +460,155 @@ run_pip_audit()                                      # delegates to pip-audit
 ### OpenAPI Inference
 
 ```python
-from je_api_testka.spec import infer_schema, records_to_openapi, openapi_changelog
+from je_api_testka.spec import (
+    infer_schema, records_to_openapi, build_openapi, export_openapi, load_report_records, openapi_changelog,
+)
 
-records_to_openapi(title="Recovered", version="0.1.0")
+records_to_openapi(title="Recovered", version="0.1.0")   # from the in-memory test record
+build_openapi(["run_success.json"])                  # record plus saved JSON reports
+export_openapi("openapi.json", ["run_success.json"]) # same, written as UTF-8 JSON
 openapi_changelog(prev_spec, current_spec)           # markdown diff
 ```
+
+Records with the same method and path merge into one operation: every status code seen gets
+a response entry, query parameter names become `in: query` parameters, and JSON or text
+bodies become response and request-body schemas. A saved report is the
+`<name>_success.json` file from `generate_json_report`; the `AT_export_openapi` command and
+`apitestka openapi` read it too.
+
+### Test-as-Spec Loop
+
+`apitestka spec check` keeps the committed OpenAPI document and the tests in step. It runs the tests (or
+reads saved reports) and then does three things:
+
+- **Drift**: every recorded request is checked against the document the way a contract interaction is
+  (operation, query parameters, request body, declared status, response schema). A request to an operation
+  the document does not declare is reported as undocumented.
+- **Coverage**: lists the documented operations no test exercised; `--min-coverage` fails the run below a share.
+- **Closing the gap**: `--missing-actions` writes actions for the untested operations (the AI backend when
+  one is set, otherwise deterministic requests built from the document's examples). `--inferred-spec` writes
+  the document the tests describe, with paths grouped under the committed templates (`/items/7` →
+  `/items/{id}`).
+
+The command exits with 1 on an undocumented operation, a drift problem or low coverage. JSON action:
+`AT_check_spec_against_tests` (fails the action with the report).
+
+```bash
+apitestka spec check openapi.json --run tests/ --min-coverage 0.8 \
+    --missing-actions tests/generated.json --inferred-spec build/openapi.inferred.json
+```
+
+```python
+from je_api_testka.spec.spec_loop import check_records_against_spec, missing_test_actions, infer_spec_from_tests
+
+report = check_records_against_spec(records, committed_spec)   # records: success records of the run
+report.coverage, report.uncovered, report.undocumented, report.problems
+actions = missing_test_actions(committed_spec, report)
+```
+
+### Contract Testing
+
+Pact-style, bidirectional consumer contracts (`je_api_testka.contract`). The consumer's test run
+becomes a contract in the Pact v2 file format, so it can go to a Pact Broker or Pactflow as it is. Every
+response body gets a `type` matching rule by default: the provider must return the same structure
+and value types, not the same values. The contract is then checked from two sides:
+
+- **Provider verification** replays each interaction against a running provider: equal status,
+  the contract's headers present (`Content-Type` by media type), and the body satisfying the
+  matching rules (`type`, `regex`, `min`; objects may carry extra keys). Provider states
+  (`providerState`) are set up through a Python callable or a setup URL that receives
+  `{"consumer": ..., "state": ...}`.
+- **Bidirectional check** compares the contract with the provider's OpenAPI document without
+  running the provider: the operation exists (path templates match), query parameters are declared
+  and required ones sent, the request body fits its schema, the status is declared (exact, `2XX` or
+  `default`), and the response body fits its schema (`$ref`, `allOf` / `anyOf` / `oneOf`, `nullable`).
+  The provider keeps its OpenAPI document honest from its own test run, e.g. with `apitestka openapi`.
+
+```python
+from je_api_testka.contract import write_contract, verify_contract, check_contract_against_openapi
+
+# consumer: its test run (current record plus saved reports) becomes the contract
+write_contract("pacts/web-shop.json", consumer="web", provider="shop", report_paths=["run_success.json"])
+# provider: replay the contract against a running provider
+verify_contract("pacts/web-shop.json", base_url="http://localhost:8000")
+# bidirectional: check the contract against the provider's OpenAPI document, no provider needed
+check_contract_against_openapi("pacts/web-shop.json", "openapi.json")
+```
+
+```bash
+apitestka contract record --report run_success.json --consumer web --provider shop -o pacts/web-shop.json
+apitestka contract verify pacts/web-shop.json --base-url http://localhost:8000
+apitestka contract compare pacts/web-shop.json openapi.json
+```
+
+`verify` and `compare` print a report (`--json` for JSON) and exit with 1 when the contract does not
+hold. JSON actions: `AT_write_contract`, `AT_verify_contract`, `AT_check_contract_against_openapi`
+(the last two fail the action with the report).
+
+Provider verification accepts only absolute URL paths below the selected base URL. Traversal segments (including percent-encoded forms), authorities, embedded queries and fragments are rejected before sending; use the separate query field.
 
 ### GUI
 
 ```bash
 pip install 'je_api_testka[gui]'
+python -m je_api_testka.gui.main_window
 ```
 
-Headless models (`HistoryPanelModel`, `EnvManagerModel`, `render_side_by_side`) live in
-the `je_api_testka.gui.*` submodules (`history_panel`, `env_manager_model`, `diff_viewer`),
-allowing tests and headless tooling to drive panels without PySide6. The actual Qt widgets
-live in `main_widget.py`.
+A sidebar leads to one page per feature, with a console underneath:
 
-Locales: English, 繁體中文, 简体中文, 日本語. Switch via `LanguageWrapper.reset_language(...)`.
+- **Request**: method, URL, backend and environment in one bar. Params, headers, body, auth and options
+  sit next to the response (status, time, size, pretty-printed body, headers), with the request history
+  on the left. `{{name}}` placeholders take the active environment's values, and **Copy as action**
+  turns the request into executor JSON.
+- **Environments**: named variable sets; activate, import and export them.
+- **Executor**: run typed action JSON, a file or a folder.
+- **Records & Reports**: the test record as a table with details and failures, and HTML, JSON, XML,
+  JUnit, Markdown and Allure reports.
+- **Mock Servers**, **Contracts**, **OpenAPI** (inference, the test-as-spec check, test generation with
+  an AI backend), **Load Test** (LoadDensity), **Trends** (latency anomalies and the HTML report) and
+  **Tools** (JSON, XML, project scaffolding).
+
+The window has light and dark themes (plain Qt style sheets; **Theme** follows the system by default) and
+four languages: English, 繁體中文, 简体中文 and 日本語. Switching the language keeps the request history,
+the environments and a running mock server. `je_api_testka.gui.main_widget.APITestkaWidget` is
+the embeddable widget, and PyBreeze embeds it. The logic behind the pages (`request_model`,
+`history_panel`, `env_manager_model`) has no Qt dependency.
 
 ### Pluggable AI Backend
 
-Default backend (`NoOpAIBackend`) never calls a network. Plug in your own to enable
-LLM-driven test generation:
+Three helpers can ask a language model: `generate_tests_from_openapi` (actions for every
+operation), `generate_fake_payload` (a value for a JSON Schema) and `classify_failures` (labels for the
+errors its rules cannot place). The default backend (`NoOpAIBackend`) never calls a network, and every
+helper then uses its deterministic fallback, as it also does when a reply is empty or unusable
+(generated actions must be a JSON list of `["AT_...", {...}]`).
+
+`AnthropicAIBackend` (`ai` extra) is the reference implementation on the Anthropic API. It takes
+credentials from the environment the `anthropic` SDK reads (`ANTHROPIC_API_KEY`, or an `ant auth login`
+profile) and never stores a key. The default model is `claude-opus-5-5`, with effort `medium` sent
+explicitly. Server-side refusal fallbacks are on (`fallbacks="default"`); pass `fallbacks=None` to
+turn them off. A refusal, a truncated reply, a rate limit, a server error or a network failure gives
+the deterministic fallback, and a rejected request (bad key, unknown model) raises `APIAIBackendException`.
 
 ```python
-from je_api_testka.ai import AIBackend, set_ai_backend, generate_tests_from_openapi
+from je_api_testka.ai import AnthropicAIBackend, set_ai_backend, generate_tests_from_openapi
 
-class AnthropicBackend(AIBackend):
-    def complete(self, prompt, *, context=None):
-        ...  # call your provider
-        return llm_response_text
-
-set_ai_backend(AnthropicBackend())
-actions = generate_tests_from_openapi(my_openapi_spec)  # falls back to a deterministic
-                                                        # happy path if the LLM reply is
-                                                        # not valid JSON
+set_ai_backend(AnthropicAIBackend())                   # claude-opus-5-5, effort "medium"
+set_ai_backend(AnthropicAIBackend(model="claude-sonnet-5-5", effort="low", timeout=60))
+actions = generate_tests_from_openapi(my_openapi_spec)
 ```
+
+Select a backend with `set_ai_backend(...)`, `select_ai_backend("anthropic", model=..., effort=...)`,
+the `AT_select_ai_backend` action, or the environment: without a selection, the first use reads
+`APITESTKA_AI_BACKEND` (`noop` or `anthropic`), `APITESTKA_AI_MODEL` and `APITESTKA_AI_EFFORT`.
+
+```bash
+pip install 'je_api_testka[ai]'
+export ANTHROPIC_API_KEY=...                            # or an `ant auth login` profile
+apitestka generate-tests openapi.json -o actions.json --ai anthropic --effort high
+APITESTKA_AI_BACKEND=anthropic apitestka mcp            # any entry point, no code changes
+```
+
+Any other provider plugs in the same way: subclass `AIBackend` and implement `complete(prompt, *, context)`.
 
 ---
 
@@ -378,7 +624,7 @@ MCP-compatible client) can drive the framework. Eight tools are exposed:
 | `apitestka_curl_to_action` | cURL → action JSON |
 | `apitestka_har_import` | HAR file → action list |
 | `apitestka_render_markdown` | Markdown report from current records |
-| `apitestka_records_to_openapi` | Reconstruct an OpenAPI document |
+| `apitestka_records_to_openapi` | Reconstruct an OpenAPI document from the record or saved reports (`report_paths`) |
 | `apitestka_clear_records` | Wipe the test record |
 | `apitestka_get_records` | Return successes / failures |
 
@@ -412,6 +658,7 @@ je_api_testka/
 ├── ai/                      # Pluggable AI backend + helpers
 ├── cli/                     # apitestka CLI subcommands + REPL + completions
 ├── connection/              # ConnectionOptions, DNS override, Cassette
+├── contract/                # Pact-style consumer contracts, provider verification, OpenAPI check
 ├── data/                    # VariableStore, templates, faker, env profiles
 ├── diff/                    # Response diff / contract drift / SLA
 ├── graphql_wrapper/         # GraphQL helper
@@ -435,6 +682,8 @@ je_api_testka/
 
 ```bash
 pip install 'je_api_testka[websocket]'
+pip install 'je_api_testka[grpc]'
+pip install 'je_api_testka[ai]'
 pip install 'je_api_testka[schema]'
 pip install 'je_api_testka[security]'
 pip install 'je_api_testka[otel]'
@@ -450,10 +699,14 @@ pip install 'je_api_testka[gui]'
 git clone https://github.com/Integration-Automation/APITestka.git
 cd APITestka
 pip install -r dev_requirements.txt
-pytest                     # full suite (~300+ tests)
+pytest                     # full suite
 ```
 
 CI runs the suite against Python 3.10 – 3.14 on Ubuntu, macOS, and Windows.
+
+The GUI widget tests run offscreen (`QT_QPA_PLATFORM=offscreen`). On Linux, Qt needs a few system
+libraries (`sudo apt-get install libegl1 libgl1 libx11-6 libxkbcommon0 libfontconfig1 libfreetype6`); without them those tests are skipped locally. CI installs them and sets
+`APITESTKA_REQUIRE_QT=1`, which turns a failed Qt import into an error.
 
 ---
 

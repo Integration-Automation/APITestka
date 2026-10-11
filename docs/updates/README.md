@@ -58,6 +58,41 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261011-01 | 2026-10-11 | Harden contract paths and bounded reply parsing | #done #ci | [2026-10](2026-10.md) |
+| U-20261008-01 | 2026-10-08 | The CLI exits 1 when something failed; reports go below TestPioneer's artifact directory | #feature #cli #report #testpioneer | [2026-10](2026-10.md) |
+| U-20261002-03 | 2026-10-02 | Keep configuration failures outside executed records | #done #records | [2026-10](2026-10.md) |
+| U-20261002-02 | 2026-10-02 | Preserve clock and failure-kind semantics | #done #records | [2026-10](2026-10.md) |
+| U-20261002-01 | 2026-10-02 | Capture shared request outcomes in HTTP wrappers | #done #records | [2026-10](2026-10.md) |
+| U-20261001-27 | 2026-10-01 | The publish lock is resolved with the 7-day cut-off the other locks use | #ci #security #X-13 | [2026-10](2026-10.md) |
+| U-20261001-26 | 2026-10-01 | Both publish jobs build with the locked setuptools | #done #ci #security #X-13 | [2026-10](2026-10.md) |
+| U-20261001-25 | 2026-10-01 | Both publish jobs install hash-locked build tooling | #done #ci #security #X-13 | [2026-10](2026-10.md) |
+| U-20261001-24 | 2026-10-01 | The sdist carries no tests | #done #packaging #X-13 | [2026-10](2026-10.md) |
+| U-20261001-23 | 2026-10-01 | CI publishes je_api_testka_dev from the dev branch | #release #ci #X-13 | [2026-10](2026-10.md) |
+| U-20261001-22 | 2026-10-01 | je_action_core comes from PyPI | #done #build #L-6 | [2026-10](2026-10.md) |
+| U-20261001-21 | 2026-10-01 | je_action_core pin moves to 19bfe0a | #build #L-6 | [2026-10](2026-10.md) |
+| U-20261001-20 | 2026-10-01 | Executor and its helpers move to je_action_core | #migration #executor #L-6 | [2026-10](2026-10.md) |
+| U-20261001-19 | 2026-10-01 | Unknown executor commands raise APITesterExecuteException | #bugfix #executor #L-6 | [2026-10](2026-10.md) |
+| U-20261001-18 | 2026-10-01 | GUI checked on a real display; four fixes | #bugfix #gui | [2026-10](2026-10.md) |
+| U-20261001-17 | 2026-10-01 | httpx records request_url as text | #bugfix #spec | [2026-10](2026-10.md) |
+| U-20261001-16 | 2026-10-01 | Package gate in front of AT_add_package_to_executor | #change #security #X-12 | [2026-10](2026-10.md) |
+| U-20261001-15 | 2026-10-01 | The package passes its lint rules | #change #lint | [2026-10](2026-10.md) |
+| U-20261001-14 | 2026-10-01 | reformat_xml_file raises its own exception for bad XML | #bugfix #gui | [2026-10](2026-10.md) |
+| U-20261001-13 | 2026-10-01 | Every workflow job has a timeout | #ci #tests | [2026-10](2026-10.md) |
+| U-20261001-12 | 2026-10-01 | GUI widget tests run on Linux CI too | #done #ci #gui | [2026-10](2026-10.md) |
+| U-20261001-11 | 2026-10-01 | GUI widget tests broke Linux CI (libEGL); now skipped there | #incident #ci #gui | [2026-10](2026-10.md) |
+| U-20261001-10 | 2026-10-01 | Development status classifier moves to Beta | #done #packaging | [2026-10](2026-10.md) |
+| U-20261001-09 | 2026-10-01 | GUI redesign: sidebar pages, request workspace, themes | #done #gui | [2026-10](2026-10.md) |
+| U-20261001-08 | 2026-10-01 | Test-as-spec loop: drift, coverage and generated tests | #done #openapi #spec | [2026-10](2026-10.md) |
+| U-20261001-07 | 2026-10-01 | Per-endpoint latency trends and anomaly detection | #done #trend #report | [2026-10](2026-10.md) |
+| U-20261001-06 | 2026-10-01 | Load-test bridge to LoadDensity | #done #load #cross-project | [2026-10](2026-10.md) |
+| U-20261001-05 | 2026-10-01 | Anthropic reference AI backend and backend selection | #done #ai | [2026-10](2026-10.md) |
+| U-20261001-04 | 2026-10-01 | Pact-style bidirectional contract testing | #done #contract | [2026-10](2026-10.md) |
+| U-20261001-03 | 2026-10-01 | Mock server serves WebSocket and gRPC endpoints | #done #mock #grpc #websocket | [2026-10](2026-10.md) |
+| U-20261001-02 | 2026-10-01 | Imported, scaffolded and AI-generated actions run as they are | #bugfix #executor | [2026-10](2026-10.md) |
+| U-20261001-01 | 2026-10-01 | records_to_openapi reachable from the CLI and MCP | #done #openapi #cli #mcp | [2026-10](2026-10.md) |
+| U-20260925-03 | 2026-09-25 | Python classifiers list every version CI tests | #packaging #tests | [2026-09](2026-09.md) |
+| U-20260925-02 | 2026-09-25 | dev_requirements.txt pins the package's PySide6 | #deps #tests | [2026-09](2026-09.md) |
+| U-20260925-01 | 2026-09-25 | Dependabot waits 7 days before proposing a new release | #ci #security #deps | [2026-09](2026-09.md) |
 | U-20260924-02 | 2026-09-24 | Keep checkout credentials only in the job that pushes | #ci #security | [2026-09](2026-09.md) |
 | U-20260924-01 | 2026-09-24 | Move CI to Node 24 actions pinned by commit | #ci #security #deps | [2026-09](2026-09.md) |
 | U-20260923-14 | 2026-09-23 | MCP server runs on mcp 1.x and 2.x; extra allows <3 | #done #mcp #compat | [2026-09](2026-09.md) |
@@ -83,4 +118,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-09.md](2026-09.md) | 2026-09 | 20 |
+| [2026-10.md](2026-10.md) | 2026-10 | 32 |
+| [2026-09.md](2026-09.md) | 2026-09 | 23 |

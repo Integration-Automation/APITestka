@@ -9,21 +9,17 @@ from __future__ import annotations
 
 from typing import Dict, List
 
+from je_api_testka.runner.metadata import action_kwargs
 from je_api_testka.utils.exception.exceptions import APITesterExecuteException
 
 
 def _id_of(action: list) -> str:
-    if len(action) >= 2 and isinstance(action[1], dict):
-        candidate = action[1].get("id")
-        if isinstance(candidate, str):
-            return candidate
-    return ""
+    candidate = (action_kwargs(action) or {}).get("id")
+    return candidate if isinstance(candidate, str) else ""
 
 
 def _deps_of(action: list) -> List[str]:
-    if len(action) < 2 or not isinstance(action[1], dict):
-        return []
-    raw = action[1].get("depends_on") or []
+    raw = (action_kwargs(action) or {}).get("depends_on") or []
     return [str(dep) for dep in raw]
 
 

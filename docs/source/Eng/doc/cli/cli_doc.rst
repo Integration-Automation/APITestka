@@ -48,3 +48,79 @@ CLI Flags
      - Execute a JSON string directly
    * - ``-c``, ``--create_project``
      - Create a project directory with template files
+
+Exit Status
+-----------
+
+``python -m je_api_testka`` with ``-e``, ``-d`` or ``--execute_str``, and ``apitestka run``, exit with
+status 1 when an action raised or a request was recorded as failed, and print
+``N action(s) failed``. A failed action does not stop the list: the remaining actions run first.
+The other subcommands that run action files (``openapi --run``, ``contract``, ``spec check``,
+``trend``) keep their own exit statuses.
+
+Running Under TestPioneer
+-------------------------
+
+TestPioneer starts a runner with ``TEST_PIONEER_ARTIFACT_DIR`` set to the directory that run's
+output belongs in. A report asked for under a relative name (HTML, JSON, XML, JUnit, Markdown,
+Allure, badge) is then written below that directory, and the folders it needs are created. An
+absolute name, and a name that would leave the directory, are used as given. Without the variable
+nothing changes.
+
+Subcommand CLI
+--------------
+
+The ``apitestka`` command (installed with the package) groups the everyday tasks:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Subcommand
+     - Description
+   * - ``run PATH``
+     - Execute an action JSON file or every JSON file in a directory
+   * - ``create PATH``
+     - Scaffold a project directory
+   * - ``mock [--host] [--port] [--config]``
+     - Start the Flask mock server; ``--config`` adds WebSocket and gRPC endpoints (see Mock Server)
+   * - ``import INPUT OUTPUT [--format openapi|postman]``
+     - Convert an OpenAPI document or Postman collection into action JSON
+   * - ``repl``
+     - Interactive JSON-action REPL
+   * - ``summary``
+     - Print a terminal summary of the latest run
+   * - ``scaffold URL OUTPUT [--method]``
+     - Write a starter action JSON for one URL
+   * - ``completion SHELL``
+     - Print a completion script for bash, zsh, fish or PowerShell
+   * - ``mcp``
+     - Run the MCP server over stdio
+   * - ``openapi``
+     - Infer an OpenAPI document from recorded traffic (below)
+   * - ``contract record|verify|compare``
+     - Record, verify and compare Pact-style consumer contracts (see Contract Testing)
+   * - ``generate-tests SPEC [-o OUT] [--ai noop|anthropic] [--model] [--effort]``
+     - Write test actions for an OpenAPI document (see Pluggable AI Backend)
+   * - ``load convert|run``
+     - Convert or run APITestka requests as a LoadDensity load test (see Integrations)
+   * - ``trend record|check|report``
+     - Record per-endpoint latencies, check the latest run for anomalies (exit 1), write the HTML trend report
+   * - ``spec check SPEC``
+     - Check the committed OpenAPI document against the tests: drift, coverage, missing tests (see Test-as-Spec Loop)
+
+Inferring an OpenAPI document
+-----------------------------
+
+``apitestka openapi`` builds an OpenAPI 3.1 document from successful requests. Give it saved
+JSON success reports (the ``<name>_success.json`` file from ``generate_json_report``), action
+files to run first, or both; each option can be repeated.
+
+.. code-block:: bash
+
+   apitestka openapi --report run_success.json -o openapi.json
+   apitestka openapi --run tests/ --title "Shop API" --api-version 2.0
+
+Without ``-o`` the document is printed to stdout. The command exits with 2 when no source is
+given or a ``--run`` path does not exist, and with 1 (writing nothing) when no successful
+record was found.

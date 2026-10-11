@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
 DEFAULT_BADGE_FILENAME: str = "apitestka_badge.json"
@@ -41,6 +42,6 @@ def render_badge(label: str = "tests") -> dict:
 
 
 def generate_badge(file_name: str = DEFAULT_BADGE_FILENAME, label: str = "tests") -> Path:
-    target = Path(file_name)
+    target = Path(report_path(file_name))
     target.write_text(json.dumps(render_badge(label), indent=2), encoding="utf-8")
     return target

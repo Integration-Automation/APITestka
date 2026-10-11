@@ -14,6 +14,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 15  # about 3x the slowest recent run, at least 15
     if: "!contains(github.event.head_commit.message, 'chore: bump version')"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -26,10 +27,15 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install build tools
+      # Hash-locked and wheels-only, the same file as the publish-dev job of ci.yml: this job holds the
+      # PyPI token. Regenerate with
+      #   uv pip compile .github/requirements/publish.in --generate-hashes --python-version 3.12 \
+      #     --python-platform x86_64-manylinux_2_28 --only-binary :all: --exclude-newer 2026-09-24 \
+      #     -o .github/requirements/publish.txt
+      # (--exclude-newer keeps the 7-day wait Dependabot applies; move the date when regenerating)
+      - name: Install build tooling
         run: |
-          python -m pip install --upgrade pip
-          pip install build twine
+          python -m pip install --require-hashes --only-binary :all: -r .github/requirements/publish.txt
 
       - name: Bump patch version in pyproject.toml
         id: bump
@@ -59,8 +65,9 @@ jobs:
           print(f"Bumped version -> {new_version}")
           EOF
 
+      # --no-isolation: the backend is the setuptools locked in publish.txt, not a fresh download.
       - name: Build distribution
-        run: python -m build
+        run: python -m build --no-isolation
 
       - name: Publish to PyPI
         env:

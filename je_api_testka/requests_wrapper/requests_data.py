@@ -7,6 +7,9 @@ from requests.utils import dict_from_cookiejar
 
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 
+# The JSON body is parsed only for a 200 response.
+HTTP_OK: int = 200
+
 
 def get_requests_data(response: Response,
                       start_time: Union[str, float, int, datetime],
@@ -41,7 +44,7 @@ def get_requests_data(response: Response,
         "end_time": end_time
     }
     try:
-        if response_data.get("status_code") == 200:
+        if response_data.get("status_code") == HTTP_OK:
             response_data.update({"json": response.json()})
         else:
             response_data.update({"json": None})

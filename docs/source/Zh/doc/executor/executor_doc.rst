@@ -101,3 +101,24 @@ JSON 關鍵字驅動測試
      - 新增路由到模擬伺服器
    * - ``AT_start_flask_mock_server``
      - 啟動模擬伺服器
+
+套件閘門
+--------
+
+``AT_add_package_to_executor`` 與 ``AT_add_package_to_callback_executor`` 會匯入 Python 套件，
+並把它的成員註冊成命令，所以只要 action 檔（或 socket 用戶端）寫得出 ``os``、``subprocess``，
+就能執行任何東西。哪些套件可以載入，由宿主程式決定：
+
+.. code-block:: python
+
+   from je_api_testka import executor
+
+   executor.allow_packages("my_helpers")          # 這些套件與其子模組
+   executor.set_allow_arbitrary_packages(False)   # 其他套件在匯入前就拒絕
+
+這兩個開關都不是 action 命令，所以 action 檔不能自己打開閘門。被拒絕的套件會以
+``APITesterExecuteException`` 記錄在該動作的結果裡。``set_allow_arbitrary_packages(True)``
+則載入任何套件、不發警告。
+
+宿主程式呼叫任一個開關之前，任何套件仍會載入，但會發出 ``DeprecationWarning``；
+之後的版本會預設拒絕允許清單以外的套件。

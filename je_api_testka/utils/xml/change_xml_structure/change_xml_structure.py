@@ -1,4 +1,5 @@
 from collections import defaultdict
+
 # Used for XML serialization only (Element/SubElement/tostring); defusedxml does not
 # provide write APIs. Inputs come from internal dicts, never from untrusted XML data.
 from xml.etree import ElementTree  # nosec B405  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
