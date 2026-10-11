@@ -21,7 +21,7 @@ CLI, a TCP socket server, an MCP server, a pytest plugin and an optional PySide6
 | `je_api_testka/requests_wrapper/`, `httpx_wrapper/` | HTTP backends: `test_api_method_requests`, `test_api_method_httpx`, `test_api_method_httpx_async`, `delegate_async_httpx` |
 | `je_api_testka/websocket_wrapper/`, `sse_wrapper/`, `graphql_wrapper/` | Extra protocol backends that need optional dependencies |
 | `je_api_testka/utils/executor/action_executor.py` | `Executor` (je_action_core's `ActionExecutor` with APITestka's settings): `event_dict` (the `AT_*` command map), `execute_action`, `execute_files`, `add_command_to_executor` |
-| `je_api_testka/utils/test_record/` | `test_record_instance`: shared success and error records, guarded by an `RLock` |
+| `je_api_testka/utils/test_record/` | `test_record_instance`: legacy success/error records guarded by an `RLock`; optional core `RunContext`, legacy adapter and context-local HTTP outcome capture |
 | `je_api_testka/utils/assert_result/` | `check_result`, JSON Schema and JSONPath checks, snapshots |
 | `je_api_testka/utils/generate_report/` | HTML, JSON, XML, JUnit, Allure and Markdown reports; badge, run diff, trend store; per-endpoint latency history and anomaly detection (`latency_trends.py`, same SQLite file) and the HTML trend report (`trend_report.py`) |
 | `je_api_testka/utils/callback/` | `callback_executor` (je_action_core's callback executor): run a trigger command, then a callback; a failure is logged and returns `None` |
@@ -150,6 +150,9 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
   package's members once the package gate lets it through (§7).
 
 ## 6. Cross-project boundaries
+
+- **Shared request results**: `utils.test_record.run_context` re-exports ActionCore `RunContext`/scope helpers. HTTP wrappers optionally emit RequestRecord v1 for executed requests; pre-transport configuration errors stay in legacy records, while native status/length survive metadata conversion errors; `contract.from_legacy_record` imports dictionaries or failure pairs. Canonical results derive end time from monotonic duration and distinguish runner/configuration errors from transport errors; they retain status, elapsed milliseconds and assertion outcomes without changing existing API returns/reports. LoadDensity shares the schema. New core support is required only for explicit canonical recording; old core installations keep legacy functionality. Payload import is opt-in and masks credential headers.
+
 
 - **PyBreeze (subprocess)** runs `python -m je_api_testka --execute_str <json>` or `--execute_file <path>`
   (`PyBreeze/pybreeze/extend/process_executor/python_task_process_manager.py`; the package name is in
