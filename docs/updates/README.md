@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261008-01 | 2026-10-08 | The CLI exits 1 when something failed; reports go below TestPioneer's artifact directory | #feature #cli #report #testpioneer | [2026-10](2026-10.md) |
 | U-20261002-03 | 2026-10-02 | Keep configuration failures outside executed records | #done #records | [2026-10](2026-10.md) |
 | U-20261002-02 | 2026-10-02 | Preserve clock and failure-kind semantics | #done #records | [2026-10](2026-10.md) |
 | U-20261002-01 | 2026-10-02 | Capture shared request outcomes in HTTP wrappers | #done #records | [2026-10](2026-10.md) |
@@ -116,5 +117,5 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | File | Period | Entries |
 |---|---|---:|
-| [2026-10.md](2026-10.md) | 2026-10 | 27 |
+| [2026-10.md](2026-10.md) | 2026-10 | 31 |
 | [2026-09.md](2026-09.md) | 2026-09 | 23 |

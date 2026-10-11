@@ -12,6 +12,7 @@ import uuid
 from pathlib import Path
 from typing import List
 
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -33,7 +34,7 @@ def _write_result(directory: Path, payload: dict) -> Path:
 def generate_allure_report(directory: str = DEFAULT_ALLURE_DIR) -> List[Path]:
     """Materialise the global test record as Allure result files."""
     apitestka_logger.info(f"allure_report generate_allure_report directory: {directory}")
-    output_dir = Path(directory)
+    output_dir = Path(report_path(directory))
     output_dir.mkdir(parents=True, exist_ok=True)
     written: List[Path] = []
 

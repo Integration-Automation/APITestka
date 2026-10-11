@@ -165,6 +165,11 @@ MCP host → apitestka-mcp → build_server → dispatch_tool(name, args) → AP
 - **TestPioneer**: `with: api-runner` imports `je_api_testka.execute_action` in-process
   (`test_pioneer/executor/run/utils.py`). `parallel_run` spawns
   `python -m je_api_testka --execute_file <script>` (`test_pioneer/executor/run/parallel_run.py`).
+  It reads two things from that process: the exit status, which is 1 when an action raised or a request
+  was recorded as failed (`cli/cli_common.py`, `FailureCount`), and the `<name>_success.json` /
+  `<name>_failure.json` pair. It sets `TEST_PIONEER_ARTIFACT_DIR` for the runner, in a child process and
+  in-process alike; `utils/generate_report/report_path.py` places a report with a relative name below it.
+  Guarded by `test/test_cli/test_failure_exit_status.py` and `test/test_utils/test_report_path.py`.
 - **LoadDensity (subprocess, this repo depends on it)**: `apitestka load run` / `AT_run_load_test`
   (`integrations/load_density_runner.py`) run `python -m je_load_density --execute_file <file>` (LoadDensity's
   hidden legacy flag, guarded by its `test/test_legacy_cli_contract.py`) with `PYTHONIOENCODING=utf-8` and the

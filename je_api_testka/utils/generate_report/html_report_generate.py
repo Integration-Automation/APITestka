@@ -4,6 +4,7 @@ from typing import List, Tuple
 
 from je_api_testka.utils.exception.exception_tags import html_generate_no_data_tag
 from je_api_testka.utils.exception.exceptions import APIHTMLException
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -200,7 +201,7 @@ def generate_html_report(html_file_name: str = "default_name") -> None:
     success_list, failure_list = generate_html()
     try:
         lock.acquire()  # 確保多執行緒安全 / Ensure thread safety
-        with open(html_file_name + ".html", "w", encoding="utf-8") as file_to_write:
+        with open(report_path(html_file_name + ".html"), "w", encoding="utf-8") as file_to_write:
             file_to_write.writelines(_html_string_head)
             for success in success_list:
                 file_to_write.write(success)

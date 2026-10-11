@@ -10,6 +10,7 @@ from pathlib import Path
 # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
 from xml.etree.ElementTree import Element, ElementTree, SubElement  # noqa: S405
 
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -61,6 +62,6 @@ def generate_junit_report(file_name: str = DEFAULT_JUNIT_FILENAME,
         )
         SubElement(case, "failure", attrib={"message": str(message)}).text = str(meta)
 
-    output = Path(file_name)
+    output = Path(report_path(file_name))
     ElementTree(suite).write(output, encoding="utf-8", xml_declaration=True)
     return output

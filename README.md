@@ -439,6 +439,8 @@ apitestka trend check                                                           
 apitestka spec check openapi.json --run tests/ --min-coverage 0.8               # see Test-as-Spec Loop
 ```
 
+`python -m je_api_testka -e/-d/--execute_str` and `apitestka run` exit with status 1 when an action raised or a request was recorded as failed; the remaining actions still run first. Under [TestPioneer](https://github.com/Integration-Automation/TestPioneer), which sets `TEST_PIONEER_ARTIFACT_DIR`, a report asked for under a relative name (HTML, JSON, XML, JUnit, Markdown, Allure, badge) is written below that directory, so the workflow needs no `artifacts:` entry for it.
+
 ### Security Probes
 
 ```python

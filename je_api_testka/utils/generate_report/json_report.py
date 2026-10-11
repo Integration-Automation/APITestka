@@ -4,6 +4,7 @@ from typing import Dict, Tuple
 
 from je_api_testka.utils.exception.exception_tags import cant_save_json_report_record_us_null
 from je_api_testka.utils.exception.exceptions import APIJsonReportException
+from je_api_testka.utils.generate_report.report_path import report_path
 from je_api_testka.utils.logging.loggin_instance import apitestka_logger
 from je_api_testka.utils.test_record.test_record_class import test_record_instance
 
@@ -88,7 +89,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
     # 儲存失敗紀錄 / Save failure records
     try:
         lock.acquire()
-        with open(json_file_name + "_failure.json", "w", encoding="utf-8") as file_to_write:
+        with open(report_path(json_file_name + "_failure.json"), "w", encoding="utf-8") as file_to_write:
             json.dump(dict(failure_dict), file_to_write, indent=4)
     except Exception as error:
         apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
@@ -98,7 +99,7 @@ def generate_json_report(json_file_name: str = "default_name") -> None:
     # 儲存成功紀錄 / Save success records
     try:
         lock.acquire()
-        with open(json_file_name + "_success.json", "w", encoding="utf-8") as file_to_write:
+        with open(report_path(json_file_name + "_success.json"), "w", encoding="utf-8") as file_to_write:
             json.dump(dict(success_dict), file_to_write, indent=4)
     except Exception as error:
         apitestka_logger.error(f"generate_json_report, failed: {repr(error)}")
