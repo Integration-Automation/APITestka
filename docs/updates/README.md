@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261022-02 | 2026-10-22 | Update certificate roots without changing unrelated dependency pins | #bugfix #deps #ci | [2026-10](2026-10.md) |
 | U-20261022-01 | 2026-10-22 | Preserve complete dependency locks | #bugfix #deps #ci | [2026-10](2026-10.md) |
 | U-20261011-01 | 2026-10-11 | Harden contract paths and bounded reply parsing | #done #ci | [2026-10](2026-10.md) |
 | U-20261008-01 | 2026-10-08 | The CLI exits 1 when something failed; reports go below TestPioneer's artifact directory | #feature #cli #report #testpioneer | [2026-10](2026-10.md) |
