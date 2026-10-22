@@ -1,16 +1,17 @@
 # What the CI test job installs; ci.txt is generated from this file (the command is in ci.yml).
 # Runtime dependencies (pyproject.toml), the gui, mcp, websocket, grpc and ai extras, and the test tools.
-requests
-Flask
-httpx
+anthropic<2,>=1.12.1
 defusedxml
-je_action_core>=0.0.1
-PySide6==6.12.0
-mcp>=1.28.1,<3
-websockets>=12.0,<17; python_version < '3.11'
-websockets>=17.2; python_version >= '3.11'
+Flask
 grpcio>=1.60
-anthropic>=1.12.1,<2
+httpx
+je_action_core>=0.0.3
+mcp<3,>=1.28.1
+PySide6==6.12.0
 pytest
 pytest-asyncio
 pytest-timeout
+requests
+websockets>=12.0
+websockets<17,>=12.0; python_version < "3.11"
+websockets>=17.2; python_version >= "3.11"

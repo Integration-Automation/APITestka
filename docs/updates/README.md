@@ -58,6 +58,7 @@ In the same commit: delete the item from `progress.md`, add a `#done` entry here
 
 | ID | Date | Title | Tags | Batch |
 |---|---|---|---|---|
+| U-20261022-04 | 2026-10-22 | Preserve complete dependency locks | #bugfix #deps #ci | [2026-10](2026-10.md) |
 | U-20261022-03 | 2026-10-22 | Preserve complete dependency locks | #bugfix #deps #ci | [2026-10](2026-10.md) |
 | U-20261022-02 | 2026-10-22 | Preserve complete dependency locks | #bugfix #deps #ci | [2026-10](2026-10.md) |
 | U-20261022-01 | 2026-10-22 | Preserve complete dependency locks | #bugfix #deps #ci | [2026-10](2026-10.md) |
