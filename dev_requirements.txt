@@ -11,4 +11,4 @@ sphinx-rtd-theme
 pytest
 pytest-asyncio
 pytest-timeout
-PySide6==6.11.2
+PySide6==6.12.0
