@@ -21,7 +21,7 @@ Requirements
 
 - **Python** 3.10 or later
 - **Dependencies:** ``requests``, ``Flask``, ``httpx``
-- **Optional (GUI):** ``PySide6==6.11.2``
+- **Optional (GUI):** ``PySide6==6.12.0``
 
 Development Setup
 -----------------
