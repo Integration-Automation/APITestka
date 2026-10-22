@@ -6,7 +6,7 @@ Flask
 grpcio>=1.60
 httpx
 je_action_core>=0.0.3
-mcp<3,>=1.28.1
+mcp<3,>=2.3.0
 PySide6==6.12.0
 pytest
 pytest-asyncio
