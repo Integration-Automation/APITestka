@@ -1,6 +1,6 @@
 # What the CI test job installs; ci.txt is generated from this file (the command is in ci.yml).
 # Runtime dependencies (pyproject.toml), the gui, mcp, websocket, grpc and ai extras, and the test tools.
-anthropic<2,>=1.12.1
+anthropic>=1.17.0,<2
 defusedxml
 Flask
 grpcio>=1.60
