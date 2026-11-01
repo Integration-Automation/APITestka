@@ -42,6 +42,7 @@ record-replay proxy、安全性檢測、平行執行 runner,以及給 Claude 用
 - [Optional Extras](#optional-extras)
 - [開發](#開發)
 - [貢獻](#貢獻)
+- [安全性](#安全性)
 - [授權](#授權)
 - [連結](#連結)
 
@@ -693,6 +694,10 @@ GUI widget 測試以 offscreen 模式執行(`QT_QPA_PLATFORM=offscreen`)。Linux
 (細節見 `CLAUDE.md` 的 *Testing Guidelines* 段)。
 
 ---
+
+## 安全性
+
+漏洞請私下回報。政策、支援版本與操作者注意事項見 [SECURITY.md](../SECURITY.md)。
 
 ## 授權
 

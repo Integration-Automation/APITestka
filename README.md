@@ -43,6 +43,7 @@ server for Claude, and more.
 - [Optional Extras](#optional-extras)
 - [Development](#development)
 - [Contributing](#contributing)
+- [Security](#security)
 - [License](#license)
 - [Links](#links)
 
@@ -716,6 +717,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Every commit must ship with unit tests
 (see `CLAUDE.md` → *Testing Guidelines*).
 
 ---
+
+## Security
+
+Report vulnerabilities privately. The policy, supported versions, and operator notes are in [SECURITY.md](SECURITY.md).
 
 ## License
 

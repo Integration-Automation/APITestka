@@ -42,6 +42,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 - [Optional Extras](#optional-extras)
 - [开发](#开发)
 - [贡献](#贡献)
+- [安全](#安全)
 - [许可证](#许可证)
 - [链接](#链接)
 
@@ -693,6 +694,10 @@ GUI widget 测试以 offscreen 模式运行(`QT_QPA_PLATFORM=offscreen`)。Linux
 (详情见 `CLAUDE.md` 的 *Testing Guidelines* 段)。
 
 ---
+
+## 安全
+
+请私下报告漏洞。政策、支持版本与操作者注意事项见 [SECURITY.md](../SECURITY.md)。
 
 ## 许可证
 
