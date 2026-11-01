@@ -12,6 +12,6 @@ pytest
 pytest-asyncio
 pytest-timeout
 requests
-websockets>=12.0
+websockets>=17.3
 websockets<17,>=12.0; python_version < "3.11"
 websockets>=17.2; python_version >= "3.11"
