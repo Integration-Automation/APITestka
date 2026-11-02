@@ -1,6 +1,6 @@
 # APITestka
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](../licenses/APITestka_LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/je_api_testka.svg)](https://pypi.org/project/je_api_testka/)
 [![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
@@ -67,7 +67,7 @@ record-replay 代理、安全检测、并行执行 runner,以及给 Claude 用�
 | **AI** | 可插拔后端,LLM 不可用时自动回退到确定性 fallback;附 Anthropic 参考实现 |
 | **MCP** | 一级支持 Claude Code,将框架作为 MCP 工具暴露 |
 | **GUI** | 可选 PySide6 GUI:每个功能一页的侧边栏、附历史与环境的请求构建器、浅色与深色主题、英 / 繁中 / 简中 / 日、嵌入 Swagger UI |
-| **跨平台** | Windows、macOS、Linux,Python 3.10–3.14 |
+| **跨平台** | Windows、macOS、Linux,Python 3.11–3.14 |
 
 ---
 
@@ -680,7 +680,7 @@ pip install -r dev_requirements.txt
 pytest                     # 整套测试
 ```
 
-CI 矩阵:Ubuntu / macOS / Windows × Python 3.10–3.14。
+CI 矩阵:Ubuntu / macOS / Windows × Python 3.11–3.14。
 
 GUI widget 测试以 offscreen 模式运行(`QT_QPA_PLATFORM=offscreen`)。Linux 上 Qt 需要几个系统库
 (`sudo apt-get install libegl1 libgl1 libx11-6 libxkbcommon0 libfontconfig1 libfreetype6`),本机没装时这些测试会跳过。CI 会安装它们并设置 `APITESTKA_REQUIRE_QT=1`,

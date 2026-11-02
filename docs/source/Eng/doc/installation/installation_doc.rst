@@ -19,7 +19,7 @@ Install with GUI support
 Requirements
 ------------
 
-- **Python** 3.10 or later
+- **Python** 3.11 or later
 - **Dependencies:** ``requests``, ``Flask``, ``httpx``
 - **Optional (GUI):** ``PySide6==6.12.0``
 

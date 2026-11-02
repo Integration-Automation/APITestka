@@ -1,6 +1,6 @@
 # APITestka
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](licenses/APITestka_LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/je_api_testka.svg)](https://pypi.org/project/je_api_testka/)
 [![Documentation Status](https://readthedocs.org/projects/apitestka/badge/?version=latest)](https://apitestka.readthedocs.io/en/latest/?badge=latest)
@@ -68,7 +68,7 @@ server for Claude, and more.
 | **AI** | Pluggable backend with deterministic fallback for test generation, fake data, failure classification; Anthropic reference backend |
 | **MCP** | First-class Claude Code / MCP server exposing the framework as tools |
 | **GUI** | Optional PySide6 GUI: sidebar pages for every feature, request builder with history and environments, light and dark themes, English / 繁中 / 简中 / 日本語, Swagger UI embed |
-| **Cross-platform** | Windows, macOS, Linux. Python 3.10–3.14 |
+| **Cross-platform** | Windows, macOS, Linux. Python 3.11–3.14 |
 
 ---
 
@@ -703,7 +703,7 @@ pip install -r dev_requirements.txt
 pytest                     # full suite
 ```
 
-CI runs the suite against Python 3.10 – 3.14 on Ubuntu, macOS, and Windows.
+CI runs the suite against Python 3.11 – 3.14 on Ubuntu, macOS, and Windows.
 
 The GUI widget tests run offscreen (`QT_QPA_PLATFORM=offscreen`). On Linux, Qt needs a few system
 libraries (`sudo apt-get install libegl1 libgl1 libx11-6 libxkbcommon0 libfontconfig1 libfreetype6`); without them those tests are skipped locally. CI installs them and sets
