@@ -4,7 +4,7 @@
 
 APITestka (`je_api_testka`) is a lightweight, cross-platform Python framework for automated API testing. Supports HTTP/HTTPS, SOAP/XML, JSON with `requests` and `httpx` backends.
 
-- **Python**: 3.10+
+- **Python**: 3.11+
 - **Dependencies**: `requests`, `Flask`, `httpx`, `defusedxml`, `je_action_core` (the executor core shared with LoadDensity, MailThunder and FileAutomation)
 - **Optional GUI**: `PySide6==6.12.0`
 
@@ -195,7 +195,7 @@ All code must pass static analysis without warnings from SonarQube, Codacy, Pyli
   - Skip gracefully via `pytest.importorskip("<package>")` when the dep is missing, AND
   - Cover the "dependency missing" error path by monkeypatching the import to raise `ImportError`.
 - Use the existing fixtures in `test/conftest.py` (`mock_url`, `clean_test_records`, `assert_valid_response`, `run_report_suite`) rather than rolling new ones.
-- Run `pytest -x` locally before committing; CI runs the full matrix on Python 3.10–3.14.
+- Run `pytest -x` locally before committing; CI runs the full matrix on Python 3.11–3.14.
 - A commit that introduces production code without tests is incomplete and should not be pushed.
 
 ## Documentation

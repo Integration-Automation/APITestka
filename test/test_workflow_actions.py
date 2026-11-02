@@ -185,7 +185,7 @@ def _locked() -> dict[str, str]:
 def _build_requires(metadata: str) -> list[Requirement]:
     """Return ``build-system.requires`` of a metadata file.
 
-    Parsed as text: ``tomllib`` is missing on Python 3.10, which CI still tests.
+    Parsed as text, so the check needs no TOML parser.
     """
     items = _BUILD_REQUIRES.search((_ROOT / metadata).read_text(encoding="utf-8")).group(1)
     return [Requirement(item) for item in re.findall(r"[\"']([^\"']+)[\"']", items)]

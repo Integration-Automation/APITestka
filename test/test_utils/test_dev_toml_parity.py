@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-tomllib = pytest.importorskip("tomllib")  # stdlib from 3.11; CI also runs 3.10
+tomllib = pytest.importorskip("tomllib")  # stdlib from 3.11, the supported floor
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
