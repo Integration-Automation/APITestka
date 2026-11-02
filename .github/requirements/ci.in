@@ -12,4 +12,4 @@ pytest
 pytest-asyncio
 pytest-timeout
 requests
-websockets>=17.2
+websockets>=17.3
